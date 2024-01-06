@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String
+  password String
+}
+
+model Customer {
+  id        Int     @id @default(autoincrement())
+  image_url String?
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int     @unique
+  Car       Car[]
+  Order     Order[]
+}
+
+model Car {
+  id         Int      @id @default(autoincrement())
+  plate      String
+  model      String
+  year       Int      @default(2010)
+  type       CarType  @default(SEDAN)
+  color      CarColor @default(BLACK)
+  customer   Customer @relation(fields: [customerId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customerId Int
+  Order      Order[]
+}
+
+model City {
+  id       Int        @id @default(autoincrement())
+  label    String     @unique
+  service  Service[]
+  CarModel CarModel[]
+}
+
+model Employee {
+  id         Int     @id @default(autoincrement())
+  position   String
+  salary     Float
+  color      String
+  start_date String
+  work_days  Int     @default(0)
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int     @unique
+  Order      Order[]
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  ref_number String
+  date       DateTime
+  city       String
+  address    String
+  note       String?
+  type       orderType @default(ORDER)
+  service    Service   @relation(fields: [serviceId], references: [id])
+  car        Car       @relation(fields: [carId], references: [id])
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  carId      Int
+  customerId Int
+  serviceId  Int
+  employeeId Int?
+}
+
+model CarModel {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  city    City      @relation(fields: [cityId], references: [id])
+  service Service[]
+  cityId  Int
+}
+
+model Service {
+  id         Int      @id @default(autoincrement())
+  name       String
+  price      Float
+  car_model  CarModel @relation(fields: [carModelId], references: [id])
+  City       City?    @relation(fields: [cityId], references: [id])
+  cityId     Int?
+  Order      Order[]
+  carModelId Int
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  full_name String
+  email     String    @unique
+  mobile    String
+  password  String
+  role      Role      @default(CUSTOMER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  customer  Customer?
+  employee  Employee?
+}
+
+model WorkTime {
+  id                Int     @id @default(autoincrement())
+  day               Day
+  start_time        String
+  end_time          String
+  employess_to_work Int[] // index 0 is the hours and index 1 is employees count
+  is_day_off        Boolean @default(false)
+}
+
+//* enums
+enum CarServiceModel {
+  PRIVATE
+}
+
+enum Day {
+  SUNDAY
+  MONDAY
+  TUSEDAY
+  WEDNSDAY
+  THIRSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum Role {
+  CUSTOMER
+  EMPLOYEE
+  ADMIN
+}
+
+enum CarColor {
+  BLACK
+  WHITE
+  GRAY
+  SILVER
+  RED
+  ORANGE
+  YELLOW
+  BROWN
+  PURPLE
+  GOLD
+  GREEN
+  BLUE
+  OTHER
+}
+
+enum CarType {
+  SEDAN
+  JEEP
+}
+
+enum orderType {
+  ORDER
+  BOOK
+}

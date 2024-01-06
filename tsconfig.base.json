@@ -14,7 +14,13 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@shtifh/admin": ["libs/api/modules/admin/src/index.ts"],
+      "@shtifh/prisma-service": [
+        "libs/api/shared/services/prisma/src/index.ts"
+      ],
+      "@shtifh/shtifh-module": ["libs/api/modules/shtifh/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

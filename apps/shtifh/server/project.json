@@ -1,0 +1,53 @@
+{
+  "name": "shtifh-server",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/shtifh/server/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/shtifh/server",
+        "main": "apps/shtifh/server/src/main.ts",
+        "tsConfig": "apps/shtifh/server/tsconfig.app.json",
+        "assets": ["apps/shtifh/server/src/assets"],
+        "webpackConfig": "apps/shtifh/server/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "shtifh-server:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "shtifh-server:build:development"
+        },
+        "production": {
+          "buildTarget": "shtifh-server:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/shtifh/server/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
