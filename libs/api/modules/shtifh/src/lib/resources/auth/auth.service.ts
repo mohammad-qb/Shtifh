@@ -1,15 +1,21 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
-import { RegisterDto } from './dto/register.dto';
+import { UserService } from '@shtifh/user-service';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthShtifhService {
   private logger = new Logger(AuthShtifhService.name);
+  private userHelper;
   private model;
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService
+  ) {
     this.model = prismaService.user;
+    this.userHelper = userService.resources;
   }
 
   async register(args: RegisterDto) {
@@ -17,9 +23,11 @@ export class AuthShtifhService {
 
     if (user) throw new BadRequestException('user_exist');
 
-    return await this.model.create({
+    const password = await this.userHelper.crypt.cryptPassword(args.password);
+
+    await this.model.create({
       data: {
-        ...args,
+        ...{ ...args, password },
         customer: {
           create: {
             image_url: '',
@@ -27,15 +35,33 @@ export class AuthShtifhService {
         },
       },
     });
+
+    return { success: true };
   }
 
   async login(args: LoginDto) {
     const user = await this.model.findFirst({
-      where: { email: args.email, password: args.password },
+      where: { email: args.email },
+      select: {
+        full_name: true,
+        email: true,
+        mobile: true,
+        password: true,
+        role: true,
+      },
     });
 
     if (!user) throw new BadRequestException('user_auth_wrong');
+    const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
+      args.password,
+      user.password
+    );
 
-    return { user };
+    if (!isPasswordMatch) throw new BadRequestException('password_wrong');
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...newUser } = user;
+
+    return { user: newUser };
   }
 }

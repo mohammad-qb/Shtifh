@@ -1,1 +1,1 @@
-export * from './lib/shtifh-module.module';
+export * from './lib/shtifh.module';

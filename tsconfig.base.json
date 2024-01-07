@@ -19,7 +19,8 @@
       "@shtifh/prisma-service": [
         "libs/api/shared/services/prisma/src/index.ts"
       ],
-      "@shtifh/shtifh-module": ["libs/api/modules/shtifh/src/index.ts"]
+      "@shtifh/shtifh-module": ["libs/api/modules/shtifh/src/index.ts"],
+      "@shtifh/user-service": ["libs/api/shared/services/user/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
