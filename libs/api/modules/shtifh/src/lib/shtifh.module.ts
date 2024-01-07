@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AuthShtifhModule } from './resources/auth/auth.module';
-import { CityShtifhModule } from './resources/city/city.module';
-import { CustomerShtifhModule } from './resources/customer/customer.module';
+import { AuthResourceModule } from './resources/auth/auth-resource.module';
+import { CityResourceModule } from './resources/city/city-resource.module';
+import { CustomerResourceModule } from './resources/customer/customer-resource.module';
+import { CarResourceModule } from './resources/car/car-resource.module';
+import { OrderResourceModule } from './resources/orders/order-resource.module';
+import { UserResourceModule } from './resources/user/user-resource.module';
 
 @Module({
-  imports: [AuthShtifhModule, CityShtifhModule, CustomerShtifhModule],
+  imports: [
+    AuthResourceModule,
+    CarResourceModule,
+    CityResourceModule,
+    CustomerResourceModule,
+    OrderResourceModule,
+    UserResourceModule,
+  ],
   providers: [],
   exports: [],
 })
