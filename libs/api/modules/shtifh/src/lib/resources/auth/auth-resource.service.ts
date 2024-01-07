@@ -5,8 +5,8 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
-export class AuthShtifhService {
-  private logger = new Logger(AuthShtifhService.name);
+export class AuthResourceService {
+  private logger = new Logger(AuthResourceService.name);
   private userHelper;
   private model;
 
@@ -43,6 +43,7 @@ export class AuthShtifhService {
     const user = await this.model.findFirst({
       where: { email: args.email },
       select: {
+        id: true,
         full_name: true,
         email: true,
         mobile: true,
@@ -51,7 +52,7 @@ export class AuthShtifhService {
       },
     });
 
-    if (!user) throw new BadRequestException('user_auth_wrong');
+    if (!user) throw new BadRequestException('user_not_exist');
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
       args.password,
       user.password
@@ -62,6 +63,13 @@ export class AuthShtifhService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...newUser } = user;
 
-    return { user: newUser };
+    const token = await this.userHelper.jwt.signJwt({
+      email: user.email,
+      full_name: user.full_name,
+      id: user.id,
+      role: user.role,
+    });
+
+    return { user: newUser, token };
   }
 }

@@ -18,13 +18,13 @@ model Customer {
   image_url String?
   user      User    @relation(fields: [userId], references: [id])
   userId    Int     @unique
-  Car       Car[]
-  Order     Order[]
+  cars       Car[]
+  orders     Order[]
 }
 
 model Car {
   id         Int      @id @default(autoincrement())
-  plate      String
+  plate      String?
   model      String
   year       Int      @default(2010)
   type       CarType  @default(SEDAN)
@@ -33,14 +33,14 @@ model Car {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   customerId Int
-  Order      Order[]
+  orders      Order[]
 }
 
 model City {
   id       Int        @id @default(autoincrement())
   label    String     @unique
-  service  Service[]
-  CarModel CarModel[]
+  services  Service[]
+  car_models CarModel[]
 }
 
 model Employee {
@@ -52,7 +52,7 @@ model Employee {
   work_days  Int     @default(0)
   user       User    @relation(fields: [userId], references: [id])
   userId     Int     @unique
-  Order      Order[]
+  order      Order[]
 }
 
 model Order {
@@ -79,7 +79,7 @@ model CarModel {
   id      Int       @id @default(autoincrement())
   name    String    @unique
   city    City      @relation(fields: [cityId], references: [id])
-  service Service[]
+  services Service[]
   cityId  Int
 }
 
@@ -88,9 +88,9 @@ model Service {
   name       String
   price      Float
   car_model  CarModel @relation(fields: [carModelId], references: [id])
-  City       City?    @relation(fields: [cityId], references: [id])
+  city       City?    @relation(fields: [cityId], references: [id])
   cityId     Int?
-  Order      Order[]
+  orders      Order[]
   carModelId Int
 }
 
@@ -122,7 +122,7 @@ enum CarServiceModel {
 }
 
 enum Day {
-  SUNDAY
+  SUNDAYs
   MONDAY
   TUSEDAY
   WEDNSDAY

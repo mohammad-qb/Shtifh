@@ -1,0 +1,10 @@
+export type EnvName =
+  | 'PORT'
+  | 'NODE_ENV'
+  | 'AWS_ACCESS_KEY'
+  | 'AWS_ACCESS_SECRET_KEY'
+  | 'AWS_REGION'
+  | 'AWS_S3_BUCKET_NAME'
+  | 'JWT_ISSUER_KEY'
+  | 'JWT_SECRET_KEY'
+  | 'JWT_AUDIENCE_KEY';
