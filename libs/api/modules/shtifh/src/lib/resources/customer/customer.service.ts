@@ -11,6 +11,7 @@ export class CustomerShtifhService {
   }
 
   async me(token: string) {
+    console.log({ token });
     return await this.model.findFirst({ where: { id: 1 } });
   }
 }

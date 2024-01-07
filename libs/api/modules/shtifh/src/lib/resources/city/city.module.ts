@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from '@shtifh/prisma-service';
-import { CityShtifhService } from './city.service';
+import { PrismaModule } from '@shtifh/prisma-service';
 import { CityShtifhController } from './city.controller';
+import { CityShtifhService } from './city.service';
 
 @Module({
-  imports: [PrismaService],
-  providers: [CityShtifhService],
+  imports: [PrismaModule],
+  controllers: [CityShtifhController],
+  providers: [CityShtifhService, CityShtifhController],
   exports: [CityShtifhService, CityShtifhController],
 })
 export class CityShtifhModule {}
