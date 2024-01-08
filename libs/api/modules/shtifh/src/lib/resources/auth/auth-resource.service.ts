@@ -49,6 +49,11 @@ export class AuthResourceService {
         mobile: true,
         password: true,
         role: true,
+        customer: {
+          select: {
+            image_url: true,
+          },
+        },
       },
     });
 
