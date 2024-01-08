@@ -1,44 +1,43 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
-import { RegisterDto } from './dto/register.dto';
+import { UserService } from '@shtifh/user-service';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthResourceService {
   private logger = new Logger(AuthResourceService.name);
   private model;
+  private userHelper;
 
-  constructor(private readonly prismaService: PrismaService) {
-    this.model = prismaService.user;
-  }
-
-  async register(args: RegisterDto) {
-    const user = await this.model.findFirst({ where: { email: args.email } });
-
-    if (user) throw new BadRequestException('user_exist');
-
-    return await this.model.create({
-      data: {
-        email: args.email,
-        full_name: args.full_name,
-        mobile: args.mobile,
-        password: args.password,
-        customer: {
-          create: {
-            image_url: '',
-          },
-        },
-      },
-    });
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService
+  ) {
+    this.model = prismaService.admin;
+    this.userHelper = userService.resources;
   }
 
   async login(args: LoginDto) {
-    const user = await this.model.findFirst({
-      where: { email: args.email, password: args.password },
+    const admin = await this.model.findFirst({
+      where: { email: args.email },
     });
 
-    if (!user) throw new BadRequestException('user_wrong');
+    if (!admin) throw new BadRequestException('user_wrong');
 
-    return { user };
+    const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
+      args.password,
+      admin.password
+    );
+
+    if (!isPasswordMatch) throw new BadRequestException('password_wrong');
+
+    const token = await this.userHelper.jwt.signJwt({
+      email: admin.email,
+      full_name: admin.full_name,
+      id: admin.id,
+      role: admin.role,
+    });
+
+    return { result: { admin, token } };
   }
 }

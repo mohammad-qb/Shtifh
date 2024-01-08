@@ -11,6 +11,8 @@ model Admin {
   id       Int    @id @default(autoincrement())
   email    String
   password String
+  full_name String
+  role Role @default(ADMIN)
 }
 
 model Customer {
@@ -38,7 +40,7 @@ model Car {
 
 model City {
   id       Int        @id @default(autoincrement())
-  label    String     @unique
+  name    String     @unique
   services  Service[]
   car_models CarModel[]
 }
@@ -62,6 +64,7 @@ model Order {
   city       String
   address    String
   note       String?
+  paid       Boolean?  @default(false)
   type       orderType @default(ORDER)
   service    Service   @relation(fields: [serviceId], references: [id])
   car        Car       @relation(fields: [carId], references: [id])
