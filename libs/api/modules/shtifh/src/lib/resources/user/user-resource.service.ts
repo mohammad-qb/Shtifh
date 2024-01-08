@@ -14,6 +14,7 @@ export class UserResourceService {
     const user = await this.model.findFirst({
       where: { id: userId },
       select: {
+        id: true,
         email: true,
         full_name: true,
         mobile: true,
