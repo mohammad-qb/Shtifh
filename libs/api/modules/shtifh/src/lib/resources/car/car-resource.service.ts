@@ -23,6 +23,7 @@ export class CarResourceService {
   }
 
   async list(customerId: number) {
-    return await this.model.findMany({ where: { customerId } });
+    const cars = await this.model.findMany({ where: { customerId } });
+    return { result: cars };
   }
 }

@@ -20,14 +20,11 @@ export class EmployeeEntity implements Employee {
   start_date!: string;
 
   @ApiProperty()
-  work_days!: number;
-
-  @ApiProperty()
-  userId!: number;
-
-  @ApiProperty()
   user!: UserEntity;
 
   @ApiProperty()
   orders!: OrderEntity[];
+
+  @ApiProperty()
+  userId!: number;
 }

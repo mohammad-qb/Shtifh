@@ -23,6 +23,12 @@ export class CarEntity implements Car {
   color!: $Enums.CarColor;
 
   @ApiProperty()
+  customer!: CustomerEntity;
+
+  @ApiProperty()
+  orders!: OrderEntity[];
+
+  @ApiProperty()
   createdAt!: Date;
 
   @ApiProperty()
@@ -30,10 +36,4 @@ export class CarEntity implements Car {
 
   @ApiProperty()
   customerId!: number;
-
-  @ApiProperty()
-  customer!: CustomerEntity;
-
-  @ApiProperty()
-  orders!: OrderEntity[];
 }
