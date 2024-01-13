@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Order } from '@prisma/client';
+import { CarServiceEntity } from './car-service.entity';
 import { CarEntity } from './car.entity';
 import { CustomerEntity } from './customer.entity';
 import { EmployeeEntity } from './employee.entity';
-import { ServiceEntity } from './service.entity';
 
 export class OrderEntity implements Order {
   @ApiProperty()
@@ -31,6 +31,18 @@ export class OrderEntity implements Order {
   type!: $Enums.orderType;
 
   @ApiProperty()
+  car_service!: CarServiceEntity;
+
+  @ApiProperty()
+  car!: CarEntity;
+
+  @ApiProperty()
+  customer!: CustomerEntity;
+
+  @ApiProperty({ nullable: true })
+  employee!: EmployeeEntity;
+
+  @ApiProperty()
   createdAt!: Date;
 
   @ApiProperty()
@@ -42,21 +54,9 @@ export class OrderEntity implements Order {
   @ApiProperty()
   customerId!: number;
 
-  @ApiProperty()
-  serviceId!: number;
-
   @ApiProperty({ nullable: true })
   employeeId!: number | null;
 
   @ApiProperty()
-  service!: ServiceEntity;
-
-  @ApiProperty()
-  car!: CarEntity;
-
-  @ApiProperty()
-  customer!: CustomerEntity;
-
-  @ApiProperty({ nullable: true })
-  employee!: EmployeeEntity;
+  carServiceId!: number;
 }

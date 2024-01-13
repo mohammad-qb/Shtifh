@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { CarResourceService } from './car-resource.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCarDto } from './dto/create-car.dto';
 import { Payload } from '@shtifh/user-service';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
+import { ListCarEntity } from './entities/list-car-response.entity';
 
 @ApiTags('Car')
 @ApiBearerAuth()
@@ -22,6 +23,7 @@ export class CarResourceController {
 
   @Get()
   @ApiOperation({ summary: 'List All Cars' })
+  @ApiResponse({type: ListCarEntity})
   async list(@GetUser() user: Payload) {
     return await this.carResourceService.list(user.id);
   }

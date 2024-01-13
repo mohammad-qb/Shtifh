@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { UserService } from '@shtifh/user-service';
 import { LoginDto } from './dto/login.dto';
+import { CreateAdminDto } from './dto/create.dto';
 
 @Injectable()
 export class AuthResourceService {
@@ -39,5 +40,10 @@ export class AuthResourceService {
     });
 
     return { result: { admin, token } };
+  }
+
+  async create(args: CreateAdminDto) {
+    const password = await this.userHelper.crypt.cryptPassword(args.password);
+    return await this.model.create({ data: { ...args, password } });
   }
 }

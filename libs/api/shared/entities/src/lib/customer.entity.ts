@@ -12,9 +12,6 @@ export class CustomerEntity implements Customer {
   image_url!: string | null;
 
   @ApiProperty()
-  userId!: number;
-
-  @ApiProperty()
   user!: UserEntity;
 
   @ApiProperty()
@@ -22,4 +19,7 @@ export class CustomerEntity implements Customer {
 
   @ApiProperty()
   orders!: OrderEntity[];
+
+  @ApiProperty()
+  userId!: number;
 }

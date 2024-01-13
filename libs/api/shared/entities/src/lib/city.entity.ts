@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { City } from '@prisma/client';
-import { ServiceEntity } from './service.entity';
-import { CarModelEntity } from './car-model.entity';
+import { WorkTimeEntity } from './work-time.entity';
+import { CarServiceEntity } from './car-service.entity';
 
 export class CityEntity implements City {
   @ApiProperty()
@@ -11,8 +11,14 @@ export class CityEntity implements City {
   name!: string;
 
   @ApiProperty()
-  service!: ServiceEntity[];
+  work_time!: WorkTimeEntity;
 
   @ApiProperty()
-  car_models!: CarModelEntity[];
+  car_services!: CarServiceEntity;
+
+  @ApiProperty()
+  carServiceId!: number;
+
+  @ApiProperty()
+  workTimeId!: number;
 }
