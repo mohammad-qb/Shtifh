@@ -6,7 +6,6 @@ export * from './lib/city.entity';
 export * from './lib/customer.entity';
 export * from './lib/employee.entity';
 export * from './lib/order.entity';
-export * from './lib/service-group.entity';
 export * from './lib/service.entity';
 export * from './lib/user.entity';
 export * from './lib/work-time.entity';

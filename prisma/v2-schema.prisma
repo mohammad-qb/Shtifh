@@ -1,0 +1,182 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Admin {
+    id        Int    @id @default(autoincrement())
+    email     String
+    password  String
+    full_name String
+    role      Role   @default(ADMIN)
+}
+
+model Customer {
+    id        Int     @id @default(autoincrement())
+    image_url String?
+    user      User    @relation(fields: [userId], references: [id])
+    cars      Car[]
+    orders    Order[]
+    userId    Int     @unique
+}
+
+model Car {
+    id         Int      @id @default(autoincrement())
+    plate      String?
+    model      String
+    year       Int      @default(2010)
+    type       CarType  @default(SEDAN)
+    color      CarColor @default(BLACK)
+    customer   Customer @relation(fields: [customerId], references: [id])
+    orders     Order[]
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    customerId Int
+}
+
+model Employee {
+    id         Int     @id @default(autoincrement())
+    position   String
+    salary     Float
+    color      String
+    start_date String
+    user       User    @relation(fields: [userId], references: [id])
+    order      Order[]
+    userId     Int     @unique
+}
+
+model CarModel {
+    id         Int          @id @default(autoincrement())
+    name       String       @unique
+    CarService CarService[]
+}
+
+model City {
+    id           Int          @id @default(autoincrement())
+    name         String       @unique
+    work_time    WorkTime?    @relation(fields: [workTimeId], references: [id])
+    car_services CarService[]
+    workTimeId   Int?         @unique
+    Order        Order[]
+}
+
+model CarService {
+    id         Int               @id @default(autoincrement())
+    car_model  CarModel          @relation(fields: [carModelId], references: [id])
+    services   CarModelService[]
+    City       City?             @relation(fields: [cityId], references: [id])
+    cityId     Int?
+    carModelId Int
+}
+
+model CarModelService {
+    id           Int         @id @default(autoincrement())
+    fees         Float
+    service      Service     @relation(fields: [serviceId], references: [id])
+    CarService   CarService? @relation(fields: [carServiceId], references: [id])
+    carServiceId Int?
+    serviceId    Int
+    Order        Order[]
+}
+
+model Order {
+    id                Int             @id @default(autoincrement())
+    ref_number        String
+    date              DateTime?
+    address           String
+    note              String?
+    paid              Boolean?        @default(false)
+    type              orderType       @default(ORDER)
+    city              City            @relation(fields: [cityId], references: [id])
+    car               Car             @relation(fields: [carId], references: [id])
+    customer          Customer        @relation(fields: [customerId], references: [id])
+    employee          Employee?       @relation(fields: [employeeId], references: [id])
+    service           CarModelService @relation(fields: [carModelServiceId], references: [id])
+    createdAt         DateTime        @default(now())
+    updatedAt         DateTime        @updatedAt
+    carId             Int
+    customerId        Int
+    employeeId        Int?
+    carModelServiceId Int
+    cityId            Int
+}
+
+model Service {
+    id              Int               @id @default(autoincrement())
+    name            String
+    CarModelService CarModelService[]
+}
+
+model User {
+    id        Int       @id @default(autoincrement())
+    full_name String
+    email     String    @unique
+    mobile    String
+    password  String
+    role      Role      @default(CUSTOMER)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    customer  Customer?
+    employee  Employee?
+}
+
+model WorkTime {
+    id                Int     @id @default(autoincrement())
+    day               Day
+    start_time        String
+    end_time          String
+    employees_to_work Int[]   @default([1, 1])
+    is_day_off        Boolean @default(false)
+    City              City?
+}
+
+//* enums
+enum CarServiceModel {
+    PRIVATE
+}
+
+enum Day {
+    SUNDAYs
+    MONDAY
+    TUSEDAY
+    WEDNSDAY
+    THIRSDAY
+    FRIDAY
+    SATURDAY
+}
+
+enum Role {
+    CUSTOMER
+    EMPLOYEE
+    ADMIN
+}
+
+enum CarColor {
+    BLACK
+    WHITE
+    GRAY
+    SILVER
+    RED
+    ORANGE
+    YELLOW
+    BROWN
+    PURPLE
+    GOLD
+    GREEN
+    BLUE
+    OTHER
+}
+
+enum CarType {
+    SEDAN
+    JEEP
+}
+
+enum orderType {
+    ORDER
+    BOOK_LATER
+}

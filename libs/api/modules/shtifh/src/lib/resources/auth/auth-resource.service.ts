@@ -51,6 +51,7 @@ export class AuthResourceService {
         role: true,
         customer: {
           select: {
+            id: true,
             image_url: true,
           },
         },
@@ -71,8 +72,9 @@ export class AuthResourceService {
     const token = await this.userHelper.jwt.signJwt({
       email: user.email,
       full_name: user.full_name,
-      id: user.id,
+      userId: user.id,
       role: user.role,
+      id: user.customer?.id || 0,
     });
 
     return { user: newUser, token };

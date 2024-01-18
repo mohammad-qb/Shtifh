@@ -59,4 +59,7 @@ export class OrderEntity implements Order {
 
   @ApiProperty()
   carServiceId!: number;
+
+  carModelServiceId!: number;
+  cityId!: number;
 }

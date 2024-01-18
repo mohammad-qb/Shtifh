@@ -5,4 +5,5 @@ export type Payload = {
   email: string;
   full_name: string;
   role: $Enums.Role;
+  userId: number;
 };

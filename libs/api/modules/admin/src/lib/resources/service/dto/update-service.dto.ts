@@ -1,17 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateServiceDto
-  implements Pick<Prisma.ServiceUncheckedUpdateInput, 'name' | 'price'>
+  implements Pick<Prisma.ServiceUncheckedUpdateInput, 'name'>
 {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   name!: string;
-
-  @ApiPropertyOptional()
-  @IsNumber()
-  @IsOptional()
-  price!: number;
 }

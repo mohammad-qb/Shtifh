@@ -6,11 +6,13 @@ import { CityResourceModule } from './resources/city/city-resource.module';
 import { CustomerResourceModule } from './resources/customer/customer-resource.module';
 import { EmployeeResourceModule } from './resources/employee/employee-resource.module';
 import { OrderResourceModule } from './resources/orders/order-resource.module';
+import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 
 @Module({
   imports: [
     AuthResourceModule,
     CarModelResourceModule,
+    CarServiceResourceModule,
     CityResourceModule,
     CustomerResourceModule,
     EmployeeResourceModule,
