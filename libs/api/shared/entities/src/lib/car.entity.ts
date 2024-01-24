@@ -11,13 +11,13 @@ export class CarEntity implements Car {
   plate!: string | null;
 
   @ApiProperty()
-  model!: string;
+  carModelId!: number;
 
   @ApiProperty()
   year!: number;
 
-  @ApiProperty({ enum: $Enums.CarType })
-  type!: $Enums.CarType;
+  @ApiProperty()
+  name!: string;
 
   @ApiProperty({ enum: $Enums.CarColor })
   color!: $Enums.CarColor;

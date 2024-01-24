@@ -7,7 +7,7 @@ class NestedCustomerEntity implements Pick<CustomerEntity, 'image_url'> {
   image_url!: string | null;
 }
 
-export class LoginEntity
+export class LoginUserEntity
   implements Pick<UserEntity, 'id' | 'email' | 'full_name' | 'mobile' | 'role'>
 {
   @ApiProperty()
@@ -27,4 +27,12 @@ export class LoginEntity
 
   @ApiProperty()
   customer!: NestedCustomerEntity;
+}
+
+export class LoginEntity {
+  @ApiProperty({ type: LoginUserEntity })
+  user!: LoginUserEntity;
+
+  @ApiProperty()
+  token!: string;
 }

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { $Enums, Prisma } from '@prisma/client';
 import {
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,27 +12,25 @@ import {
 export class CreateCarDto
   implements Omit<Prisma.CarUncheckedCreateInput, 'customerId'>
 {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   plate?: string | null | undefined;
 
   @ApiProperty()
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  model!: string;
+  carModelId!: number;
 
   @ApiPropertyOptional()
   @IsNumber()
   @IsOptional()
   year?: number | undefined;
-
-  @ApiPropertyOptional({
-    enum: $Enums.CarType,
-  })
-  @IsEnum($Enums.CarType)
-  @IsOptional()
-  type?: $Enums.CarType | undefined;
 
   @ApiPropertyOptional({
     enum: $Enums.CarColor,

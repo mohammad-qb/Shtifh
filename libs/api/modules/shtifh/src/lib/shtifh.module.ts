@@ -5,6 +5,7 @@ import { CustomerResourceModule } from './resources/customer/customer-resource.m
 import { CarResourceModule } from './resources/car/car-resource.module';
 import { OrderResourceModule } from './resources/orders/order-resource.module';
 import { UserResourceModule } from './resources/user/user-resource.module';
+import { CarModelResourceModule } from './resources/car-models/car-model-resource.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserResourceModule } from './resources/user/user-resource.module';
     CarResourceModule,
     CityResourceModule,
     CustomerResourceModule,
+    CarModelResourceModule,
     OrderResourceModule,
     UserResourceModule,
   ],

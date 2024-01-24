@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCarDto } from './dto/create-car.dto';
+import { HeaderLang } from '@shtifh/decorators';
 
 @Injectable()
 export class CarResourceService {
@@ -22,8 +23,30 @@ export class CarResourceService {
     return { car };
   }
 
-  async list(customerId: number) {
-    const cars = await this.model.findMany({ where: { customerId } });
-    return { result: cars };
+  async list(customerId: number, lang: HeaderLang) {
+    const cars = await this.model.findMany({
+      where: { customerId },
+      select: {
+        id: true,
+        color: true,
+        plate: true,
+        name: true,
+        year: true,
+        model: {
+          select: {
+            name_ar: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
+      },
+    });
+
+    const results = cars.map((el) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { model, ..._car } = el;
+      return { ..._car, model_name: el.model[`name_${lang}`] };
+    });
+    return { results };
   }
 }

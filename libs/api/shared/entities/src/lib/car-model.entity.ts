@@ -7,7 +7,13 @@ export class CarModelEntity implements CarModel {
   id!: number;
 
   @ApiProperty()
-  name!: string;
+  name_ar!: string;
+
+  @ApiProperty()
+  name_en!: string;
+
+  @ApiProperty()
+  name_he!: string;
 
   @ApiProperty()
   car_services!: CarServiceEntity[];

@@ -1,7 +1,38 @@
-import { ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { $Enums } from '@prisma/client';
+import { CustomerEntity, UserEntity } from '@shtifh/entities';
 
-@ApiResponse({})
-export class RegisterEntity {
+class NestedCustomerEntity implements Pick<CustomerEntity, 'image_url'> {
+  @ApiProperty({ nullable: true })
+  image_url!: string | null;
+}
+
+export class RegisterUserEntity
+  implements Pick<UserEntity, 'id' | 'email' | 'full_name' | 'mobile' | 'role'>
+{
   @ApiProperty()
-  success!: boolean;
+  id!: number;
+
+  @ApiProperty()
+  email!: string;
+
+  @ApiProperty()
+  full_name!: string;
+
+  @ApiProperty()
+  mobile!: string;
+
+  @ApiProperty({ enum: $Enums.Role })
+  role!: $Enums.Role;
+
+  @ApiProperty()
+  customer!: NestedCustomerEntity;
+}
+
+export class RegisterEntity {
+  @ApiProperty({ type: RegisterUserEntity })
+  user!: RegisterUserEntity;
+
+  @ApiProperty()
+  token!: string;
 }

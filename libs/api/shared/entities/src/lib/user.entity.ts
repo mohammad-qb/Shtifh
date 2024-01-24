@@ -19,6 +19,9 @@ export class UserEntity implements User {
   @ApiProperty()
   password!: string;
 
+  @ApiProperty()
+  reset_password_code!: string | null;
+
   @ApiProperty({ enum: $Enums.Role })
   role!: $Enums.Role;
 

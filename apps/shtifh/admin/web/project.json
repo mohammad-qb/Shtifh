@@ -1,0 +1,58 @@
+{
+  "name": "shtifh-admin-web",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/shtifh/admin/web",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/shtifh/admin/web"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/shtifh/admin/web"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "shtifh-admin-web:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "shtifh-admin-web:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "shtifh-admin-web:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "shtifh-admin-web:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/shtifh/admin/web/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": []
+}

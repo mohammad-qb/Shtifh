@@ -6,5 +6,11 @@ export class ServiceEntity implements Service {
   id!: number;
 
   @ApiProperty()
-  name!: string;
+  name_ar!: string;
+
+  @ApiProperty()
+  name_en!: string;
+
+  @ApiProperty()
+  name_he!: string;
 }

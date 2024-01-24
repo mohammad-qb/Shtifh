@@ -8,7 +8,13 @@ export class CityEntity implements City {
   id!: number;
 
   @ApiProperty()
-  name!: string;
+  name_ar!: string;
+
+  @ApiProperty()
+  name_en!: string;
+
+  @ApiProperty()
+  name_he!: string;
 
   @ApiProperty()
   work_time!: WorkTimeEntity;

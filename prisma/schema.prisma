@@ -27,41 +27,16 @@ model Customer {
 model Car {
   id         Int      @id @default(autoincrement())
   plate      String?
-  model      String
+  name       String
+  model      CarModel @relation(fields: [carModelId], references: [id])
   year       Int      @default(2010)
-  type       CarType  @default(SEDAN)
   color      CarColor @default(BLACK)
   customer   Customer @relation(fields: [customerId], references: [id])
   orders     Order[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   customerId Int
-}
-
-model CarModel {
-  id           Int          @id @default(autoincrement())
-  name         String       @unique
-  car_services CarService[]
-}
-
-model City {
-  id           Int         @id @default(autoincrement())
-  name         String      @unique
-  work_time    WorkTime?   @relation(fields: [workTimeId], references: [id])
-  car_service  CarService? @relation(fields: [carServiceId], references: [id])
-  workTimeId   Int?        @unique
-  carServiceId Int
-}
-
-model CarService {
-  id             Int          @id @default(autoincrement())
-  active         Boolean      @default(true)
-  car_model      CarModel     @relation(fields: [carModelId], references: [id])
-  service_group  ServiceGroup @relation(fields: [serviceGroupId], references: [id])
-  cities         City[]
-  orders         Order[]
-  carModelId     Int
-  serviceGroupId Int
+  carModelId Int
 }
 
 model Employee {
@@ -75,52 +50,87 @@ model Employee {
   userId     Int     @unique
 }
 
+model CarModel {
+  id         Int          @id @default(autoincrement())
+  name_ar    String       @unique
+  name_en    String       @unique
+  name_he    String       @unique
+  CarService CarService[]
+  Car        Car[]
+}
+
+model City {
+  id           Int          @id @default(autoincrement())
+  name_ar      String       @unique
+  name_en      String       @unique
+  name_he      String       @unique
+  work_time    WorkTime?    @relation(fields: [workTimeId], references: [id])
+  car_services CarService[]
+  workTimeId   Int?         @unique
+  Order        Order[]
+}
+
+model CarService {
+  id         Int               @id @default(autoincrement())
+  car_model  CarModel          @relation(fields: [carModelId], references: [id])
+  services   CarModelService[]
+  City       City?             @relation(fields: [cityId], references: [id])
+  cityId     Int?
+  carModelId Int
+}
+
+model CarModelService {
+  id           Int         @id @default(autoincrement())
+  fees         Float
+  service      Service     @relation(fields: [serviceId], references: [id])
+  CarService   CarService? @relation(fields: [carServiceId], references: [id])
+  carServiceId Int?
+  serviceId    Int
+  Order        Order[]
+}
+
 model Order {
-  id           Int        @id @default(autoincrement())
-  ref_number   String
-  date         DateTime
-  city         String
-  address      String
-  note         String?
-  paid         Boolean?   @default(false)
-  type         orderType  @default(ORDER)
-  car_service  CarService @relation(fields: [carServiceId], references: [id])
-  car          Car        @relation(fields: [carId], references: [id])
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  employee     Employee?  @relation(fields: [employeeId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  carId        Int
-  customerId   Int
-  employeeId   Int?
-  carServiceId Int
+  id                Int             @id @default(autoincrement())
+  ref_number        String
+  date              DateTime?
+  address           String
+  note              String?
+  paid              Boolean?        @default(false)
+  type              orderType       @default(ORDER)
+  city              City            @relation(fields: [cityId], references: [id])
+  car               Car             @relation(fields: [carId], references: [id])
+  customer          Customer        @relation(fields: [customerId], references: [id])
+  employee          Employee?       @relation(fields: [employeeId], references: [id])
+  service           CarModelService @relation(fields: [carModelServiceId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  carId             Int
+  customerId        Int
+  employeeId        Int?
+  carModelServiceId Int
+  cityId            Int
 }
 
 model Service {
-  id             Int            @id @default(autoincrement())
-  name           String
-  service_groups ServiceGroup[]
-}
-
-model ServiceGroup {
-  id           Int          @id @default(autoincrement())
-  price        Float
-  service      Service      @relation(fields: [serviceId], references: [id])
-  car_services CarService[]
-  serviceId    Int
+  id              Int               @id @default(autoincrement())
+  name_ar         String            @unique
+  name_en         String            @unique
+  name_he         String            @unique
+  CarModelService CarModelService[]
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  full_name String
-  email     String    @unique
-  mobile    String
-  password  String
-  role      Role      @default(CUSTOMER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  customer  Customer?
-  employee  Employee?
+  id                  Int       @id @default(autoincrement())
+  full_name           String
+  email               String    @unique
+  mobile              String
+  password            String
+  reset_password_code String?
+  role                Role      @default(CUSTOMER)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  customer            Customer?
+  employee            Employee?
 }
 
 model WorkTime {
@@ -177,5 +187,5 @@ enum CarType {
 
 enum orderType {
   ORDER
-  BOOK
+  BOOK_LATER
 }
