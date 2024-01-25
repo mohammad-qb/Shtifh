@@ -1,13 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
+import { UserService } from '@shtifh/user-service';
 
 @Injectable()
 export class UserResourceService {
   private logger = new Logger(UserResourceService.name);
   private model;
+  private userHelper;
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService
+  ) {
     this.model = prismaService.user;
+    this.userHelper = userService.resources;
   }
 
   async me(userId: number) {
@@ -20,11 +26,21 @@ export class UserResourceService {
         mobile: true,
         role: true,
         customer: {
-          select: { image_url: true },
+          select: { id: true, image_url: true },
         },
       },
     });
 
-    return { user };
+    if (!user) throw new BadRequestException('user_wrong');
+
+    const token = await this.userHelper.jwt.signJwt({
+      email: user.email,
+      full_name: user.full_name,
+      id: user.customer?.id || 0,
+      role: user.role,
+      userId: user.id,
+    });
+
+    return { user, token };
   }
 }

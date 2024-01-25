@@ -71,7 +71,7 @@ export class AuthResourceService {
       id: newUser.customer?.id || 0,
     });
 
-    return { result: newUser, token };
+    return { newUser, token };
   }
 
   async login(args: LoginDto) {
