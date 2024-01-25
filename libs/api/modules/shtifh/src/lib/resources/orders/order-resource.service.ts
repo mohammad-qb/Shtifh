@@ -28,8 +28,42 @@ export class OrderResourceService {
   }
 
   async list(customerId: number) {
-    const orders = await this.model.findMany({ where: { customerId } });
+    const orders = await this.model.findMany({
+      where: { customerId },
+      select: {
+        id: true,
+        city: {
+          select: {
+            name_ar: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
+        date: true,
+        note: true,
+        address: true,
+        service: {
+          include: {
+            service: {
+              select: {
+                id: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+          },
+        },
+        car: {
+          select: {
+            color: true,
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-    return { result: orders };
+    return { results: orders };
   }
 }

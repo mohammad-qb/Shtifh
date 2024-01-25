@@ -1,9 +1,15 @@
 import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { OrderResourceService } from './order-resource.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { Payload } from '@shtifh/user-service';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { ListOrdersEntity } from './entities/list-orders.entity';
+import { OrderResourceService } from './order-resource.service';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -22,6 +28,7 @@ export class OrderResourceController {
 
   @Get()
   @ApiOperation({ summary: 'List All Orders' })
+  @ApiResponse({ type: ListOrdersEntity })
   async list(@GetUser() user: Payload) {
     return await this.orderResourceService.list(user.id);
   }

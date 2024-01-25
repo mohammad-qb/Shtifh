@@ -26,7 +26,45 @@ export class UserResourceService {
         mobile: true,
         role: true,
         customer: {
-          select: { id: true, image_url: true },
+          select: {
+            id: true,
+            image_url: true,
+            orders: {
+              take: 1,
+              select: {
+                id: true,
+                city: {
+                  select: {
+                    name_ar: true,
+                    name_en: true,
+                    name_he: true,
+                  },
+                },
+                date: true,
+                note: true,
+                address: true,
+                service: {
+                  include: {
+                    service: {
+                      select: {
+                        id: true,
+                        name_ar: true,
+                        name_en: true,
+                        name_he: true,
+                      },
+                    },
+                  },
+                },
+                car: {
+                  select: {
+                    color: true,
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
         },
       },
     });
