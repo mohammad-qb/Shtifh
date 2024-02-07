@@ -4,6 +4,12 @@ import { CustomerEntity } from './customer.entity';
 import { OrderEntity } from './order.entity';
 
 export class CarEntity implements Car {
+  @ApiProperty({ nullable: true })
+  building_number!: string | null;
+
+  @ApiProperty()
+  cityId!: number;
+
   @ApiProperty()
   id!: number;
 

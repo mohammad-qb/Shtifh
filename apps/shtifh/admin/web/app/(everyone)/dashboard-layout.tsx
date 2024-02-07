@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import Sidebar from '../../libs/components/layout/sidebar/Sidebar'
+import Sidebar from '../../libs/components/layout/navbar/Sidebar'
 import ModalContainer from '../../libs/components/containers/modal'
 
 const DashboardLayout = ({children}: {children: ReactNode}) => {

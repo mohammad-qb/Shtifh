@@ -22,6 +22,9 @@ class NestedCarEntity
 
   @ApiProperty()
   year!: number;
+
+  @ApiProperty()
+  city!: string;
 }
 
 export class ListCarEntity {

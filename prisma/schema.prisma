@@ -25,18 +25,21 @@ model Customer {
 }
 
 model Car {
-  id         Int      @id @default(autoincrement())
-  plate      String?
-  name       String
-  model      CarModel @relation(fields: [carModelId], references: [id])
-  year       Int      @default(2010)
-  color      CarColor @default(BLACK)
-  customer   Customer @relation(fields: [customerId], references: [id])
-  orders     Order[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  customerId Int
-  carModelId Int
+  id              Int      @id @default(autoincrement())
+  city            City     @relation(fields: [cityId], references: [id])
+  building_number String?
+  plate           String?
+  name            String
+  model           CarModel @relation(fields: [carModelId], references: [id])
+  year            Int      @default(2010)
+  color           CarColor @default(BLACK)
+  customer        Customer @relation(fields: [customerId], references: [id])
+  orders          Order[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  customerId      Int
+  carModelId      Int
+  cityId          Int
 }
 
 model Employee {
@@ -68,6 +71,7 @@ model City {
   car_services CarService[]
   workTimeId   Int?         @unique
   Order        Order[]
+  Car          Car[]
 }
 
 model CarService {
@@ -92,7 +96,8 @@ model CarModelService {
 model Order {
   id                Int             @id @default(autoincrement())
   ref_number        String
-  date              DateTime?
+  date              String?
+  time              String?
   address           String
   note              String?
   paid              Boolean?        @default(false)
@@ -109,6 +114,7 @@ model Order {
   employeeId        Int?
   carModelServiceId Int
   cityId            Int
+  Payment           Payment[]
 }
 
 model Service {
@@ -143,9 +149,26 @@ model WorkTime {
   City              City?
 }
 
+model Payment {
+  id        Int           @id @default(autoincrement())
+  uniq_id   String
+  fees      Float
+  status    PaymentStatus @default(PENDING)
+  order     Order         @relation(fields: [orderId], references: [id])
+  createAt  DateTime      @default(now())
+  updatedAt DateTime      @updatedAt()
+  orderId   Int
+}
+
 //* enums
 enum CarServiceModel {
   PRIVATE
+}
+
+enum PaymentStatus {
+  PENDING
+  FAILED
+  SUCCESS
 }
 
 enum Day {

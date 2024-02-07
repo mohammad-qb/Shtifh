@@ -7,6 +7,11 @@ export class CreateOrderDto {
   @IsOptional()
   date?: string;
 
+  @ApiPropertyOptional({ default: '12:00:00' })
+  @IsString()
+  @IsOptional()
+  time?: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from '@shtifh/prisma-service';
 import { OrderResourceController } from './order-resource.controller';
 import { OrderResourceService } from './order-resource.service';
+import { DateAccessModule } from '@shtifh/date-access-service';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, DateAccessModule],
   controllers: [OrderResourceController],
   providers: [OrderResourceController, OrderResourceService],
   exports: [OrderResourceController, OrderResourceService],

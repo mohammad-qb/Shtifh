@@ -12,6 +12,16 @@ import {
 export class CreateCarDto
   implements Omit<Prisma.CarUncheckedCreateInput, 'customerId'>
 {
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  building_number?: string | null | undefined;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  cityId!: number;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

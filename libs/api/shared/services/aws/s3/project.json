@@ -1,0 +1,30 @@
+{
+  "name": "aws-s3-lib",
+  "$schema": "../../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api/shared/services/aws/s3/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api/shared/services/aws/s3",
+        "main": "libs/api/shared/services/aws/s3/src/index.ts",
+        "tsConfig": "libs/api/shared/services/aws/s3/tsconfig.lib.json",
+        "assets": ["libs/api/shared/services/aws/s3/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/api/shared/services/aws/s3/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
