@@ -12,8 +12,11 @@ export class OrderEntity implements Order {
   @ApiProperty()
   ref_number!: string;
 
-  @ApiProperty()
-  date!: Date;
+  @ApiProperty({ nullable: true })
+  date!: string | null;
+
+  @ApiProperty({ nullable: true })
+  time!: string | null;
 
   @ApiProperty()
   city!: string;
