@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { CityResourceService } from './city-resource.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListSlotsDto } from './dto/slots.dto';
+import { ListCarModelsByCityEntity } from './entities/list-car-models';
 
 @ApiTags('City')
 @Controller('cities')
@@ -20,5 +21,12 @@ export class CityResourceController {
   @ApiOperation({ summary: 'List all City slots' })
   async slots(@Body() body: ListSlotsDto) {
     return await this.cityResourceService.slots(body);
+  }
+
+  @Get('car-models/:id')
+  @ApiOperation({ summary: 'List all City car models' })
+  @ApiResponse({ type: ListCarModelsByCityEntity })
+  async carModels(@Param('id') id: string) {
+    return await this.cityResourceService.carModels(id);
   }
 }

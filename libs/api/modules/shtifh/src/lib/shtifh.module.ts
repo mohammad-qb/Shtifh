@@ -7,6 +7,7 @@ import { OrderResourceModule } from './resources/orders/order-resource.module';
 import { UserResourceModule } from './resources/user/user-resource.module';
 import { CarModelResourceModule } from './resources/car-models/car-model-resource.module';
 import { NotificationResourceModule } from './resources/notification/notification-resource.module';
+import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NotificationResourceModule } from './resources/notification/notificatio
     OrderResourceModule,
     UserResourceModule,
     NotificationResourceModule,
+    CarServiceResourceModule,
   ],
   providers: [],
   exports: [],

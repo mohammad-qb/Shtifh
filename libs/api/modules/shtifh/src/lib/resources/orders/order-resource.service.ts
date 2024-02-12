@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { DateAccessService } from '@shtifh/date-access-service';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
 export class OrderResourceService {
@@ -23,7 +24,7 @@ export class OrderResourceService {
 
   async create(customerId: string, args: CreateOrderDto) {
     const refNumber = Math.floor(Math.random() * 90000000) + 10000000 + '';
-    const order = await this.model.create({
+    await this.model.create({
       data: {
         ...args,
         ref_number: refNumber,
@@ -36,18 +37,14 @@ export class OrderResourceService {
       where: { id: args.carModelServiceId },
     });
 
-    console.log({ modelService });
-
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
       OrderTotalSum: modelService?.fees || 0,
     });
 
-    console.log(paymentIntent);
     return {
       url: paymentIntent,
       success: true,
-      result: order,
     };
   }
 
@@ -89,5 +86,12 @@ export class OrderResourceService {
     });
 
     return { results: orders };
+  }
+
+  async update(args: UpdateOrderDto) {
+    await this.model.update({
+      where: { id: args.orderId },
+      data: { time: args.time },
+    });
   }
 }

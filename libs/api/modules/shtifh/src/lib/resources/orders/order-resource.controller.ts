@@ -10,6 +10,7 @@ import { Payload } from '@shtifh/user-service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ListOrdersEntity } from './entities/list-orders.entity';
 import { OrderResourceService } from './order-resource.service';
+import { CreateOrderEntity } from './entities/create-order.entity';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -22,6 +23,7 @@ export class OrderResourceController {
 
   @Post()
   @ApiOperation({ summary: 'Create Order' })
+  @ApiResponse({ type: CreateOrderEntity })
   async create(@Body() body: CreateOrderDto, @GetUser() user: Payload) {
     return await this.orderResourceService.create(user.id, body);
   }

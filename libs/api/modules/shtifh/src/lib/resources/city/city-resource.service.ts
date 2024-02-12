@@ -7,9 +7,11 @@ import { ListSlotsDto } from './dto/slots.dto';
 export class CityResourceService {
   private logger = new Logger(CityResourceService.name);
   private model;
+  private carServiceModel;
 
   constructor(private readonly prismaService: PrismaService) {
     this.model = prismaService.city;
+    this.carServiceModel = prismaService.carService;
   }
 
   async list(lang?: HeaderLang) {
@@ -19,40 +21,6 @@ export class CityResourceService {
         name_ar: true,
         name_en: true,
         name_he: true,
-        work_time: {
-          select: {
-            day: true,
-            end_time: true,
-            start_time: true,
-            is_day_off: true,
-          },
-        },
-        car_services: {
-          select: {
-            id: true,
-            services: {
-              select: {
-                id: true,
-                fees: true,
-                service: {
-                  select: {
-                    id: true,
-                    name_ar: true,
-                    name_en: true,
-                    name_he: true,
-                  },
-                },
-              },
-            },
-            car_model: {
-              select: {
-                name_ar: true,
-                name_en: true,
-                name_he: true,
-              },
-            },
-          },
-        },
       },
     });
   }
@@ -72,5 +40,23 @@ export class CityResourceService {
       };
     });
     return { result: _slots };
+  }
+
+  async carModels(cityId: string) {
+    const result = await this.carServiceModel.findMany({
+      where: { cityId },
+      select: {
+        car_model: {
+          select: {
+            name_ar: true,
+            id: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
+      },
+    });
+
+    return { result };
   }
 }
