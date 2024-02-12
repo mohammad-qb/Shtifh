@@ -9,6 +9,9 @@ export class CarServiceEntity implements CarService {
   id!: string;
 
   @ApiProperty()
+  book_rate!: number[];
+
+  @ApiProperty()
   active!: boolean;
 
   @ApiProperty()

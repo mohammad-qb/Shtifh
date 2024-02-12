@@ -17,6 +17,7 @@ export class UserResourceService {
   }
 
   async me(userId: string) {
+    console.log({ userId });
     const user = await this.model.findFirst({
       where: { id: userId },
       select: {

@@ -23,6 +23,6 @@ export class UserResourceController {
   @ApiOperation({ summary: 'Get the user detail by token' })
   @ApiResponse({ type: MeEntity })
   async me(@GetUser() user: Payload) {
-    return await this.userResourceService.me(user.id);
+    return await this.userResourceService.me(user.userId);
   }
 }

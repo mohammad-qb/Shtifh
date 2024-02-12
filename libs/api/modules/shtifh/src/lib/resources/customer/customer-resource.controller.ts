@@ -26,7 +26,7 @@ export class CustomerResourceController {
   @Put()
   @ApiOperation({ summary: 'Update Customer Profile' })
   async update(@Body() body: UpdateCustomerDto, @GetUser() user: Payload) {
-    return await this.customerResourceService.update(user.id, body);
+    return await this.customerResourceService.update(user.userId, body);
   }
 
   @Put('password')
