@@ -4,20 +4,19 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { CarModelResourceService } from './car-model-resource.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@shtifh/auth-service';
+import { CarModelResourceService } from './car-model-resource.service';
 import { CreateCarModelDto } from './dto/create-car-model.dto';
 import { UpdateCarModelDto } from './dto/update-car-model.dto';
-import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @ApiTags('Car Model')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 @Controller('card-models')
 export class CarModelResourceController {
   private logger = new Logger(CarModelResourceController.name);
@@ -42,7 +41,7 @@ export class CarModelResourceController {
   @ApiOperation({ summary: 'Update Car Model' })
   async update(
     @Body() body: UpdateCarModelDto,
-    @Param('id', ParseIntPipe) carModelId: number
+    @Param('id') carModelId: string
   ) {
     return await this.carModelResourceService.update(carModelId, body);
   }

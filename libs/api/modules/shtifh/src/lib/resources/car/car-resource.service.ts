@@ -12,7 +12,7 @@ export class CarResourceService {
     this.model = prismaService.car;
   }
 
-  async create(customerId: number, args: CreateCarDto) {
+  async create(customerId: string, args: CreateCarDto) {
     const car = await this.model.create({
       data: {
         ...args,
@@ -23,7 +23,7 @@ export class CarResourceService {
     return { car };
   }
 
-  async list(customerId: number, lang: HeaderLang) {
+  async list(customerId: string, lang: HeaderLang) {
     const cars = await this.model.findMany({
       where: { customerId },
       select: {

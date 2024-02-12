@@ -4,7 +4,7 @@ import { CityEntity } from './city.entity';
 
 export class WorkTimeEntity implements WorkTime {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty({ enum: $Enums.Day })
   day!: $Enums.Day;

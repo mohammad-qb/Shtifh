@@ -6,7 +6,7 @@ import { OrderEntity } from './order.entity';
 
 export class CustomerEntity implements Customer {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty({ nullable: true })
   image_url!: string | null;
@@ -21,5 +21,5 @@ export class CustomerEntity implements Customer {
   orders!: OrderEntity[];
 
   @ApiProperty()
-  userId!: number;
+  userId!: string;
 }

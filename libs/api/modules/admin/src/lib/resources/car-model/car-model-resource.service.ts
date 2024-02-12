@@ -22,7 +22,7 @@ export class CarModelResourceService {
     return { result: carModels };
   }
 
-  async update(carModelId: number, args: UpdateCarModelDto) {
+  async update(carModelId: string, args: UpdateCarModelDto) {
     const carModel = await this.model.update({
       where: { id: carModelId },
       data: args,

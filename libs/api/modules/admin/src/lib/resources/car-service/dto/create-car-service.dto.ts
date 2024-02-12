@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsInt, IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CreateNestedServiceDto
@@ -12,21 +17,21 @@ class CreateNestedServiceDto
   fees!: number;
 
   @ApiProperty()
-  @IsInt()
+  @IsMongoId()
   @IsNotEmpty()
-  serviceId!: number;
+  serviceId!: string;
 }
 
 export class CreateCarServiceDto {
   @ApiProperty()
-  @IsInt()
+  @IsMongoId()
   @IsNotEmpty()
-  cityId!: number;
+  cityId!: string;
 
   @ApiProperty()
-  @IsInt()
+  @IsMongoId()
   @IsNotEmpty()
-  carModelId!: number;
+  carModelId!: string;
 
   @ApiProperty({ type: [CreateNestedServiceDto] })
   @ValidateNested({ each: true })

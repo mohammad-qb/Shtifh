@@ -5,7 +5,7 @@ import { CarServiceEntity } from './car-service.entity';
 
 export class CityEntity implements City {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   name_ar!: string;
@@ -23,8 +23,8 @@ export class CityEntity implements City {
   car_services!: CarServiceEntity;
 
   @ApiProperty()
-  carServiceId!: number;
+  carServiceId!: string;
 
   @ApiProperty()
-  workTimeId!: number;
+  workTimeId!: string;
 }

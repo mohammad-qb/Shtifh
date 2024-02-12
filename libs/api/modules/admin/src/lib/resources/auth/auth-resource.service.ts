@@ -37,6 +37,7 @@ export class AuthResourceService {
       full_name: admin.full_name,
       id: admin.id,
       role: admin.role,
+      userId: '',
     });
 
     return { result: { admin, token } };

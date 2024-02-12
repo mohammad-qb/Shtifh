@@ -4,7 +4,6 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -17,8 +16,8 @@ import { UpdateCityDro } from './dto/update-city.dto';
 
 @ApiTags('City')
 @Controller('cities')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 export class CityResourceController {
   private logger = new Logger(CityResourceController.name);
 
@@ -38,16 +37,13 @@ export class CityResourceController {
 
   @Get(':id')
   @ApiOperation({ summary: 'retrieve City' })
-  async retrieve(@Param('id', ParseIntPipe) cityId: number) {
+  async retrieve(@Param('id') cityId: string) {
     return await this.cityResourceService.retrieve(cityId);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update City' })
-  async update(
-    @Body() body: UpdateCityDro,
-    @Param('id', ParseIntPipe) cityId: number
-  ) {
+  async update(@Body() body: UpdateCityDro, @Param('id') cityId: string) {
     return await this.cityResourceService.update(cityId, body);
   }
 }

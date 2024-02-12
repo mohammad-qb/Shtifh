@@ -20,15 +20,15 @@ export class TakbullResourceService {
   async paymentIntent(
     args: CreatePaymentIntentDto
   ): Promise<CreatePaymentIntentEntity> {
-    return await axios.post(
+    // Set default headers for all requests
+    axios.defaults.headers['API_Key'] = this.apiKey;
+    axios.defaults.headers['API_Secret'] = this.secretKey;
+
+    const result = await axios.post(
       `${this.baseUrl}/GetTakbullPaymentPageRedirectUrl`,
-      {
-        headers: {
-          API_Secret: this.secretKey,
-          API_Key: this.apiKey,
-        },
-        body: args,
-      }
+      args
     );
+
+    return result.data;
   }
 }

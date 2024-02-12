@@ -19,7 +19,7 @@ export class EmployeeResourceService {
         position: args.position,
         salary: args.salary,
         start_date: args.start_date,
-        work_days: args.work_days,
+        // work_days: args.work_days,
         user: {
           create: {
             email: args.email,
@@ -39,7 +39,7 @@ export class EmployeeResourceService {
     return { result: employees };
   }
 
-  async update(employeeId: number, args: UpdateEmployeeDto) {
+  async update(employeeId: string, args: UpdateEmployeeDto) {
     const employee = await this.model.update({
       where: { id: employeeId },
       data: {
@@ -47,7 +47,7 @@ export class EmployeeResourceService {
         position: args.position,
         salary: args.salary,
         start_date: args.start_date,
-        work_days: args.work_days,
+        // work_days: args.work_days,
         user: {
           update: {
             email: args.email,

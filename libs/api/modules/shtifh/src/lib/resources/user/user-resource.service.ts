@@ -16,7 +16,7 @@ export class UserResourceService {
     this.userHelper = userService.resources;
   }
 
-  async me(userId: number) {
+  async me(userId: string) {
     const user = await this.model.findFirst({
       where: { id: userId },
       select: {
@@ -74,7 +74,7 @@ export class UserResourceService {
     const token = await this.userHelper.jwt.signJwt({
       email: user.email,
       full_name: user.full_name,
-      id: user.customer?.id || 0,
+      id: user.customer?.id || '',
       role: user.role,
       userId: user.id,
     });

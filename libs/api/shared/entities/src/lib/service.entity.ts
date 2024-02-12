@@ -3,7 +3,7 @@ import { Service } from '@prisma/client';
 
 export class ServiceEntity implements Service {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   name_ar!: string;

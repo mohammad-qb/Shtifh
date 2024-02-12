@@ -5,9 +5,8 @@ import { CityEntity } from './city.entity';
 import { OrderEntity } from './order.entity';
 
 export class CarServiceEntity implements CarService {
-  cityId!: number | null;
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   active!: boolean;
@@ -22,8 +21,11 @@ export class CarServiceEntity implements CarService {
   orders!: OrderEntity[];
 
   @ApiProperty()
-  carModelId!: number;
+  cityId!: string | null;
 
   @ApiProperty()
-  serviceGroupId!: number;
+  carModelId!: string;
+
+  @ApiProperty()
+  serviceGroupId!: string;
 }

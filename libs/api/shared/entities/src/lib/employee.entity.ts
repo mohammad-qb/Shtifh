@@ -5,7 +5,7 @@ import { OrderEntity } from './order.entity';
 
 export class EmployeeEntity implements Employee {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   position!: string;
@@ -26,5 +26,5 @@ export class EmployeeEntity implements Employee {
   orders!: OrderEntity[];
 
   @ApiProperty()
-  userId!: number;
+  userId!: string;
 }

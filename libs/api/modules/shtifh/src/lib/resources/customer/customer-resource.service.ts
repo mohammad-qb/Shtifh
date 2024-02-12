@@ -22,7 +22,7 @@ export class CustomerResourceService {
 
   async updateProfileImage() {}
 
-  async update(userId: number, args: UpdateCustomerDto) {
+  async update(userId: string, args: UpdateCustomerDto) {
     const user = await this._userModel.update({
       where: { id: userId },
       data: args,
@@ -40,7 +40,7 @@ export class CustomerResourceService {
     return { user: { ...user, ...args } };
   }
 
-  async updatePassword(userId: number, args: UpdatePasswordDto) {
+  async updatePassword(userId: string, args: UpdatePasswordDto) {
     const user = await this._userModel.findFirst({ where: { id: userId } });
 
     if (!user) throw new BadRequestException('old_password_wrong');

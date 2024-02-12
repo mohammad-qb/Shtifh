@@ -8,16 +8,16 @@ export class CarEntity implements Car {
   building_number!: string | null;
 
   @ApiProperty()
-  cityId!: number;
+  cityId!: string;
 
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty({ nullable: true })
   plate!: string | null;
 
   @ApiProperty()
-  carModelId!: number;
+  carModelId!: string;
 
   @ApiProperty()
   year!: number;
@@ -41,5 +41,5 @@ export class CarEntity implements Car {
   updatedAt!: Date;
 
   @ApiProperty()
-  customerId!: number;
+  customerId!: string;
 }

@@ -6,5 +6,15 @@ export class CreateServiceDto implements Prisma.ServiceUncheckedCreateInput {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  name!: string;
+  name_ar!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name_en!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name_he!: string;
 }

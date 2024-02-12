@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
+import { ListSlotsDto } from './dto/slots.dto';
 
 @Injectable()
 export class CityResourceService {
@@ -24,7 +25,6 @@ export class CityResourceService {
             end_time: true,
             start_time: true,
             is_day_off: true,
-            employees_to_work: true,
           },
         },
         car_services: {
@@ -55,5 +55,22 @@ export class CityResourceService {
         },
       },
     });
+  }
+
+  async slots(args: ListSlotsDto) {
+    const city = await this.model.findFirst({ where: { id: args.cityId } });
+
+    if (!city) throw new BadRequestException('city_not_exist');
+    let startSlot = 8;
+    const _slots = Array.from({ length: 10 }).map((el) => {
+      const content = `${startSlot}:00 - ${startSlot + 1}:00`;
+      const value = startSlot;
+      startSlot += 1;
+      return {
+        content,
+        value,
+      };
+    });
+    return { result: _slots };
   }
 }

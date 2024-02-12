@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { $Enums, Prisma } from '@prisma/client';
 import {
   IsEnum,
-  IsInt,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -18,9 +18,9 @@ export class CreateCarDto
   building_number?: string | null | undefined;
 
   @ApiProperty()
-  @IsInt()
+  @IsMongoId()
   @IsNotEmpty()
-  cityId!: number;
+  cityId!: string;
 
   @ApiProperty()
   @IsString()
@@ -33,9 +33,9 @@ export class CreateCarDto
   plate?: string | null | undefined;
 
   @ApiProperty()
-  @IsInt()
+  @IsMongoId()
   @IsNotEmpty()
-  carModelId!: number;
+  carModelId!: string;
 
   @ApiPropertyOptional()
   @IsNumber()

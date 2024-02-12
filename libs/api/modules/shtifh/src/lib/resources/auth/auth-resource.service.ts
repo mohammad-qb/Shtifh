@@ -68,7 +68,7 @@ export class AuthResourceService {
       full_name: newUser.full_name,
       userId: newUser.id,
       role: newUser.role,
-      id: newUser.customer?.id || 0,
+      id: newUser.customer?.id || '',
     });
 
     return { user: newUser, token };
@@ -144,7 +144,7 @@ export class AuthResourceService {
       full_name: user.full_name,
       userId: user.id,
       role: user.role,
-      id: user.customer?.id || 0,
+      id: user.customer?.id || '',
     });
 
     return { user: newUser, token };

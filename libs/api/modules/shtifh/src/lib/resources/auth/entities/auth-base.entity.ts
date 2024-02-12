@@ -18,7 +18,7 @@ export class BaseAuthUserEntity
   implements Pick<UserEntity, 'id' | 'email' | 'full_name' | 'mobile' | 'role'>
 {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   email!: string;

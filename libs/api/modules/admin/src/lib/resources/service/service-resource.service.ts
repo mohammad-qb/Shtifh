@@ -25,7 +25,7 @@ export class ServiceResourceService {
     return { result: services };
   }
 
-  async update(serviceId: number, args: UpdateServiceDto) {
+  async update(serviceId: string, args: UpdateServiceDto) {
     const service = await this.model.update({
       where: { id: serviceId },
       data: args,

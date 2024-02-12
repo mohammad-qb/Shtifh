@@ -5,7 +5,7 @@ import { EmployeeEntity } from './employee.entity';
 
 export class UserEntity implements User {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   full_name!: string;

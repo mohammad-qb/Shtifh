@@ -6,5 +6,15 @@ export class UpdateCarModelDto implements Prisma.CarModelUncheckedUpdateInput {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  name?: string;
+  name_ar?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  name_en?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  name_he?: string;
 }

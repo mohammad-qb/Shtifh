@@ -22,12 +22,12 @@ export class CityResourceService {
     return { result: cities };
   }
 
-  async retrieve(cityId: number) {
+  async retrieve(cityId: string) {
     const city = await this.model.findFirst({ where: { id: cityId } });
     return { result: city };
   }
 
-  async update(cityId: number, args: UpdateCityDro) {
+  async update(cityId: string, args: UpdateCityDro) {
     const city = await this.model.update({
       where: { id: cityId },
       data: args,

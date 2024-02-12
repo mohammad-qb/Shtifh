@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Admin {
-  id        Int    @id @default(autoincrement())
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   password  String
   full_name String
@@ -16,16 +16,17 @@ model Admin {
 }
 
 model Customer {
-  id        Int     @id @default(autoincrement())
-  image_url String?
-  user      User    @relation(fields: [userId], references: [id])
-  cars      Car[]
-  orders    Order[]
-  userId    Int     @unique
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  image_url    String?
+  user         User           @relation(fields: [userId], references: [id])
+  cars         Car[]
+  orders       Order[]
+  userId       String         @unique @db.ObjectId
+  Notification Notification[]
 }
 
 model Car {
-  id              Int      @id @default(autoincrement())
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
   city            City     @relation(fields: [cityId], references: [id])
   building_number String?
   plate           String?
@@ -37,24 +38,24 @@ model Car {
   orders          Order[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  customerId      Int
-  carModelId      Int
-  cityId          Int
+  customerId      String   @db.ObjectId
+  carModelId      String   @db.ObjectId
+  cityId          String   @db.ObjectId
 }
 
 model Employee {
-  id         Int     @id @default(autoincrement())
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
   position   String
   salary     Float
   color      String
   start_date String
   user       User    @relation(fields: [userId], references: [id])
   order      Order[]
-  userId     Int     @unique
+  userId     String  @unique @db.ObjectId
 }
 
 model CarModel {
-  id         Int          @id @default(autoincrement())
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
   name_ar    String       @unique
   name_en    String       @unique
   name_he    String       @unique
@@ -63,38 +64,39 @@ model CarModel {
 }
 
 model City {
-  id           Int          @id @default(autoincrement())
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
   name_ar      String       @unique
   name_en      String       @unique
   name_he      String       @unique
   work_time    WorkTime?    @relation(fields: [workTimeId], references: [id])
   car_services CarService[]
-  workTimeId   Int?         @unique
+  workTimeId   String?      @unique @db.ObjectId
   Order        Order[]
   Car          Car[]
 }
 
 model CarService {
-  id         Int               @id @default(autoincrement())
+  id         String            @id @default(auto()) @map("_id") @db.ObjectId
+  book_rate  Int[]             @default([1, 1])
   car_model  CarModel          @relation(fields: [carModelId], references: [id])
   services   CarModelService[]
   City       City?             @relation(fields: [cityId], references: [id])
-  cityId     Int?
-  carModelId Int
+  cityId     String?           @db.ObjectId
+  carModelId String            @db.ObjectId
 }
 
 model CarModelService {
-  id           Int         @id @default(autoincrement())
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   fees         Float
   service      Service     @relation(fields: [serviceId], references: [id])
   CarService   CarService? @relation(fields: [carServiceId], references: [id])
-  carServiceId Int?
-  serviceId    Int
   Order        Order[]
+  carServiceId String?     @db.ObjectId
+  serviceId    String      @db.ObjectId
 }
 
 model Order {
-  id                Int             @id @default(autoincrement())
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
   ref_number        String
   date              String?
   time              String?
@@ -107,18 +109,18 @@ model Order {
   customer          Customer        @relation(fields: [customerId], references: [id])
   employee          Employee?       @relation(fields: [employeeId], references: [id])
   service           CarModelService @relation(fields: [carModelServiceId], references: [id])
+  Payment           Payment[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
-  carId             Int
-  customerId        Int
-  employeeId        Int?
-  carModelServiceId Int
-  cityId            Int
-  Payment           Payment[]
+  carId             String          @db.ObjectId
+  customerId        String          @db.ObjectId
+  employeeId        String?         @db.ObjectId
+  carModelServiceId String          @db.ObjectId
+  cityId            String          @db.ObjectId
 }
 
 model Service {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
   name_ar         String            @unique
   name_en         String            @unique
   name_he         String            @unique
@@ -126,7 +128,7 @@ model Service {
 }
 
 model User {
-  id                  Int       @id @default(autoincrement())
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
   full_name           String
   email               String    @unique
   mobile              String
@@ -140,29 +142,56 @@ model User {
 }
 
 model WorkTime {
-  id                Int     @id @default(autoincrement())
-  day               Day
-  start_time        String
-  end_time          String
-  employees_to_work Int[]   @default([1, 1])
-  is_day_off        Boolean @default(false)
-  City              City?
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  day        Day
+  start_time String
+  end_time   String
+  is_day_off Boolean @default(false)
+  City       City?
 }
 
 model Payment {
-  id        Int           @id @default(autoincrement())
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
   uniq_id   String
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])
   createAt  DateTime      @default(now())
   updatedAt DateTime      @updatedAt()
-  orderId   Int
+  orderId   String        @db.ObjectId
 }
 
-//* enums
+model Slots {
+  id     String        @id @default(auto()) @map("_id") @db.ObjectId
+  date   String
+  booked BookedSlots[]
+}
+
+model BookedSlots {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  date    String  @unique
+  time    String
+  count   Int     @default(0)
+  Slots   Slots?  @relation(fields: [slotsId], references: [id])
+  slotsId String? @db.ObjectId
+}
+
+model Notification {
+  id         String           @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  type       NotifivationType @default(DEFAULT)
+  customer   Customer         @relation(fields: [customerId], references: [id])
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt()
+  customerId String           @db.ObjectId
+}
+
 enum CarServiceModel {
   PRIVATE
+}
+
+enum NotifivationType {
+  DEFAULT
 }
 
 enum PaymentStatus {
@@ -172,7 +201,7 @@ enum PaymentStatus {
 }
 
 enum Day {
-  SUNDAYs
+  SUNDAY
   MONDAY
   TUSEDAY
   WEDNSDAY

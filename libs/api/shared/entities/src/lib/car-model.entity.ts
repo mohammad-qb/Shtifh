@@ -4,7 +4,7 @@ import { CarServiceEntity } from './car-service.entity';
 
 export class CarModelEntity implements CarModel {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   name_ar!: string;

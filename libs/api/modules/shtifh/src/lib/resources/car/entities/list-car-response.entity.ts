@@ -9,7 +9,7 @@ class NestedCarEntity
   color!: $Enums.CarColor;
 
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   model_name!: string;

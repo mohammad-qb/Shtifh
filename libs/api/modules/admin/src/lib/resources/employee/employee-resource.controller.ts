@@ -4,16 +4,15 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@shtifh/auth-service';
-import { EmployeeResourceService } from './employee-resource.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { EmployeeResourceService } from './employee-resource.service';
 
 @ApiTags('Employee')
 @UseGuards(JwtAuthGuard)
@@ -42,7 +41,7 @@ export class EmployeeResourceController {
   @ApiOperation({ summary: 'Update Employee' })
   async update(
     @Body() body: UpdateEmployeeDto,
-    @Param('id', ParseIntPipe) employeeId: number
+    @Param('id') employeeId: string
   ) {
     return await this.employeeResourceService.update(employeeId, body);
   }

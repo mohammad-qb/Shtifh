@@ -4,19 +4,18 @@ import {
   Get,
   Logger,
   Param,
-  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ServiceResourceService } from './service-resource.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@shtifh/auth-service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { ServiceResourceService } from './service-resource.service';
 
 @ApiTags('Service')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 @Controller('services')
 export class ServiceResourceController {
   private logger = new Logger(ServiceResourceController.name);
@@ -39,10 +38,7 @@ export class ServiceResourceController {
 
   @Post(':id')
   @ApiOperation({ summary: 'Update Service' })
-  async update(
-    @Body() body: UpdateServiceDto,
-    @Param('id', ParseIntPipe) serviceId: number
-  ) {
+  async update(@Body() body: UpdateServiceDto, @Param('id') serviceId: string) {
     return await this.serviceResourceServices.update(serviceId, body);
   }
 }

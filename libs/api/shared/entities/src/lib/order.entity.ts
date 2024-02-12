@@ -7,7 +7,7 @@ import { EmployeeEntity } from './employee.entity';
 
 export class OrderEntity implements Order {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   ref_number!: string;
@@ -52,17 +52,20 @@ export class OrderEntity implements Order {
   updatedAt!: Date;
 
   @ApiProperty()
-  carId!: number;
+  carId!: string;
 
   @ApiProperty()
-  customerId!: number;
+  customerId!: string;
 
   @ApiProperty({ nullable: true })
-  employeeId!: number | null;
+  employeeId!: string | null;
 
   @ApiProperty()
-  carServiceId!: number;
+  carServiceId!: string;
 
-  carModelServiceId!: number;
-  cityId!: number;
+  @ApiProperty()
+  carModelServiceId!: string;
+
+  @ApiProperty()
+  cityId!: string;
 }

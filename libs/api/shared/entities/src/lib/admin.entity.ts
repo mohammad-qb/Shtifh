@@ -3,7 +3,7 @@ import { $Enums, Admin } from '@prisma/client';
 
 export class AdminEntity implements Admin {
   @ApiProperty()
-  id!: number;
+  id!: string;
 
   @ApiProperty()
   email!: string;

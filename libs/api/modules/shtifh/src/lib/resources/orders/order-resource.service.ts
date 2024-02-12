@@ -21,7 +21,7 @@ export class OrderResourceService {
     this.paymentModel = this.prismaService.payment;
   }
 
-  async create(customerId: number, args: CreateOrderDto) {
+  async create(customerId: string, args: CreateOrderDto) {
     const refNumber = Math.floor(Math.random() * 90000000) + 10000000 + '';
     const order = await this.model.create({
       data: {
@@ -36,19 +36,22 @@ export class OrderResourceService {
       where: { id: args.carModelServiceId },
     });
 
+    console.log({ modelService });
+
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
       OrderTotalSum: modelService?.fees || 0,
     });
 
+    console.log(paymentIntent);
     return {
-      url: paymentIntent.url,
+      url: paymentIntent,
       success: true,
       result: order,
     };
   }
 
-  async list(customerId: number) {
+  async list(customerId: string) {
     const orders = await this.model.findMany({
       where: { customerId },
       select: {
