@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { CarServiceResourceService } from './car-service-resource.service';
 import { JwtAuthGuard } from '@shtifh/auth-service';
 import {
@@ -21,7 +21,7 @@ export class CarServiceResourceController {
     private readonly carServiceResourceService: CarServiceResourceService
   ) {}
 
-  @Get('')
+  @Post('')
   @ApiOperation({ summary: 'List Car services by City and Car Model' })
   @ApiResponse({
     type: ListCarServicesEntity,

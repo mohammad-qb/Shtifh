@@ -76,20 +76,20 @@ model City {
 }
 
 model CarService {
-  id         String            @id @default(auto()) @map("_id") @db.ObjectId
-  book_rate  Int[]             @default([1, 1])
-  car_model  CarModel          @relation(fields: [carModelId], references: [id])
-  services   CarModelService[]
-  City       City?             @relation(fields: [cityId], references: [id])
-  cityId     String?           @db.ObjectId
-  carModelId String            @db.ObjectId
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  book_rate          Int[]             @default([1, 1])
+  car_model          CarModel          @relation(fields: [carModelId], references: [id])
+  car_model_services CarModelService[]
+  City               City?             @relation(fields: [cityId], references: [id])
+  cityId             String?           @db.ObjectId
+  carModelId         String            @db.ObjectId
 }
 
 model CarModelService {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   fees         Float
   service      Service     @relation(fields: [serviceId], references: [id])
-  CarService   CarService? @relation(fields: [carServiceId], references: [id])
+  car_service  CarService? @relation(fields: [carServiceId], references: [id])
   Order        Order[]
   carServiceId String?     @db.ObjectId
   serviceId    String      @db.ObjectId
