@@ -19,6 +19,7 @@ export class CarServiceResourceService {
       select: {
         car_model_services: {
           select: {
+            id: true,
             fees: true,
             service: {
               select: {
