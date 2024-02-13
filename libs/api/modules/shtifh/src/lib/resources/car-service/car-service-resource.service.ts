@@ -14,24 +14,6 @@ export class CarServiceResourceService {
   }
 
   async listByCityAndCarModel(args: ListCarServicesByCityAndCarModel) {
-    // const ress = await this.model.create({
-    //   data: {
-    //     cityId: '65c8e223c98ba74d88e81eb3',
-    //     carModelId: '65c8e26bc98ba74d88e81eb8',
-    //     car_model_services: {
-    //       create: {
-    //         fees: 5,
-    //         service: {
-    //           create: {
-    //             name_ar: 'تعقيم',
-    //             name_en: 'Cleane',
-    //             name_he: 'hhh',
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    // });
     const result = await this.model.findFirst({
       where: { cityId: args.cityId, carModelId: args.carModelId },
       select: {
