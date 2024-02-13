@@ -94,6 +94,7 @@ export class AuthResourceService {
                 id: true,
                 city: {
                   select: {
+                    id: true,
                     name_ar: true,
                     name_en: true,
                     name_he: true,
@@ -104,6 +105,22 @@ export class AuthResourceService {
                 address: true,
                 service: {
                   include: {
+                    car_service: {
+                      select: {
+                        car_model_services: {
+                          select: {
+                            service: {
+                              select: {
+                                id: true,
+                                name_ar: true,
+                                name_en: true,
+                                name_he: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
                     service: {
                       select: {
                         id: true,
@@ -128,6 +145,7 @@ export class AuthResourceService {
       },
     });
 
+    console.log({ user });
     if (!user) throw new BadRequestException('user_not_exist');
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
       args.password,

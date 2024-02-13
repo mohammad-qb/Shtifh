@@ -34,6 +34,7 @@ export class CarResourceService {
         year: true,
         model: {
           select: {
+            id: true,
             name_ar: true,
             name_en: true,
             name_he: true,
@@ -45,7 +46,10 @@ export class CarResourceService {
     const results = cars.map((el) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { model, ..._car } = el;
-      return { ..._car, model_name: el.model[`name_${lang}`] };
+      return {
+        ..._car,
+        model: { name: el.model[`name_${lang}`], id: el.model.id },
+      };
     });
     return { results };
   }
