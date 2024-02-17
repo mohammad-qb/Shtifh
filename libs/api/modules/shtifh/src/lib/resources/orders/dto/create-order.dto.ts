@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateOrderDto {
   @ApiPropertyOptional({ default: '10/10/2022:13:55:10' })
@@ -36,4 +42,9 @@ export class CreateOrderDto {
   @IsMongoId()
   @IsNotEmpty()
   carModelServiceId!: string;
+
+  @ApiPropertyOptional()
+  @IsEnum([0, 10, 20, 30, 40, 50])
+  @IsOptional()
+  tip!: number;
 }

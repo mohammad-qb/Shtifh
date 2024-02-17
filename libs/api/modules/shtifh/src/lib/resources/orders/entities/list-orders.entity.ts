@@ -44,8 +44,8 @@ export class OrdersDataEntity {
   @ApiProperty({ type: OrderCarDataEntity })
   car!: OrderCarDataEntity;
 
-  // @ApiProperty({ type: OrderServiceDataEntity })
-  // service!: OrderServiceDataEntity;
+  @ApiProperty({ type: OrderServiceDataEntity })
+  service!: OrderServiceDataEntity;
 }
 
 export class ListOrdersEntity {
