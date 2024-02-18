@@ -152,13 +152,15 @@ model WorkTime {
 
 model Payment {
   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  uniq_id   String
+  uniq_id   String 
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])
   createAt  DateTime      @default(now())
   updatedAt DateTime      @updatedAt()
   orderId   String        @db.ObjectId
+
+  @@index([uniq_id])
 }
 
 model Slots {

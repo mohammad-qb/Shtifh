@@ -10,4 +10,5 @@ export type EnvName =
   | 'JWT_AUDIENCE_KEY'
   | 'TAKBULL_API_KEY'
   | 'TAKBULL_API_SECRET'
-  | 'TAKBULL_BASE_URL';
+  | 'TAKBULL_BASE_URL'
+  | 'SERVER_URL';

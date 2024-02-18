@@ -1,0 +1,26 @@
+export type IpnOrderDetails = {
+  Id: number;
+  uniqId: string;
+  OrderNumber: number;
+  order_reference: string;
+  DealType: number;
+  CustomerFullName: string;
+  CustomerEmail: string;
+  CustomerPhone: string;
+  OrderStatus: number;
+  InvoiceStatusCode: number;
+  InvoiceStatusDescription: string | null;
+  StatusDescription: string | null;
+  StatusCode: number;
+  InitialRecuringPaymentStatusCode: number;
+  InitialRecuringPaymentDescription: string | null;
+  SubscriptionStatusCode: number;
+  SubscriptionStatusDescription: string | null;
+  IsSubscriptionPayment: boolean;
+  TransactionId: number;
+  InvoiceUniqId: string;
+  CustomerIdentity: string;
+  Token: string;
+  Cardtype: string;
+  Last4Digs: string;
+};

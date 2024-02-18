@@ -11,6 +11,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { ListOrdersEntity } from './entities/list-orders.entity';
 import { OrderResourceService } from './order-resource.service';
 import { CreateOrderEntity } from './entities/create-order.entity';
+import { HeaderLang, Lang } from '@shtifh/decorators';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -24,8 +25,12 @@ export class OrderResourceController {
   @Post()
   @ApiOperation({ summary: 'Create Order' })
   @ApiResponse({ type: CreateOrderEntity })
-  async create(@Body() body: CreateOrderDto, @GetUser() user: Payload) {
-    return await this.orderResourceService.create(user.id, body);
+  async create(
+    @Body() body: CreateOrderDto,
+    @GetUser() user: Payload,
+    @Lang() lang: HeaderLang
+  ) {
+    return await this.orderResourceService.create(user.id, lang, body);
   }
 
   @Get()
