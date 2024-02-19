@@ -9,6 +9,7 @@ import { CarModelResourceModule } from './resources/car-models/car-model-resourc
 import { NotificationResourceModule } from './resources/notification/notification-resource.module';
 import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 import { PaymentResourceModule } from './resources/payment/payment-resource.module';
+import { EmployeeResourceModule } from './resources/employee/employee.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PaymentResourceModule } from './resources/payment/payment-resource.modu
     NotificationResourceModule,
     CarServiceResourceModule,
     PaymentResourceModule,
+    EmployeeResourceModule,
   ],
   providers: [],
   exports: [],

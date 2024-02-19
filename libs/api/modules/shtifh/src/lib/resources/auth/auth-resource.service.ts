@@ -143,6 +143,9 @@ export class AuthResourceService {
             },
           },
         },
+        employee: {
+          select: { id: true },
+        },
       },
     });
 
@@ -163,7 +166,9 @@ export class AuthResourceService {
       full_name: user.full_name,
       userId: user.id,
       role: user.role,
-      id: user.customer?.id || '',
+      id:
+        (user.role === 'EMPLOYEE' ? user.employee?.id : user.customer?.id) ||
+        '',
     });
 
     return { user: newUser, token };

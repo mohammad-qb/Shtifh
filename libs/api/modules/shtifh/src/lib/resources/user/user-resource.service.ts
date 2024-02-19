@@ -17,7 +17,6 @@ export class UserResourceService {
   }
 
   async me(userId: string) {
-    console.log({ userId });
     const user = await this.model.findFirst({
       where: { id: userId },
       select: {
@@ -67,6 +66,9 @@ export class UserResourceService {
             },
           },
         },
+        employee: {
+          select: { id: true },
+        },
       },
     });
 
@@ -75,7 +77,9 @@ export class UserResourceService {
     const token = await this.userHelper.jwt.signJwt({
       email: user.email,
       full_name: user.full_name,
-      id: user.customer?.id || '',
+      id:
+        (user.role === 'EMPLOYEE' ? user.employee?.id : user.customer?.id) ||
+        '',
       role: user.role,
       userId: user.id,
     });
