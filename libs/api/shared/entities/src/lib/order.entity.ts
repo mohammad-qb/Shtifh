@@ -24,6 +24,9 @@ export class OrderEntity implements Order {
   @ApiProperty()
   address!: string;
 
+  @ApiProperty()
+  tip!: number;
+
   @ApiProperty({ nullable: true })
   note!: string | null;
 

@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+
+  pre_build:
+    commands:
+      # Auth AWS
+      - echo Authenticating into AWS ECR...
+      - aws configure set region eu-central-1
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 540876827424.dkr.ecr.us-east-1.amazonaws.com
+
+  build:
+    commands:
+      - echo Listing contents of the current directory
+      - ls -alh
+      - echo Displaying Docker version
+      - docker --version
+      - echo Building shtifh-server Image
+      - docker build -t shtifh-server -f ./apps/shtifh/server/Dockerfile .
+      - echo Tagging shtifh-server
+      - docker tag shtifh-server:latest 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-server:latest
+
+  post_build:
+    commands:
+      - echo Pushing Shtifh Server image...
+      - docker push 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-server:latest
+
+artifacts:
+  files:
+    - imagedefinitions.json

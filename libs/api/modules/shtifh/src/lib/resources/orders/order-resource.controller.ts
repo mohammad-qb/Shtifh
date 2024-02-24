@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -12,6 +21,7 @@ import { ListOrdersEntity } from './entities/list-orders.entity';
 import { OrderResourceService } from './order-resource.service';
 import { CreateOrderEntity } from './entities/create-order.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -31,6 +41,13 @@ export class OrderResourceController {
     @Lang() lang: HeaderLang
   ) {
     return await this.orderResourceService.create(user.id, lang, body);
+  }
+
+  @Put('/:id')
+  @ApiOperation({ summary: 'Update Order' })
+  @ApiResponse({ type: CreateOrderEntity })
+  async update(@Param('id') id: string, @Body() body: UpdateOrderDto) {
+    return await this.orderResourceService.update(id, body);
   }
 
   @Get()

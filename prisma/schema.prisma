@@ -101,6 +101,7 @@ model Order {
   date              String?
   time              String?
   address           String
+  tip               Int             @default(0)
   note              String?
   paid              Boolean?        @default(false)
   type              orderType       @default(ORDER)
@@ -152,7 +153,7 @@ model WorkTime {
 
 model Payment {
   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  uniq_id   String 
+  uniq_id   String
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])
