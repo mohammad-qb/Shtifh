@@ -25,7 +25,5 @@ import { EmployeeResourceModule } from './resources/employee/employee.module';
     PaymentResourceModule,
     EmployeeResourceModule,
   ],
-  providers: [],
-  exports: [],
 })
 export class ShtifhModule {}
