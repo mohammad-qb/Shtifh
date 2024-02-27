@@ -5,8 +5,8 @@ import { OrderResourceService } from './order-resource.service';
 
 @ApiTags('Order')
 @Controller('orders')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 export class OrderResourceController {
   private logger = new Logger(OrderResourceController.name);
 

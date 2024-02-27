@@ -5,8 +5,8 @@ import { CustomerResourceService } from './customer-resource.service';
 
 @ApiTags('Customer')
 @Controller('customers')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 export class CustomerResourceController {
   private logger = new Logger(CustomerResourceController.name);
 

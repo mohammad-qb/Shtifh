@@ -15,8 +15,8 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeResourceService } from './employee-resource.service';
 
 @ApiTags('Employee')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+// @UseGuards(JwtAuthGuard)
+// @ApiBearerAuth()
 @Controller('employees')
 export class EmployeeResourceController {
   private logger = new Logger(EmployeeResourceController.name);

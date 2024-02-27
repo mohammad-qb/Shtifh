@@ -35,7 +35,7 @@ export class EmployeeResourceService {
   }
 
   async list() {
-    const employees = await this.model.findMany();
+    const employees = await this.model.findMany({ include: { user: true } });
     return { result: employees };
   }
 

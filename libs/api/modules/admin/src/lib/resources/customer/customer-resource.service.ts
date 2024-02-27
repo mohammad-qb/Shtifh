@@ -11,7 +11,9 @@ export class CustomerResourceService {
   }
 
   async list() {
-    const customers = await this.model.findMany();
+    const customers = await this.model.findMany({
+      include: { user: true, cars: { include: { model: true } } },
+    });
     return { result: customers };
   }
 }
