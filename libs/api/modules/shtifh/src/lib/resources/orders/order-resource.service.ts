@@ -111,10 +111,93 @@ export class OrderResourceService {
     return { results: orders };
   }
 
-  async update(orderId: string, args: UpdateOrderDto) {
-    await this.model.update({
-      where: { id: orderId },
-      data: args,
+  async update(orderId: string, args: UpdateOrderDto, lang: HeaderLang) {
+    const order = await this.model.findFirst({ where: { id: orderId } });
+    if (!order) throw new BadRequestException('order_not_exist');
+
+    if (order.carModelServiceId === args.carModelServiceId) {
+      await this.model.update({
+        where: { id: orderId },
+        data: args,
+      });
+
+      return { success: true, url: null };
+    } else {
+      const customer = await this.customerModel.findFirst({
+        where: { id: order.customerId },
+        include: { user: true },
+      });
+      if (!customer) throw new BadRequestException('user_not_exist');
+
+      const modelService = await this.carModelServiceModel.findFirst({
+        where: { id: args.carModelServiceId },
+      });
+      const OrderTotalSum = modelService?.fees || 0;
+
+      const paymentIntent = await this.takbull.paymentIntent({
+        order_reference: order.ref_number,
+        OrderTotalSum: OrderTotalSum,
+        lang,
+        email: customer.user.email,
+        phone: customer.user.mobile,
+      });
+
+      await this.paymentModel.create({
+        data: {
+          fees: OrderTotalSum,
+          uniq_id: paymentIntent.uniqId,
+          orderId: order.id,
+        },
+      });
+
+      return {
+        url: paymentIntent,
+        success: true,
+      };
+    }
+  }
+
+  async lastInvoice(customerId: string) {
+    const invoice = await this.model.findFirst({
+      where: { customerId, paid: true },
+      select: {
+        ref_number: true,
+        city: {
+          select: {
+            name_ar: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
+        address: true,
+        date: true,
+        time: true,
+        Payment: {
+          select: { fees: true },
+          orderBy: { createAt: 'desc' },
+          take: 1,
+        },
+        service: {
+          select: {
+            service: {
+              select: {
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
+
+    if (!invoice) return null;
+
+    const { service, Payment, ...rest } = invoice;
+
+    return { ...rest, service: service.service, fees: Payment[0].fees };
   }
 }

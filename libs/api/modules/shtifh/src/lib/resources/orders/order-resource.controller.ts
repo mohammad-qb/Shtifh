@@ -22,6 +22,8 @@ import { OrderResourceService } from './order-resource.service';
 import { CreateOrderEntity } from './entities/create-order.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { RetrieveLastInvoiceEntity } from './entities/last-invoice.entity';
+import { UpdateOrderEntity } from './entities/update-order.entity';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -45,9 +47,13 @@ export class OrderResourceController {
 
   @Put('/:id')
   @ApiOperation({ summary: 'Update Order' })
-  @ApiResponse({ type: CreateOrderEntity })
-  async update(@Param('id') id: string, @Body() body: UpdateOrderDto) {
-    return await this.orderResourceService.update(id, body);
+  @ApiResponse({ type: UpdateOrderEntity })
+  async update(
+    @Param('id') id: string,
+    @Lang() lang: HeaderLang,
+    @Body() body: UpdateOrderDto
+  ) {
+    return await this.orderResourceService.update(id, body, lang);
   }
 
   @Get()
@@ -55,5 +61,12 @@ export class OrderResourceController {
   @ApiResponse({ type: ListOrdersEntity })
   async list(@GetUser() user: Payload) {
     return await this.orderResourceService.list(user.id);
+  }
+
+  @Get('last-invoice')
+  @ApiOperation({ summary: 'Retrieve last invoice' })
+  @ApiResponse({ type: RetrieveLastInvoiceEntity })
+  async lastInvoice(@GetUser() user: Payload) {
+    return await this.orderResourceService.lastInvoice(user.id);
   }
 }
