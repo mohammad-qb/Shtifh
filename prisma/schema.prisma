@@ -23,6 +23,7 @@ model Customer {
   orders       Order[]
   userId       String         @unique @db.ObjectId
   Notification Notification[]
+  privateOrder privateOrder[]
 }
 
 model Car {
@@ -44,14 +45,15 @@ model Car {
 }
 
 model Employee {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  position   String
-  salary     Float
-  color      String
-  start_date String
-  user       User    @relation(fields: [userId], references: [id])
-  order      Order[]
-  userId     String  @unique @db.ObjectId
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  position     String
+  salary       Float
+  color        String
+  start_date   String
+  user         User           @relation(fields: [userId], references: [id])
+  order        Order[]
+  userId       String         @unique @db.ObjectId
+  privateOrder privateOrder[]
 }
 
 model CarModel {
@@ -128,6 +130,29 @@ model Service {
   CarModelService CarModelService[]
 }
 
+model PrivateService {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name_ar      String         @unique
+  name_en      String         @unique
+  name_he      String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt()
+  privateOrder privateOrder[]
+}
+
+model privateOrder {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  customer         Customer       @relation(fields: [customerId], references: [id])
+  employee         Employee?      @relation(fields: [employeeId], references: [id])
+  private_service  PrivateService @relation(fields: [privateServiceId], references: [id])
+  status           OrderStatus    @default(PENDING)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt()
+  customerId       String         @db.ObjectId
+  employeeId       String?        @db.ObjectId
+  privateServiceId String         @db.ObjectId
+}
+
 model User {
   id                  String    @id @default(auto()) @map("_id") @db.ObjectId
   full_name           String
@@ -201,6 +226,12 @@ enum PaymentStatus {
   PENDING
   FAILED
   SUCCESS
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
 }
 
 enum Day {

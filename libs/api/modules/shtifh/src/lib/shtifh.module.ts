@@ -10,6 +10,8 @@ import { NotificationResourceModule } from './resources/notification/notificatio
 import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 import { PaymentResourceModule } from './resources/payment/payment-resource.module';
 import { EmployeeResourceModule } from './resources/employee/employee.module';
+import { PrivateServiceResourceModule } from './resources/private-service/private-service.module';
+import { PrivateOrderResourceModule } from './resources/private-order/private-order.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { EmployeeResourceModule } from './resources/employee/employee.module';
     UserResourceModule,
     NotificationResourceModule,
     CarServiceResourceModule,
+    PrivateServiceResourceModule,
+    PrivateOrderResourceModule,
     PaymentResourceModule,
     EmployeeResourceModule,
   ],
