@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PrivateOrderService } from './private-order.service';
-import { GetUser } from '@shtifh/auth-service';
+import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { Payload } from '@shtifh/user-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
 import { ListPrivateOrdersEntity } from './entities/list-private-orders.entity';
@@ -14,6 +14,7 @@ import { CreatePrivateOrderEntity } from './entities/create-private-order.entity
 
 @ApiTags('Private Orders')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('private-orders')
 export class PrivateOrderController {
   private logger = new Logger(PrivateOrderController.name);
@@ -24,6 +25,7 @@ export class PrivateOrderController {
   @ApiOperation({ summary: 'List all private orders' })
   @ApiResponse({ type: ListPrivateOrdersEntity, isArray: true })
   async list(@GetUser() user: Payload) {
+    console.log({ user });
     return await this.privateOrderService.list(user.id);
   }
 
