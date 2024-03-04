@@ -4,6 +4,9 @@ import { $Enums } from '@prisma/client';
 class OrderCityDataEntity {
   @ApiProperty()
   name!: string;
+
+  @ApiProperty()
+  id!: string;
 }
 
 class OrderServiceDataEntity {
