@@ -1,7 +1,9 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Logger, Post, Put } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCarServiceDto } from './dto/create-car-service.dto';
 import { CarServiceResourceService } from './car-service-resource.service';
+import { ChangeVisibilityDto } from './dto/change.dto';
+import { ChangeVisibilityEntity } from './entities/change.entity';
 
 @ApiTags('Car Service')
 @Controller('car-services')
@@ -16,5 +18,12 @@ export class CarServiceResourceController {
   @ApiOperation({ summary: 'Create a car service' })
   async create(@Body() body: CreateCarServiceDto) {
     return await this.carServiceResourceService.create(body);
+  }
+
+  @Put('visibility')
+  @ApiOperation({ summary: 'Update a car service visibility' })
+  @ApiResponse({ type: ChangeVisibilityEntity })
+  async changeVisibility(@Body() body: ChangeVisibilityDto) {
+    return await this.carServiceResourceService.changeVisibility(body);
   }
 }

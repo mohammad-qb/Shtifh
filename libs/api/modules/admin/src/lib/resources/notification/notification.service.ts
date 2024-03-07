@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
+import { CreateNotificationDto } from './dto/create.dto';
 
 @Injectable()
 export class NotificationResourceService {
@@ -10,17 +11,16 @@ export class NotificationResourceService {
     this.model = prismaService.notification;
   }
 
-  async list(customerId: string) {
-    const result = await this.model.findMany({
-      where: { OR: [{ customerId }, { for_all: true }] },
-      select: {
-        content: true,
-        createdAt: true,
-        id: true,
-        type: true,
+  async create(args: CreateNotificationDto) {
+    await this.model.create({
+      data: {
+        content: args.content_en,
+        content_ar: args.content_ar,
+        content_he: args.content_he,
+        for_all: true,
       },
     });
 
-    return { result };
+    return { success: true };
   }
 }

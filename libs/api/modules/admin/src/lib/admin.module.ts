@@ -8,6 +8,7 @@ import { EmployeeResourceModule } from './resources/employee/employee-resource.m
 import { OrderResourceModule } from './resources/orders/order-resource.module';
 import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 import { StatisticsResourceModule } from './resources/statistics/statistics.module';
+import { NotificationResourceModule } from './resources/notification/notification.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { StatisticsResourceModule } from './resources/statistics/statistics.modu
     OrderResourceModule,
     ServiceResourceModule,
     StatisticsResourceModule,
+    NotificationResourceModule,
   ],
   providers: [],
   exports: [],

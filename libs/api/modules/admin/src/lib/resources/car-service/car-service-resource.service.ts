@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCarServiceDto } from './dto/create-car-service.dto';
+import { ChangeVisibilityDto } from './dto/change.dto';
 
 @Injectable()
 export class CarServiceResourceService {
@@ -16,7 +17,7 @@ export class CarServiceResourceService {
       data: {
         cityId: args.cityId,
         carModelId: args.carModelId,
-        services: {
+        car_model_services: {
           createMany: {
             data: args.services,
           },
@@ -25,5 +26,16 @@ export class CarServiceResourceService {
     });
 
     return createdRecord;
+  }
+
+  async changeVisibility(args: ChangeVisibilityDto) {
+    const carService = await this.model.update({
+      where: { id: args.carServiceId },
+      data: { active: args.active },
+    });
+
+    if (!carService) throw new BadRequestException('Car service not exist');
+
+    return { success: true };
   }
 }

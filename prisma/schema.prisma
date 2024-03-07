@@ -82,6 +82,7 @@ model CarService {
   book_rate          Int[]             @default([1, 1])
   car_model          CarModel          @relation(fields: [carModelId], references: [id])
   car_model_services CarModelService[]
+  active             Boolean           @default(true)
   City               City?             @relation(fields: [cityId], references: [id])
   cityId             String?           @db.ObjectId
   carModelId         String            @db.ObjectId
@@ -209,11 +210,14 @@ model BookedSlots {
 model Notification {
   id         String           @id @default(auto()) @map("_id") @db.ObjectId
   content    String
+  content_ar String
+  content_he String
+  for_all    Boolean          @default(false)
   type       NotifivationType @default(DEFAULT)
-  customer   Customer         @relation(fields: [customerId], references: [id])
+  customer   Customer?        @relation(fields: [customerId], references: [id])
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt()
-  customerId String           @db.ObjectId
+  customerId String?          @db.ObjectId
 }
 
 enum CarServiceModel {

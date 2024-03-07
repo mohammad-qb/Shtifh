@@ -35,17 +35,18 @@ export class OrderResourceService {
 
     if (!customer) throw new BadRequestException('user_wrong');
 
+    const modelService = await this.carModelServiceModel.findFirst({
+      where: { id: args.carModelServiceId },
+    });
+
     const order = await this.model.create({
       data: {
         ...args,
+        fees: modelService?.fees || 0,
         ref_number: refNumber,
         customerId,
         type: args.date ? 'ORDER' : 'BOOK_LATER',
       },
-    });
-
-    const modelService = await this.carModelServiceModel.findFirst({
-      where: { id: args.carModelServiceId },
     });
 
     const OrderTotalSum = (modelService?.fees || 0) + (args.tip || 0);
