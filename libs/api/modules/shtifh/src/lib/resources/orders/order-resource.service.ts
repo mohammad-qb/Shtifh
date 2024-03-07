@@ -78,6 +78,7 @@ export class OrderResourceService {
         id: true,
         city: {
           select: {
+            id: true,
             name_ar: true,
             name_en: true,
             name_he: true,

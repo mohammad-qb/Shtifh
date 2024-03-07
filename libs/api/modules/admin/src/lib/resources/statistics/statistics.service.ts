@@ -26,7 +26,7 @@ export class StatisticsResourceService {
 
     const where = {
       gte: startDate,
-      lt: endDate,
+      lte: endDate,
     };
 
     console.log({ where });
@@ -34,7 +34,7 @@ export class StatisticsResourceService {
     const [customers, orders, completeOrders, incompleteOrders, money] =
       await Promise.all([
         this.prismaService.customer.count({
-          //   where: { user: { createdAt: where } },
+          where: { user: { createdAt: where } },
         }),
         this.prismaService.order.count({
           where: { createdAt: where },

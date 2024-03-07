@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+class MoneyData {
+  @ApiProperty()
+  fees!: number;
+
+  @ApiProperty()
+  tip!: number;
+}
 export class ListStatisticsEntity {
   @ApiProperty()
   customers!: number;
@@ -13,6 +20,6 @@ export class ListStatisticsEntity {
   @ApiProperty()
   incompleteOrders!: number;
 
-  @ApiProperty()
-  money!: number;
+  @ApiProperty({ type: MoneyData })
+  money!: MoneyData;
 }
