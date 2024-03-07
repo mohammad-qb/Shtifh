@@ -100,9 +100,11 @@ model CarModelService {
 model Order {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   ref_number        String
+  is_done           Boolean         @default(false)
   date              String?
   time              String?
   address           String
+  fees              Float
   tip               Int             @default(0)
   note              String?
   paid              Boolean?        @default(false)
