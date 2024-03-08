@@ -52,7 +52,7 @@ export class EmployeeResourceService {
           update: {
             email: args.email,
             full_name: args.full_name,
-            mobile: args.full_name,
+            mobile: args.mobile,
           },
         },
       },
