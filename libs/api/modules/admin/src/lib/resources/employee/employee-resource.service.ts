@@ -24,7 +24,7 @@ export class EmployeeResourceService {
           create: {
             email: args.email,
             full_name: args.full_name,
-            mobile: args.full_name,
+            mobile: args.mobile,
             password: '',
             role: 'EMPLOYEE',
           },
