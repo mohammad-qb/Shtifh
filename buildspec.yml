@@ -18,15 +18,15 @@ phases:
       - ls -alh
       - echo Displaying Docker version
       - docker --version
-      - echo Building shtifh-server Image
-      - docker build -t shtifh-server -f ./apps/shtifh/server/Dockerfile .
-      - echo Tagging shtifh-server
-      - docker tag shtifh-server:latest 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-server:latest
+      - echo Building shtifh-admin-server Image
+      - docker build -t shtifh-admin-server -f ./apps/shtifh/admin/server/Dockerfile .
+      - echo Tagging shtifh-admin-server
+      - docker tag shtifh-admin-server:latest 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-admin-server:latest
 
   post_build:
     commands:
       - echo Pushing Shtifh Server image...
-      - docker push 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-server:latest
+      - docker push 540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-admin-server:latest
 
 artifacts:
   files:

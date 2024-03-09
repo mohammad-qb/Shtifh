@@ -1,6 +1,6 @@
 [
   {
-    "name": "shtifh-server",
-    "imageUri": "540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-server"
+    "name": "shtifh-admin-server",
+    "imageUri": "540876827424.dkr.ecr.us-east-1.amazonaws.com/shtifh-admin-server"
   }
 ]
