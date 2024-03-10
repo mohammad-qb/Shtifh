@@ -1,7 +1,8 @@
-import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@shtifh/auth-service';
 import { OrderResourceService } from './order-resource.service';
+import { ListOrdersDto } from './dto/list.dto';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -12,9 +13,10 @@ export class OrderResourceController {
 
   constructor(private readonly orderResourceService: OrderResourceService) {}
 
+  //TODO: change to post
   @Get()
   @ApiOperation({ summary: 'List All Orders' })
-  async list() {
-    return await this.orderResourceService.list();
+  async list(@Body() body: ListOrdersDto) {
+    return await this.orderResourceService.list(body);
   }
 }

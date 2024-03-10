@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
+import { ListOrdersDto } from './dto/list.dto';
 
 @Injectable()
 export class OrderResourceService {
@@ -10,7 +11,7 @@ export class OrderResourceService {
     this.model = prismaService.order;
   }
 
-  async list() {
+  async list(args: ListOrdersDto) {
     const orders = await this.model.findMany({
       include: {
         car: { include: { model: true } },
