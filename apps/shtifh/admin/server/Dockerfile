@@ -13,7 +13,7 @@ RUN yarn
 COPY  /apps/shtifh/admin/server ./apps/shtifh/admin/server
 
 # COPY NEEDED LIBRARIES
-COPY /libs/api/modules/admin/shtifh ./libs/api/modules/admin/shtifh
+COPY /libs/api/modules/admin ./libs/api/modules/admin
 COPY /libs/api/shared/decorators ./libs/api/shared/decorators
 COPY /libs/api/shared/entities ./libs/api/shared/entities
 COPY /libs/api/shared/services/auth ./libs/api/shared/services/auth
