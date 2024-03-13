@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { ListOrdersDto } from './dto/list.dto';
 import { Prisma } from '@prisma/client';
+import { groupBy } from 'lodash';
 
 @Injectable()
 export class OrderResourceService {
@@ -29,9 +30,8 @@ export class OrderResourceService {
       };
     }
 
-    // Fetch orders with conditions applied
     const orders = await this.model.findMany({
-      where: condition,
+      where: condition, // Assuming 'condition' is defined elsewhere
       include: {
         car: { include: { model: true } },
         city: true,
@@ -41,20 +41,31 @@ export class OrderResourceService {
       },
     });
 
-    // Group orders by createdAt and then by city
-    const groupedByCreatedAt = orders.reduce((acc: any, order) => {
-      const date = order.createdAt.toISOString().split('T')[0]; // Group by date (YYYY-MM-DD)
-      if (!acc[date]) {
-        acc[date] = {};
-      }
-      const cityName = order.city.name_he;
-      if (!acc[date][cityName]) {
-        acc[date][cityName] = [];
-      }
-      acc[date][cityName].push(order);
-      return acc;
-    }, {});
+    // Group orders by their creation date
+    const ordersGroupedByDate = groupBy(
+      orders,
+      (order) => order.createdAt.toISOString().split('T')[0]
+    );
 
-    return { result: groupedByCreatedAt };
+    // For each date, group its orders by city
+    const result = Object.entries(ordersGroupedByDate).map(([date, orders]) => {
+      // Group orders of the same date by city
+      const ordersGroupedByCity = groupBy(orders, 'city.name_he'); // Assuming you want to group by English city name
+
+      // Convert city groups into an array format
+      const cities = Object.entries(ordersGroupedByCity).map(
+        ([cityName, orders]) => ({
+          city: cityName,
+          orders: orders,
+        })
+      );
+
+      return {
+        date: date,
+        cities: cities,
+      };
+    });
+
+    return result;
   }
 }

@@ -14,7 +14,7 @@ export class OrderResourceController {
   constructor(private readonly orderResourceService: OrderResourceService) {}
 
   //TODO: change to post
-  @Get()
+  @Post()
   @ApiOperation({ summary: 'List All Orders' })
   async list(@Body() body: ListOrdersDto) {
     return await this.orderResourceService.list(body);
