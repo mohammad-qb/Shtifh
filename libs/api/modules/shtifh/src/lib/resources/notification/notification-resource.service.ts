@@ -15,6 +15,8 @@ export class NotificationResourceService {
       where: { OR: [{ customerId }, { for_all: true }] },
       select: {
         content: true,
+        content_ar: true,
+        content_he: true,
         createdAt: true,
         id: true,
         type: true,
