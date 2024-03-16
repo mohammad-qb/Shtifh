@@ -9,6 +9,8 @@ import { OrderResourceModule } from './resources/orders/order-resource.module';
 import { CarServiceResourceModule } from './resources/car-service/car-service-resource.module';
 import { StatisticsResourceModule } from './resources/statistics/statistics.module';
 import { NotificationResourceModule } from './resources/notification/notification.module';
+import { PrivateOrderModule } from './resources/private-order/private-order.module';
+import { PrivateServiceModule } from './resources/private-server/private-service.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { NotificationResourceModule } from './resources/notification/notificatio
     ServiceResourceModule,
     StatisticsResourceModule,
     NotificationResourceModule,
+    PrivateOrderModule,
+    PrivateServiceModule,
   ],
   providers: [],
   exports: [],
