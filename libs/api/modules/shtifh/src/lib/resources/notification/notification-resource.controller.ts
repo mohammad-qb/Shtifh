@@ -9,6 +9,7 @@ import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { NotificationResourceService } from './notification-resource.service';
 import { Payload } from '@shtifh/user-service';
 import { ListNotificationsEntity } from './entities/list-notifications.entity';
+import { HeaderLang, Lang } from '@shtifh/decorators';
 @ApiTags('Notifications')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -23,7 +24,7 @@ export class NotificationResourceController {
   @Get()
   @ApiOperation({ summary: 'List notifications' })
   @ApiResponse({ type: ListNotificationsEntity })
-  async list(@GetUser() user: Payload) {
-    return await this.notificationResourceService.list(user.id);
+  async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
+    return await this.notificationResourceService.list(user.id, lang);
   }
 }
