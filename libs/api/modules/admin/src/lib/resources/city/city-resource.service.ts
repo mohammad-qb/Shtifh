@@ -18,7 +18,25 @@ export class CityResourceService {
   }
 
   async list() {
-    const cities = await this.model.findMany();
+    const cities = await this.model.findMany({include:{
+      car_services:{
+        include:{
+          car_model:{
+            select:{
+              name_he:true
+              ,id:true,
+              
+            }
+          },
+          car_model_services:{
+            include:{
+              service:true,
+               
+            }
+          }
+        }
+      }
+    }});
     return { result: cities };
   }
 
