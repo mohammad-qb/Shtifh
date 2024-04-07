@@ -70,11 +70,10 @@ model City {
   name_ar      String       @unique
   name_en      String       @unique
   name_he      String       @unique
-  work_time    WorkTime?    @relation(fields: [workTimeId], references: [id])
   car_services CarService[]
-  workTimeId   String?      @unique @db.ObjectId
   Order        Order[]
   Car          Car[]
+  WorkTime     WorkTime[]
 }
 
 model CarService {
@@ -171,12 +170,24 @@ model User {
 }
 
 model WorkTime {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  day        Day
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  day               Day
+  start_time        String
+  end_time          String
+  is_day_off        Boolean           @default(false)
+  city              City              @relation(fields: [cityId], references: [id])
+  unavailable_slots UnavailableSlot[]
+  cityId            String            @db.ObjectId
+}
+
+model UnavailableSlot {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  date       DateTime
   start_time String
   end_time   String
-  is_day_off Boolean @default(false)
-  City       City?
+  WorkTimeId String?   @db.ObjectId
+  WorkTime   WorkTime? @relation(fields: [workTimeId], references: [id])
+  workTimeId String?   @db.ObjectId
 }
 
 model Payment {
@@ -243,9 +254,9 @@ enum OrderStatus {
 enum Day {
   SUNDAY
   MONDAY
-  TUSEDAY
-  WEDNSDAY
-  THIRSDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
   FRIDAY
   SATURDAY
 }

@@ -8,6 +8,7 @@ import { EmployeeEntity } from './employee.entity';
 export class OrderEntity implements Order {
   @ApiProperty()
   is_done!: boolean;
+  
   @ApiProperty()
   fees!: number;
 

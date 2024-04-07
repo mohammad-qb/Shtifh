@@ -70,7 +70,7 @@ export class AuthResourceService {
                 date: true,
                 note: true,
                 address: true,
-                service: true,
+                service: { include: { service: true } },
                 // service: {
                 //   include: {
                 //     car_service: {
@@ -159,7 +159,7 @@ export class AuthResourceService {
                 date: true,
                 note: true,
                 address: true,
-                service: true,
+                service: { include: { service: true } },
                 // service: {
                 //   include: {
                 //     car_service: {
