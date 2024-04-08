@@ -49,6 +49,12 @@ export class CityResourceController {
     return await this.cityResourceService.retrieve(cityId);
   }
 
+  @Put('day-time')
+  @ApiOperation({ summary: 'update day time for city' })
+  async updateCityDay(@Body() body: UpdateCityDayDto) {
+    return await this.cityResourceService.updateDay(body);
+  }
+  
   @Put(':id')
   @ApiOperation({ summary: 'Update City' })
   async update(@Body() body: UpdateCityDro, @Param('id') cityId: string) {
@@ -61,10 +67,5 @@ export class CityResourceController {
     return await this.cityResourceService.switchDay(workId);
   }
 
-  @Put('day-time')
-  @ApiOperation({ summary: 'update day time for city' })
-  async updateCityDay(@Body() body: UpdateCityDayDto) {
-    return await this.cityResourceService.updateDay(body);
-  }
 
 }
