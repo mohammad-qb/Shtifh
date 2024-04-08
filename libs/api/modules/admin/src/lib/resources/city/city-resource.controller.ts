@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '@shtifh/auth-service';
 import { CityResourceService } from './city-resource.service';
 import { CreateCityDro } from './dto/create-city.dto';
 import { UpdateCityDro } from './dto/update-city.dto';
+import { CreateUnavailableSlot } from './dto/create-unavailable-slot.dto';
 
 @ApiTags('City')
 @Controller('cities')
@@ -27,6 +28,12 @@ export class CityResourceController {
   @ApiOperation({ summary: 'Create New City' })
   async create(@Body() body: CreateCityDro) {
     return await this.cityResourceService.create(body);
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Add Unavailable Slot' })
+  async createUnavailableSlot(@Body() body: CreateUnavailableSlot) {
+    return await this.cityResourceService.unavailableSlot(body);
   }
 
   @Get()
