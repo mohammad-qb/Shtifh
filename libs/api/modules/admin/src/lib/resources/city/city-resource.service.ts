@@ -20,37 +20,37 @@ export class CityResourceService {
       data: [{
         day: 'FRIDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       }, 
       {
         day: 'MONDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       },
       {
         day: 'SATURDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       },
       {
         day: 'SUNDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       },
       {
         day: 'THURSDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       },
       {
         day: 'TUESDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       },
       {
         day: 'WEDNESDAY',
         start_time: '08:00',
-        end_time: '06:00',
+        end_time: '22:00',
       }
     ]
     }}},  });
