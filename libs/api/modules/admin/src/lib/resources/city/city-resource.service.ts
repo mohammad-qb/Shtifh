@@ -21,6 +21,7 @@ export class CityResourceService {
         day: 'FRIDAY',
         start_time: '08:00',
         end_time: '22:00',
+        is_day_off: true
       }, 
       {
         day: 'MONDAY',
@@ -31,6 +32,7 @@ export class CityResourceService {
         day: 'SATURDAY',
         start_time: '08:00',
         end_time: '22:00',
+        is_day_off: true
       },
       {
         day: 'SUNDAY',
