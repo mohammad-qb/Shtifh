@@ -30,7 +30,7 @@ export class CityResourceController {
     return await this.cityResourceService.create(body);
   }
 
-  @Post()
+  @Post('unavailable-slot')
   @ApiOperation({ summary: 'Add Unavailable Slot' })
   async createUnavailableSlot(@Body() body: CreateUnavailableSlot) {
     return await this.cityResourceService.unavailableSlot(body);
