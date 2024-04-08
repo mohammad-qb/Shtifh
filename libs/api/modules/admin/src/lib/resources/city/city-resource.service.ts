@@ -102,13 +102,13 @@ export class CityResourceService {
   async unavailableSlot(args: CreateUnavailableSlot){
     const dayOfWeek = moment(args.date).format('dddd').toUpperCase();
 
-    const work = await this.prismaService.workTime.findFirst({where: {id: args.cityId, day: dayOfWeek as $Enums.Day}});
+    const work = await this.prismaService.workTime.findFirst({where: {cityId: args.cityId, day: dayOfWeek as $Enums.Day}});
 
     if(!work) throw new BadRequestException('No Work Time');
     
     return await this.prismaService.unavailableSlot.create({
       data: {
-        date: args.date,
+        date: new Date(args.date),
         end_time: args.end_time,
         start_time: args.start_time,
         workTimeId: work?.id
