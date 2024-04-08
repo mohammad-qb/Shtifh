@@ -185,7 +185,6 @@ model UnavailableSlot {
   date       DateTime
   start_time String
   end_time   String
-  WorkTimeId String?   @db.ObjectId
   WorkTime   WorkTime? @relation(fields: [workTimeId], references: [id])
   workTimeId String?   @db.ObjectId
 }
