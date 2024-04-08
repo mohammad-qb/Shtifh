@@ -108,7 +108,7 @@ export class CityResourceService {
         date: args.date,
         end_time: args.end_time,
         start_time: args.start_time,
-        WorkTimeId: work?.id
+        workTimeId: work?.id
       }
     })
   }
