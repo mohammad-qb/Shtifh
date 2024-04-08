@@ -53,4 +53,16 @@ export class CityResourceController {
   async update(@Body() body: UpdateCityDro, @Param('id') cityId: string) {
     return await this.cityResourceService.update(cityId, body);
   }
+
+  @Put('/day-off/:id')
+  @ApiOperation({ summary: 'Update City Day Off' })
+  async dayOff(@Param('id') cityId: string) {
+    return await this.cityResourceService.updateDayOff(cityId);
+  }
+
+  @Put('day-on/:id')
+  @ApiOperation({ summary: 'Update City Day On' })
+  async dayOn(@Param('id') cityId: string) {
+    return await this.cityResourceService.updateDayOn(cityId);
+  }
 }

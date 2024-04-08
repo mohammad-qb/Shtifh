@@ -114,4 +114,14 @@ export class CityResourceService {
       }
     })
   }
+
+  async updateDayOff(id: string){
+    await this.prismaService.workTime.update({where: {id}, data: {is_day_off: false}})
+    return {success: true};
+  }
+
+  async updateDayOn(id: string){
+    await this.prismaService.workTime.update({where: {id}, data: {is_day_off: true}})
+    return {success: true};
+  }
 }
