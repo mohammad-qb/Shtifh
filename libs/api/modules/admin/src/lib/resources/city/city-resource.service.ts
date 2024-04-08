@@ -115,13 +115,12 @@ export class CityResourceService {
     })
   }
 
-  async updateDayOff(id: string){
-    await this.prismaService.workTime.update({where: {id}, data: {is_day_off: false}})
-    return {success: true};
-  }
+  async switchDay(id: string){
+    const work = await this.prismaService.workTime.findFirst({where: {id}});
 
-  async updateDayOn(id: string){
-    await this.prismaService.workTime.update({where: {id}, data: {is_day_off: true}})
+    if(!work) throw new BadRequestException('No Work');
+
+    await this.prismaService.workTime.update({where: {id}, data: {is_day_off: !work.is_day_off}})
     return {success: true};
   }
 }
