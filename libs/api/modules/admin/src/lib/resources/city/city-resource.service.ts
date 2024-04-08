@@ -5,6 +5,7 @@ import { UpdateCityDro } from './dto/update-city.dto';
 import { CreateUnavailableSlot } from './dto/create-unavailable-slot.dto';
 import moment from 'moment';
 import { $Enums } from '@prisma/client';
+import { UpdateCityDayDto } from './dto/update-city-day.dto';
 
 @Injectable()
 export class CityResourceService {
@@ -122,5 +123,18 @@ export class CityResourceService {
 
     await this.prismaService.workTime.update({where: {id}, data: {is_day_off: !work.is_day_off}})
     return {success: true};
+  }
+
+  async updateDay(args: UpdateCityDayDto){
+    const work = await this.prismaService.workTime.findFirst({where: {id: args.workId}});
+
+    if(!work) throw new BadRequestException('No work');
+
+    await this.prismaService.workTime.update({where: {id: args.workId}, data: {
+      end_time: args.end_time,
+      start_time: args.start_time
+    }});
+
+    return {success: true}
   }
 }

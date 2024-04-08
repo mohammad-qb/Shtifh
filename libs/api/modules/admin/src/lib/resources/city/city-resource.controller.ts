@@ -14,6 +14,7 @@ import { CityResourceService } from './city-resource.service';
 import { CreateCityDro } from './dto/create-city.dto';
 import { UpdateCityDro } from './dto/update-city.dto';
 import { CreateUnavailableSlot } from './dto/create-unavailable-slot.dto';
+import { UpdateCityDayDto } from './dto/update-city-day.dto';
 
 @ApiTags('City')
 @Controller('cities')
@@ -58,6 +59,12 @@ export class CityResourceController {
   @ApiOperation({ summary: 'Update City Day Off or On' })
   async dayOff(@Param('workId') workId: string) {
     return await this.cityResourceService.switchDay(workId);
+  }
+
+  @Put('day-time')
+  @ApiOperation({ summary: 'update day time for city' })
+  async updateCityDay(@Body() body: UpdateCityDayDto) {
+    return await this.cityResourceService.updateDay(body);
   }
 
 }
