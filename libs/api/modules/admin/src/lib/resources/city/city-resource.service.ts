@@ -91,12 +91,16 @@ export class CityResourceService {
   }
 
   async update(cityId: string, args: UpdateCityDro) {
-    const city = await this.model.update({
+    const city = await this.model.findFirst({where: {id: cityId}});
+
+    if(!city) throw new BadRequestException('City not exist');
+
+   const result = await this.model.update({
       where: { id: cityId },
       data: args,
     });
 
-    return { result: city };
+    return { result };
   }
 
   async unavailableSlot(args: CreateUnavailableSlot){
