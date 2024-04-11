@@ -3,6 +3,7 @@ import { PrismaService } from '@shtifh/prisma-service';
 import { ListOrdersDto } from './dto/list.dto';
 import { Prisma } from '@prisma/client';
 import { groupBy } from 'lodash';
+import { UpdateOrderDto } from './dto/update.dto';
 
 @Injectable()
 export class OrderResourceService {
@@ -67,5 +68,17 @@ export class OrderResourceService {
     });
 
     return result;
+  }
+
+  async update(id: string, args: UpdateOrderDto) {
+    const order = await this.model.findFirst({
+      where: { id },
+    });
+
+    if (!order) throw new Error('No Order exist');
+
+    await this.model.update({ where: { id }, data: args });
+
+    return { success: true };
   }
 }

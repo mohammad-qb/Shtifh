@@ -11,6 +11,7 @@ import { StatisticsResourceModule } from './resources/statistics/statistics.modu
 import { NotificationResourceModule } from './resources/notification/notification.module';
 import { PrivateOrderModule } from './resources/private-order/private-order.module';
 import { PrivateServiceModule } from './resources/private-server/private-service.module';
+import { CarModelServiceModule } from './resources/car-model-service/car-model-service.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PrivateServiceModule } from './resources/private-server/private-service
     NotificationResourceModule,
     PrivateOrderModule,
     PrivateServiceModule,
+    CarModelServiceModule,
   ],
   providers: [],
   exports: [],
