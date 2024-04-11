@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
 
@@ -50,5 +50,17 @@ export class PrivateOrderService {
         },
       },
     });
+  }
+
+  async done(id: string, empId: string) {
+    const privateOrder = await this.model.findFirst({
+      where: { id, employeeId: empId },
+    });
+
+    if (!privateOrder) throw new BadGatewayException('Private order not exist');
+
+    await this.model.update({ where: { id }, data: { is_done: true } });
+
+    return { success: true };
   }
 }

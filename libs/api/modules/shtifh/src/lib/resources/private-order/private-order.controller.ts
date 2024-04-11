@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -34,5 +42,11 @@ export class PrivateOrderController {
   @ApiResponse({ type: CreatePrivateOrderEntity })
   async create(@Body() body: CreatePrivateOrderDto, @GetUser() user: Payload) {
     return await this.privateOrderService.create(user.id, body);
+  }
+
+  @Get('done/:id')
+  @ApiOperation({ summary: 'Make it done' })
+  async done(@GetUser() user: Payload, @Param('id') id: string) {
+    return await this.privateOrderService.done(id, user.id);
   }
 }

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { DateAccessService } from '@shtifh/date-access-service';
@@ -201,5 +206,17 @@ export class OrderResourceService {
     const { service, Payment, ...rest } = invoice;
 
     return { ...rest, service: service.service, fees: Payment[0].fees };
+  }
+
+  async done(id: string, empId: string) {
+    const order = await this.model.findFirst({
+      where: { id, employeeId: empId },
+    });
+
+    if (!order) throw new BadGatewayException('Private order not exist');
+
+    await this.model.update({ where: { id }, data: { is_done: true } });
+
+    return { success: true };
   }
 }

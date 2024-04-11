@@ -4,19 +4,34 @@ import { PrismaService } from '@shtifh/prisma-service';
 @Injectable()
 export class EmployeeResourceService {
   private logger = new Logger(EmployeeResourceService.name);
-  private model;
+  private orderModel;
+  private privateOrderModel;
+
   constructor(private readonly prismaService: PrismaService) {
-    this.model = prismaService.order;
+    this.orderModel = prismaService.order;
+    this.privateOrderModel = prismaService.privateOrder;
   }
 
   async orders(employeeId: string) {
-    const results = await this.model.findMany({
-      where: { employeeId, paid: true },
+    const results = await this.orderModel.findMany({
+      where: { employeeId, paid: true, is_done: false },
       include: {
         city: true,
         customer: { include: { user: true } },
         car: { include: { model: true } },
         service: { include: { service: true } },
+      },
+    });
+
+    return { result: results };
+  }
+
+  async privateOrders(employeeId: string) {
+    const results = await this.privateOrderModel.findMany({
+      where: { employeeId, is_done: false },
+      include: {
+        customer: { include: { user: true } },
+        private_service: true,
       },
     });
 

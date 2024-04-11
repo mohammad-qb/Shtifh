@@ -69,4 +69,10 @@ export class OrderResourceController {
   async lastInvoice(@GetUser() user: Payload) {
     return await this.orderResourceService.lastInvoice(user.id);
   }
+
+  @Get('done/:id')
+  @ApiOperation({ summary: 'Make it done' })
+  async done(@GetUser() user: Payload, @Param('id') id: string) {
+    return await this.orderResourceService.done(id, user.id);
+  }
 }
