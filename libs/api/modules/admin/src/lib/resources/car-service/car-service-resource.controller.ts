@@ -28,10 +28,4 @@ export class CarServiceResourceController {
     return await this.carServiceResourceService.changeVisibility(body);
   }
 
-  @Put('all-visibility')
-  @ApiOperation({ summary: 'Update all car service visibility for city' })
-  @ApiResponse({ type: ChangeVisibilityEntity })
-  async changeManyVisibility(@Body() body: ChangeManyVisibilityDto) {
-    return await this.carServiceResourceService.changeManyVisibility(body);
-  }
 }
