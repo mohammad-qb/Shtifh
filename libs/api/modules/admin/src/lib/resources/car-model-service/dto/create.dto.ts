@@ -5,7 +5,7 @@ export class CreateCarModelServiceDto {
   @ApiProperty()
   @IsMongoId()
   @IsNotEmpty()
-  cardServiceId!: string;
+  carServiceId!: string;
 
   @ApiProperty()
   @IsMongoId()
