@@ -1,6 +1,7 @@
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
+import { Payload } from '@shtifh/user-service';
 
 @Injectable()
 export class PrivateOrderService {
@@ -33,12 +34,18 @@ export class PrivateOrderService {
     });
   }
 
-  async list(customerId: string) {
+  async list(user: Payload) {
     return await this.model.findMany({
-      where: { customerId },
+      where:
+        user.role === 'CUSTOMER'
+          ? { customerId: user.id }
+          : { employeeId: user.id },
       select: {
         status: true,
         id: true,
+        customer: {
+          select: { user: { select: { full_name: true, mobile: true } } },
+        },
         private_service: {
           select: {
             id: true,

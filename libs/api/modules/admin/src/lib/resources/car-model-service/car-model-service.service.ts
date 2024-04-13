@@ -10,7 +10,7 @@ export class CarModelServiceService {
 
   async create(args: CreateCarModelServiceDto) {
     const carService = await this.prismaService.carService.findFirst({
-      where: { id: args.cardServiceId },
+      where: { id: args.carServiceId },
     });
 
     if (!carService) throw new BadRequestException('Car service not exist');

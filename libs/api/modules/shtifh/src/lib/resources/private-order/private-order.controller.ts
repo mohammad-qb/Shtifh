@@ -34,7 +34,7 @@ export class PrivateOrderController {
   @ApiResponse({ type: ListPrivateOrdersEntity, isArray: true })
   async list(@GetUser() user: Payload) {
     console.log({ user });
-    return await this.privateOrderService.list(user.id);
+    return await this.privateOrderService.list(user);
   }
 
   @Post()
