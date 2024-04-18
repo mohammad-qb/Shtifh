@@ -66,14 +66,15 @@ model CarModel {
 }
 
 model City {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar      String       @unique
-  name_en      String       @unique
-  name_he      String       @unique
-  car_services CarService[]
-  Order        Order[]
-  Car          Car[]
-  WorkTime     WorkTime[]
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name_ar         String            @unique
+  name_en         String            @unique
+  name_he         String            @unique
+  car_services    CarService[]
+  Order           Order[]
+  Car             Car[]
+  MonthlySchedule MonthlySchedule[]
+  weekend         weekend[]
 }
 
 model CarService {
@@ -147,7 +148,7 @@ model privateOrder {
   customer         Customer       @relation(fields: [customerId], references: [id])
   employee         Employee?      @relation(fields: [employeeId], references: [id])
   private_service  PrivateService @relation(fields: [privateServiceId], references: [id])
-  is_done Boolean @default(false)
+  is_done          Boolean        @default(false)
   status           OrderStatus    @default(PENDING)
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt()
@@ -170,24 +171,39 @@ model User {
   employee            Employee?
 }
 
-model WorkTime {
-  id                String            @id @default(auto()) @map("_id") @db.ObjectId
-  day               Day
-  start_time        String
-  end_time          String
-  is_day_off        Boolean           @default(false)
-  city              City              @relation(fields: [cityId], references: [id])
-  unavailable_slots UnavailableSlot[]
-  cityId            String            @db.ObjectId
+model UnavailableSlot {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  date            DateTime
+  start_time      String
+  end_time        String
+  DailySchedule   DailySchedule? @relation(fields: [dailyScheduleId], references: [id])
+  dailyScheduleId String?        @db.ObjectId
 }
 
-model UnavailableSlot {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  date       DateTime
-  start_time String
-  end_time   String
-  WorkTime   WorkTime? @relation(fields: [workTimeId], references: [id])
-  workTimeId String?   @db.ObjectId
+model DailySchedule {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  date              DateTime
+  start_time        String
+  end_time          String
+  requests_in_hour  Int
+  cityId            String            @db.ObjectId
+  unavailable_slots UnavailableSlot[]
+}
+
+model MonthlySchedule {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  start_time       String
+  end_time         String
+  requests_in_hour Int
+  city             City   @relation(fields: [cityId], references: [id])
+  cityId           String @db.ObjectId
+}
+
+model weekend {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  city   City   @relation(fields: [cityId], references: [id])
+  day    Day
+  cityId String @db.ObjectId
 }
 
 model Payment {
