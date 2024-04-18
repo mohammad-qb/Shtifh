@@ -75,6 +75,8 @@ model City {
   Car             Car[]
   MonthlySchedule MonthlySchedule[]
   weekend         weekend[]
+  UnavailableSlot UnavailableSlot[]
+  GlobalSchedule  GlobalSchedule[]
 }
 
 model CarService {
@@ -171,27 +173,46 @@ model User {
   employee            Employee?
 }
 
+model BookedSlots {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  date             DateTime
+  time             String
+  requsts_limt     Int
+  current_requests Int
+}
+
 model UnavailableSlot {
-  id              String         @id @default(auto()) @map("_id") @db.ObjectId
-  date            DateTime
-  start_time      String
-  end_time        String
-  DailySchedule   DailySchedule? @relation(fields: [dailyScheduleId], references: [id])
-  dailyScheduleId String?        @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  date       DateTime
+  start_time String
+  end_time   String
+  city       City     @relation(fields: [cityId], references: [id])
+  cityId     String   @db.ObjectId
 }
 
 model DailySchedule {
-  id                String            @id @default(auto()) @map("_id") @db.ObjectId
-  date              DateTime
-  start_time        String
-  end_time          String
-  requests_in_hour  Int
-  cityId            String            @db.ObjectId
-  unavailable_slots UnavailableSlot[]
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  date             DateTime
+  start_time       String
+  end_time         String
+  requests_in_hour Int
+  is_off           Boolean  @default(false)
+  cityId           String   @db.ObjectId
+}
+
+model GlobalSchedule {
+  id               String @id @default(auto()) @map("_id") @db.ObjectId
+  start_time       String
+  end_time         String
+  requests_in_hour Int
+  city             City   @relation(fields: [cityId], references: [id])
+  cityId           String @db.ObjectId
 }
 
 model MonthlySchedule {
   id               String @id @default(auto()) @map("_id") @db.ObjectId
+  month            Int
+  year             Int
   start_time       String
   end_time         String
   requests_in_hour Int
@@ -217,21 +238,6 @@ model Payment {
   orderId   String        @db.ObjectId
 
   @@index([uniq_id])
-}
-
-model Slots {
-  id     String        @id @default(auto()) @map("_id") @db.ObjectId
-  date   String
-  booked BookedSlots[]
-}
-
-model BookedSlots {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  date    String  @unique
-  time    String
-  count   Int     @default(0)
-  Slots   Slots?  @relation(fields: [slotsId], references: [id])
-  slotsId String? @db.ObjectId
 }
 
 model Notification {

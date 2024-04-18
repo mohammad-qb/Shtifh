@@ -12,6 +12,7 @@ import { NotificationResourceModule } from './resources/notification/notificatio
 import { PrivateOrderModule } from './resources/private-order/private-order.module';
 import { PrivateServiceModule } from './resources/private-server/private-service.module';
 import { CarModelServiceModule } from './resources/car-model-service/car-model-service.module';
+import { ScheduleResourceModule } from './resources/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CarModelServiceModule } from './resources/car-model-service/car-model-s
     PrivateOrderModule,
     PrivateServiceModule,
     CarModelServiceModule,
+    ScheduleResourceModule,
   ],
   providers: [],
   exports: [],
