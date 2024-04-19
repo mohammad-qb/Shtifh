@@ -69,7 +69,7 @@ export class ScheduleResourceService {
 
   async updateMonth(args: UpdateMonthDto) {
     const { scheduleId, ...rest } = args;
-    if (scheduleId) {
+    if (!scheduleId) {
       await this.prismaService.monthlySchedule.create({ data: rest });
     } else {
       await this.prismaService.monthlySchedule.update({
