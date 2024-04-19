@@ -23,12 +23,14 @@ export class EmployeeResourceService {
       },
     });
 
+    console.log({results})
     return { result: results };
   }
 
   async privateOrders(employeeId: string) {
+    console.log({employeeId})
     const results = await this.privateOrderModel.findMany({
-      where: { employeeId, is_done: false },
+      where: { employeeId, is_done: false, status: 'CONFIRMED' },
       include: {
         customer: { include: { user: true } },
         private_service: true,
