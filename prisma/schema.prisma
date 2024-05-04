@@ -66,17 +66,20 @@ model CarModel {
 }
 
 model City {
-  id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar         String            @unique
-  name_en         String            @unique
-  name_he         String            @unique
-  car_services    CarService[]
-  Order           Order[]
-  Car             Car[]
-  MonthlySchedule MonthlySchedule[]
-  weekend         weekend[]
-  UnavailableSlot UnavailableSlot[]
-  GlobalSchedule  GlobalSchedule[]
+  id                     String                   @id @default(auto()) @map("_id") @db.ObjectId
+  active                 Boolean?                 @default(true)
+  name_ar                String                   @unique
+  name_en                String                   @unique
+  name_he                String                   @unique
+  car_services           CarService[]
+  Order                  Order[]
+  Car                    Car[]
+  MonthlySchedule        MonthlySchedule[]
+  weekend                weekend[]
+  UnavailableSlot        UnavailableSlot[]
+  GlobalSchedule         GlobalSchedule[]
+  RecurringDailySchedule RecurringDailySchedule[]
+  DailySchedule          DailySchedule[]
 }
 
 model CarService {
@@ -197,7 +200,19 @@ model DailySchedule {
   end_time         String
   requests_in_hour Int
   is_off           Boolean  @default(false)
+  city             City     @relation(fields: [cityId], references: [id])
   cityId           String   @db.ObjectId
+}
+
+model RecurringDailySchedule {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  day              Day
+  start_time       String
+  end_time         String
+  requests_in_hour Int
+  is_off           Boolean @default(false)
+  city             City    @relation(fields: [cityId], references: [id])
+  cityId           String  @db.ObjectId
 }
 
 model GlobalSchedule {

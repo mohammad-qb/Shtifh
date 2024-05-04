@@ -53,10 +53,17 @@ export class ScheduleResourceService {
       this.prismaService.weekend.findMany({
         where: { cityId: args.cityId },
       }),
+      this.prismaService.recurringDailySchedule.findMany(),
     ];
 
-    const [schedule, monthlySchedule, dailySchedule, unavailableSlot, weekend] =
-      await Promise.all(promises);
+    const [
+      schedule,
+      monthlySchedule,
+      dailySchedule,
+      unavailableSlot,
+      weekend,
+      recurringDaily,
+    ] = await Promise.all(promises);
 
     return {
       schedule,
@@ -64,6 +71,7 @@ export class ScheduleResourceService {
       dailySchedule,
       weekend,
       unavailableSlot,
+      recurringDaily,
     };
   }
 

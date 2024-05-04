@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateCityDro implements Prisma.CityUncheckedUpdateInput {
   @ApiPropertyOptional()
@@ -17,4 +17,9 @@ export class UpdateCityDro implements Prisma.CityUncheckedUpdateInput {
   @IsString()
   @IsOptional()
   name_he?: string;
+
+  @ApiPropertyOptional()
+  @IsBoolean()
+  @IsOptional()
+  active?: boolean;
 }

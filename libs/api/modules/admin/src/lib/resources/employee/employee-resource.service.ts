@@ -47,7 +47,6 @@ export class EmployeeResourceService {
         position: args.position,
         salary: args.salary,
         start_date: args.start_date,
-        // work_days: args.work_days,
         user: {
           update: {
             email: args.email,

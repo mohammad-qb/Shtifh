@@ -16,6 +16,7 @@ export class CityResourceService {
 
   async list(lang?: HeaderLang) {
     return this.model.findMany({
+      where: { active: true },
       select: {
         id: true,
         name_ar: true,
