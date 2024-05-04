@@ -14,6 +14,13 @@ export class PrivateServiceService {
     });
   }
 
+  async update(id: string, args: CreatePrivateServiceDto) {
+    return await this.prismaService.privateService.update({
+      where: { id },
+      data: args,
+    });
+  }
+
   async list() {
     return await this.prismaService.privateService.findMany({});
   }

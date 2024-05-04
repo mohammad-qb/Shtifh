@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrivateServiceService } from './private-service.service';
 import { CreatePrivateServiceDto } from './private-service.dto';
@@ -14,6 +22,12 @@ export class PrivateServiceController {
   @ApiOperation({ summary: 'Create Private Service' })
   async create(@Body() body: CreatePrivateServiceDto) {
     return await this.privateServiceService.create(body);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update Private Service' })
+  async update(@Body() body: CreatePrivateServiceDto, @Param('id') id: string) {
+    return await this.privateServiceService.update(id, body);
   }
 
   @Get()
