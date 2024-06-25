@@ -29,9 +29,8 @@ model Customer {
 model Car {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   city            City     @relation(fields: [cityId], references: [id])
-  building_number String?
   plate           String?
-  name            String
+  body_type       CarBodyType
   model           CarModel @relation(fields: [carModelId], references: [id])
   year            Int      @default(2010)
   color           CarColor @default(BLACK)
@@ -58,9 +57,10 @@ model Employee {
 
 model CarModel {
   id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar    String       @unique
-  name_en    String       @unique
-  name_he    String       @unique
+  image_url  String
+  name_ar    String       
+  name_en    String       
+  name_he    String       
   CarService CarService[]
   Car        Car[]
 }
@@ -68,9 +68,9 @@ model CarModel {
 model City {
   id                     String                   @id @default(auto()) @map("_id") @db.ObjectId
   active                 Boolean?                 @default(true)
-  name_ar                String                   @unique
-  name_en                String                   @unique
-  name_he                String                   @unique
+  name_ar                String                   
+  name_en                String                   
+  name_he                String                   
   car_services           CarService[]
   Order                  Order[]
   Car                    Car[]
@@ -132,17 +132,17 @@ model Order {
 
 model Service {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar         String            @unique
-  name_en         String            @unique
-  name_he         String            @unique
+  name_ar         String            
+  name_en         String            
+  name_he         String            
   CarModelService CarModelService[]
 }
 
 model PrivateService {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar      String         @unique
-  name_en      String         @unique
-  name_he      String         @unique
+  name_ar      String         
+  name_en      String         
+  name_he      String         
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   privateOrder privateOrder[]
@@ -329,4 +329,9 @@ enum CarType {
 enum orderType {
   ORDER
   BOOK_LATER
+}
+
+enum CarBodyType {
+  SEDAN
+  JEEP
 }

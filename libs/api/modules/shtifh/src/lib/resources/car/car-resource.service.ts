@@ -30,7 +30,7 @@ export class CarResourceService {
         id: true,
         color: true,
         plate: true,
-        name: true,
+        body_type: true,
         year: true,
         model: {
           select: {

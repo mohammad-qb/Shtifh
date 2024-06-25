@@ -3,7 +3,8 @@ import { $Enums, Car } from '@prisma/client';
 import { CustomerEntity } from './customer.entity';
 import { OrderEntity } from './order.entity';
 
-export class CarEntity implements Car {
+export class CarEntity {
+  // implements Car
   @ApiProperty({ nullable: true })
   building_number!: string | null;
 
