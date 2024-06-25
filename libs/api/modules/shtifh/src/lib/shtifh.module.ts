@@ -12,7 +12,6 @@ import { PaymentResourceModule } from './resources/payment/payment-resource.modu
 import { EmployeeResourceModule } from './resources/employee/employee.module';
 import { PrivateServiceResourceModule } from './resources/private-service/private-service.module';
 import { PrivateOrderResourceModule } from './resources/private-order/private-order.module';
-import { WorkTimeModule } from './resources/work-time/work-time.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { WorkTimeModule } from './resources/work-time/work-time.module';
     PrivateOrderResourceModule,
     PaymentResourceModule,
     EmployeeResourceModule,
-    WorkTimeModule,
   ],
 })
 export class ShtifhModule {}
