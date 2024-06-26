@@ -11,12 +11,12 @@ export class CreateOrderDto {
   @ApiPropertyOptional({ default: '10/10/2022:13:55:10' })
   @IsString()
   @IsOptional()
-  date?: string;
+  date!: string;
 
   @ApiPropertyOptional({ default: '12:00:00' })
   @IsString()
   @IsOptional()
-  time?: string;
+  time!: string;
 
   @ApiProperty()
   @IsString()

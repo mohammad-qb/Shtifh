@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -24,6 +25,7 @@ import { HeaderLang, Lang } from '@shtifh/decorators';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { RetrieveLastInvoiceEntity } from './entities/last-invoice.entity';
 import { UpdateOrderEntity } from './entities/update-order.entity';
+import { ListOrdersDto } from './dto/list-orders.dto';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -56,11 +58,11 @@ export class OrderResourceController {
     return await this.orderResourceService.update(id, body, lang);
   }
 
-  @Get()
+  @Post('all/:isDone')
   @ApiOperation({ summary: 'List All Orders' })
   @ApiResponse({ type: ListOrdersEntity })
-  async list(@GetUser() user: Payload) {
-    return await this.orderResourceService.list(user.id);
+  async list(@GetUser() user: Payload, @Body() body: ListOrdersDto) {
+    return await this.orderResourceService.list(user.id, body.isDone);
   }
 
   @Get('last-invoice')
@@ -74,5 +76,17 @@ export class OrderResourceController {
   @ApiOperation({ summary: 'Make it done' })
   async done(@GetUser() user: Payload, @Param('id') id: string) {
     return await this.orderResourceService.done(id, user.id);
+  }
+
+  @Get('next-upcoming')
+  @ApiOperation({ summary: 'Get the next upcoming order' })
+  async nextUpcoming(@GetUser() user: Payload) {
+    return await this.orderResourceService.nextUpcoming(user.id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Cancel Order' })
+  async cancelOrder(@GetUser() user: Payload, @Param('id') id: string) {
+    return await this.orderResourceService.cancelOrder(id, user.id);
   }
 }

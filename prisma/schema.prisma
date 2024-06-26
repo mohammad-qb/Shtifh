@@ -26,11 +26,22 @@ model Customer {
   privateOrder privateOrder[]
 }
 
+model CarBrand {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  image_url String?
+  name_en   String
+  name_he   String
+  name_ar   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  Car       Car[]
+}
+
 model Car {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   city            City     @relation(fields: [cityId], references: [id])
+  brand           CarBrand @relation(fields: [carBrandId], references: [id])
   plate           String?
-  body_type       CarBodyType
   model           CarModel @relation(fields: [carModelId], references: [id])
   year            Int      @default(2010)
   color           CarColor @default(BLACK)
@@ -41,6 +52,7 @@ model Car {
   customerId      String   @db.ObjectId
   carModelId      String   @db.ObjectId
   cityId          String   @db.ObjectId
+  carBrandId      String   @db.ObjectId
 }
 
 model Employee {
@@ -58,9 +70,9 @@ model Employee {
 model CarModel {
   id         String       @id @default(auto()) @map("_id") @db.ObjectId
   image_url  String
-  name_ar    String       
-  name_en    String       
-  name_he    String       
+  name_ar    String
+  name_en    String
+  name_he    String
   CarService CarService[]
   Car        Car[]
 }
@@ -68,9 +80,9 @@ model CarModel {
 model City {
   id                     String                   @id @default(auto()) @map("_id") @db.ObjectId
   active                 Boolean?                 @default(true)
-  name_ar                String                   
-  name_en                String                   
-  name_he                String                   
+  name_ar                String
+  name_en                String
+  name_he                String
   car_services           CarService[]
   Order                  Order[]
   Car                    Car[]
@@ -107,13 +119,14 @@ model Order {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   ref_number        String
   is_done           Boolean         @default(false)
-  date              String?
-  time              String?
+  date              String
+  time              String
   address           String
   fees              Float
   tip               Int             @default(0)
   note              String?
   paid              Boolean?        @default(false)
+  is_canceled       Boolean?        @default(false)
   type              orderType       @default(ORDER)
   city              City            @relation(fields: [cityId], references: [id])
   car               Car             @relation(fields: [carId], references: [id])
@@ -121,6 +134,7 @@ model Order {
   employee          Employee?       @relation(fields: [employeeId], references: [id])
   service           CarModelService @relation(fields: [carModelServiceId], references: [id])
   Payment           Payment[]
+  accessories       Accessories[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   carId             String          @db.ObjectId
@@ -132,20 +146,34 @@ model Order {
 
 model Service {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar         String            
-  name_en         String            
-  name_he         String            
+  name_ar         String
+  name_en         String
+  name_he         String
   CarModelService CarModelService[]
 }
 
 model PrivateService {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name_ar      String         
-  name_en      String         
-  name_he      String         
+  image_url    String
+  name_ar      String
+  name_en      String
+  name_he      String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   privateOrder privateOrder[]
+}
+
+model Accessories {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  image_url String
+  price     Float
+  name_ar   String
+  name_en   String
+  name_he   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  Order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   String?  @db.ObjectId
 }
 
 model privateOrder {
@@ -155,6 +183,9 @@ model privateOrder {
   private_service  PrivateService @relation(fields: [privateServiceId], references: [id])
   is_done          Boolean        @default(false)
   status           OrderStatus    @default(PENDING)
+  address          String?
+  date             String?
+  time             String?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt()
   customerId       String         @db.ObjectId

@@ -81,4 +81,56 @@ export class OrderResourceService {
 
     return { success: true };
   }
+
+  async nextUpcoming(customerId: string) {
+    const order = await this.prismaService.order.findFirst({
+      where: {
+        customerId,
+        is_done: false,
+        paid: true,
+        date: {
+          gt: new Date().toISOString(),
+        },
+      },
+      orderBy: { date: 'desc' },
+      select: {
+        id: true,
+        time: true,
+        date: true,
+        address: true,
+        city: { select: { name_ar: true, name_en: true, name_he: true } },
+        employee: {
+          select: {
+            user: {
+              select: {
+                full_name: true,
+              },
+            },
+          },
+        },
+        service: {
+          select: {
+            service: {
+              select: { name_ar: true, name_en: true, name_he: true },
+            },
+          },
+        },
+        car: {
+          select: {
+            brand: {
+              select: {
+                image_url: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+            model: { select: { name_ar: true, name_en: true, name_he: true } },
+          },
+        },
+      },
+    });
+
+    return order;
+  }
 }

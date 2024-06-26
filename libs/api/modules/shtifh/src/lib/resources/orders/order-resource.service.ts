@@ -50,7 +50,7 @@ export class OrderResourceService {
         fees: modelService?.fees || 0,
         ref_number: refNumber,
         customerId,
-        type: args.date ? 'ORDER' : 'BOOK_LATER',
+        type: 'ORDER',
       },
     });
 
@@ -77,39 +77,43 @@ export class OrderResourceService {
     };
   }
 
-  async list(customerId: string) {
+  async list(customerId: string, isDone: boolean) {
     const orders = await this.model.findMany({
-      where: { customerId, paid: true },
+      where: { customerId, paid: true, is_canceled: false, is_done: isDone },
+      orderBy: { date: 'desc' },
       select: {
         id: true,
-        city: {
+        time: true,
+        date: true,
+        address: true,
+        city: { select: { name_ar: true, name_en: true, name_he: true } },
+        employee: {
           select: {
-            id: true,
-            name_ar: true,
-            name_en: true,
-            name_he: true,
+            user: {
+              select: {
+                full_name: true,
+              },
+            },
           },
         },
-        date: true,
-        note: true,
-        address: true,
         service: {
-          include: {
+          select: {
             service: {
-              select: {
-                id: true,
-                name_ar: true,
-                name_en: true,
-                name_he: true,
-              },
+              select: { name_ar: true, name_en: true, name_he: true },
             },
           },
         },
         car: {
           select: {
-            color: true,
-            id: true,
-            name: true,
+            brand: {
+              select: {
+                image_url: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+            model: { select: { name_ar: true, name_en: true, name_he: true } },
           },
         },
       },
@@ -216,6 +220,74 @@ export class OrderResourceService {
     if (!order) throw new BadGatewayException('Private order not exist');
 
     await this.model.update({ where: { id }, data: { is_done: true } });
+
+    return { success: true };
+  }
+
+  async nextUpcoming(customerId: string) {
+    const order = await this.prismaService.order.findFirst({
+      where: {
+        customerId,
+        is_done: false,
+        is_canceled: false,
+        paid: true,
+        date: {
+          gt: new Date().toISOString(),
+        },
+      },
+      orderBy: { date: 'desc' },
+      select: {
+        id: true,
+        time: true,
+        date: true,
+        address: true,
+        city: { select: { name_ar: true, name_en: true, name_he: true } },
+        employee: {
+          select: {
+            user: {
+              select: {
+                full_name: true,
+              },
+            },
+          },
+        },
+        service: {
+          select: {
+            service: {
+              select: { name_ar: true, name_en: true, name_he: true },
+            },
+          },
+        },
+        car: {
+          select: {
+            brand: {
+              select: {
+                image_url: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+            model: { select: { name_ar: true, name_en: true, name_he: true } },
+          },
+        },
+      },
+    });
+
+    return order;
+  }
+
+  async cancelOrder(id: string, customerId: string) {
+    const order = await this.prismaService.order.findFirst({
+      where: { id, customerId },
+    });
+
+    if (!order) throw new BadRequestException('order_not_exist');
+
+    await this.prismaService.order.update({
+      where: { id },
+      data: { is_canceled: true },
+    });
 
     return { success: true };
   }

@@ -19,7 +19,6 @@ export class CarResourceService {
         customerId,
       },
     });
-
     return { car };
   }
 
@@ -30,8 +29,15 @@ export class CarResourceService {
         id: true,
         color: true,
         plate: true,
-        body_type: true,
         year: true,
+        brand: {
+          select: {
+            image_url: true,
+            name_ar: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
         model: {
           select: {
             id: true,

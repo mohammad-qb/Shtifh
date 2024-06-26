@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
 import { CustomerEntity, UserEntity } from '@shtifh/entities';
-import { OrdersDataEntity } from '../../orders/entities/list-orders.entity';
 
 class NestedCustomerEntity implements Pick<CustomerEntity, 'image_url'> {
   @ApiProperty({ nullable: true })
@@ -9,9 +8,6 @@ class NestedCustomerEntity implements Pick<CustomerEntity, 'image_url'> {
 
   @ApiProperty()
   id!: number;
-
-  @ApiProperty({ type: OrdersDataEntity })
-  orders!: OrdersDataEntity;
 }
 
 export class BaseAuthUserEntity

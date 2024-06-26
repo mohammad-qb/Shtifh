@@ -13,9 +13,9 @@ export class CreateCarDto
   implements Omit<Prisma.CarUncheckedCreateInput, 'customerId'>
 {
   @ApiProperty()
-  @IsEnum($Enums.CarBodyType)
+  @IsMongoId()
   @IsNotEmpty()
-  body_type!: $Enums.CarBodyType;
+  carBrandId!: string;
 
   @ApiProperty()
   @IsMongoId()

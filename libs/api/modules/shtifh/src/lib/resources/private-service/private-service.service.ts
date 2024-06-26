@@ -14,6 +14,7 @@ export class PrivateServiceService {
     return await this.model.findMany({
       select: {
         id: true,
+        image_url: true,
         name_ar: true,
         name_en: true,
         name_he: true,

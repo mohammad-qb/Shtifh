@@ -5,6 +5,9 @@ export class ListPrivateServicesEntity {
   id!: string;
 
   @ApiProperty()
+  image_url!: string;
+
+  @ApiProperty()
   name_he!: string;
 
   @ApiProperty()

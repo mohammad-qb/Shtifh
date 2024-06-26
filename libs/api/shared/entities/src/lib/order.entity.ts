@@ -6,9 +6,12 @@ import { CustomerEntity } from './customer.entity';
 import { EmployeeEntity } from './employee.entity';
 
 export class OrderEntity implements Order {
+  @ApiProperty({ default: false })
+  is_canceled!: boolean | null;
+
   @ApiProperty()
   is_done!: boolean;
-  
+
   @ApiProperty()
   fees!: number;
 
@@ -18,11 +21,11 @@ export class OrderEntity implements Order {
   @ApiProperty()
   ref_number!: string;
 
-  @ApiProperty({ nullable: true })
-  date!: string | null;
+  @ApiProperty()
+  date!: string;
 
-  @ApiProperty({ nullable: true })
-  time!: string | null;
+  @ApiProperty()
+  time!: string;
 
   @ApiProperty()
   city!: string;

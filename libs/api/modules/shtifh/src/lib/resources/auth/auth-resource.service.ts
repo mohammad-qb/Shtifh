@@ -55,59 +55,6 @@ export class AuthResourceService {
           select: {
             id: true,
             image_url: true,
-            orders: {
-              take: 1,
-              select: {
-                id: true,
-                city: {
-                  select: {
-                    id: true,
-                    name_ar: true,
-                    name_en: true,
-                    name_he: true,
-                  },
-                },
-                date: true,
-                note: true,
-                address: true,
-                service: { include: { service: true } },
-                // service: {
-                //   include: {
-                //     car_service: {
-                //       select: {
-                //         car_model_services: {
-                //           select: {
-                //             service: {
-                //               select: {
-                //                 id: true,
-                //                 name_ar: true,
-                //                 name_en: true,
-                //                 name_he: true,
-                //               },
-                //             },
-                //           },
-                //         },
-                //       },
-                //     },
-                //     service: {
-                //       select: {
-                //         id: true,
-                //         name_ar: true,
-                //         name_en: true,
-                //         name_he: true,
-                //       },
-                //     },
-                //   },
-                // },
-                car: {
-                  select: {
-                    color: true,
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
           },
         },
         employee: {
@@ -144,59 +91,6 @@ export class AuthResourceService {
           select: {
             id: true,
             image_url: true,
-            orders: {
-              take: 1,
-              select: {
-                id: true,
-                city: {
-                  select: {
-                    id: true,
-                    name_ar: true,
-                    name_en: true,
-                    name_he: true,
-                  },
-                },
-                date: true,
-                note: true,
-                address: true,
-                service: { include: { service: true } },
-                // service: {
-                //   include: {
-                //     car_service: {
-                //       select: {
-                //         car_model_services: {
-                //           select: {
-                //             service: {
-                //               select: {
-                //                 id: true,
-                //                 name_ar: true,
-                //                 name_en: true,
-                //                 name_he: true,
-                //               },
-                //             },
-                //           },
-                //         },
-                //       },
-                //     },
-                //     service: {
-                //       select: {
-                //         id: true,
-                //         name_ar: true,
-                //         name_en: true,
-                //         name_he: true,
-                //       },
-                //     },
-                //   },
-                // },
-                car: {
-                  select: {
-                    color: true,
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
           },
         },
         employee: {
