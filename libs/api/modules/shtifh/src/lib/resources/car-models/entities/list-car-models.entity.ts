@@ -5,6 +5,9 @@ class CarModelsDateEntity {
   id!: string;
 
   @ApiProperty()
+  image_url!: string;
+
+  @ApiProperty()
   name!: string;
 }
 
