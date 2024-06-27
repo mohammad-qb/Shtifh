@@ -12,6 +12,8 @@ import { PaymentResourceModule } from './resources/payment/payment-resource.modu
 import { EmployeeResourceModule } from './resources/employee/employee.module';
 import { PrivateServiceResourceModule } from './resources/private-service/private-service.module';
 import { PrivateOrderResourceModule } from './resources/private-order/private-order.module';
+import { CarBrandResourceModule } from './resources/car-brand/car-brand.module';
+import { AccessoriesResourceModule } from './resources/accessories/accessories.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { PrivateOrderResourceModule } from './resources/private-order/private-or
     PrivateOrderResourceModule,
     PaymentResourceModule,
     EmployeeResourceModule,
+    CarBrandResourceModule,
+    AccessoriesResourceModule,
   ],
 })
 export class ShtifhModule {}
