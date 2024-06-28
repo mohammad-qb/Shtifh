@@ -58,7 +58,7 @@ export class OrderResourceController {
     return await this.orderResourceService.update(id, body, lang);
   }
 
-  @Post('all/:isDone')
+  @Post('all')
   @ApiOperation({ summary: 'List All Orders' })
   @ApiResponse({ type: ListOrdersEntity })
   async list(@GetUser() user: Payload, @Body() body: ListOrdersDto) {

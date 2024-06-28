@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { CustomerResourceService } from './customer-resource.service';
@@ -35,6 +35,12 @@ export class CustomerResourceController {
     @Body() body: UpdatePasswordDto,
     @GetUser() user: Payload
   ) {
-    return await this.customerResourceService.updatePassword(user.id, body);
+    return await this.customerResourceService.updatePassword(user.userId, body);
+  }
+
+  @Get('statistics')
+  @ApiOperation({ summary: 'Get customer statistics' })
+  async statistics(@GetUser() user: Payload) {
+    return await this.customerResourceService.statistics(user.id);
   }
 }

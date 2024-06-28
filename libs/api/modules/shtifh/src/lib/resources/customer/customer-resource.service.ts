@@ -64,9 +64,16 @@ export class CustomerResourceService {
   }
 
   async updatePassword(userId: string, args: UpdatePasswordDto) {
+    console.log({ userId, args });
     const user = await this._userModel.findFirst({ where: { id: userId } });
 
     if (!user) throw new BadRequestException('old_password_wrong');
+    const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
+      args.old_password,
+      user.password
+    );
+
+    if (!isPasswordMatch) throw new BadRequestException('old_password_wrong');
 
     const newPassword = await this.userHelper.crypt.cryptPassword(
       args.new_password
