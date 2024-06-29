@@ -44,17 +44,36 @@ export class OrderResourceService {
       where: { id: args.carModelServiceId },
     });
 
+    const accessories =
+      args.accessoriesIds.length > 0
+        ? await this.prismaService.accessories.findMany({
+            where: { id: { in: args.accessoriesIds } },
+            select: {
+              id: true,
+              price: true,
+            },
+          })
+        : [];
+
+    let accessoriesTotalPrice = 0;
+    for (const acc of accessories) {
+      accessoriesTotalPrice += acc.price;
+    }
+
     const order = await this.model.create({
       data: {
         ...args,
-        fees: modelService?.fees || 0,
+        fees:
+          (modelService?.fees || 0) + accessoriesTotalPrice + (args.tip || 0),
         ref_number: refNumber,
         customerId,
         type: 'ORDER',
+        accessoriesIds: args.accessoriesIds,
       },
     });
 
-    const OrderTotalSum = (modelService?.fees || 0) + (args.tip || 0);
+    const OrderTotalSum =
+      (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
       OrderTotalSum: OrderTotalSum,

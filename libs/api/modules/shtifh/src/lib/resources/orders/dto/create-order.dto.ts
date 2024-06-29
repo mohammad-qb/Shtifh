@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEnum,
   IsMongoId,
   IsNotEmpty,
@@ -47,4 +48,9 @@ export class CreateOrderDto {
   @IsEnum([0, 10, 20, 30, 40, 50])
   @IsOptional()
   tip!: number;
+
+  @ApiPropertyOptional()
+  @IsMongoId({ each: true })
+  @IsArray()
+  accessoriesIds!: [];
 }

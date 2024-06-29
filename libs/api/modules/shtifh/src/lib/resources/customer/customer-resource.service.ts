@@ -64,7 +64,6 @@ export class CustomerResourceService {
   }
 
   async updatePassword(userId: string, args: UpdatePasswordDto) {
-    console.log({ userId, args });
     const user = await this._userModel.findFirst({ where: { id: userId } });
 
     if (!user) throw new BadRequestException('old_password_wrong');
