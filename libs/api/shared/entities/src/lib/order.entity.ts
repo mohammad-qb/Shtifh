@@ -6,6 +6,9 @@ import { CustomerEntity } from './customer.entity';
 import { EmployeeEntity } from './employee.entity';
 
 export class OrderEntity implements Order {
+  @ApiProperty()
+  accessoriesIds!: string[];
+
   @ApiProperty({ default: false })
   is_canceled!: boolean | null;
 

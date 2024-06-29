@@ -289,12 +289,13 @@ model Payment {
 
 model Notification {
   id         String           @id @default(auto()) @map("_id") @db.ObjectId
-  content    String
+  content_en String
   content_ar String
   content_he String
   for_all    Boolean          @default(false)
   type       NotifivationType @default(DEFAULT)
   customer   Customer?        @relation(fields: [customerId], references: [id])
+  is_read    String[]         @db.ObjectId
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt()
   customerId String?          @db.ObjectId
@@ -306,6 +307,8 @@ enum CarServiceModel {
 
 enum NotifivationType {
   DEFAULT
+  ADMIN
+  REMINDER
 }
 
 enum PaymentStatus {

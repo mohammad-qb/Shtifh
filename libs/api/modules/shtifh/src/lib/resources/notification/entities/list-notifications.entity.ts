@@ -12,6 +12,9 @@ class ListNotificationsDataEntity {
 
   @ApiProperty()
   type!: string;
+
+  @ApiProperty()
+  isRead!: boolean;
 }
 
 export class ListNotificationsEntity {

@@ -12,9 +12,9 @@ export class EmployeeResourceService {
     this.privateOrderModel = prismaService.privateOrder;
   }
 
-  async orders(employeeId: string) {
+  async orders(employeeId: string, isDone: boolean) {
     const results = await this.orderModel.findMany({
-      where: { employeeId, paid: true, is_done: false },
+      where: { employeeId, paid: true, is_done: isDone },
       include: {
         city: true,
         customer: { include: { user: true } },
@@ -23,14 +23,12 @@ export class EmployeeResourceService {
       },
     });
 
-    console.log({results})
     return { result: results };
   }
 
-  async privateOrders(employeeId: string) {
-    console.log({employeeId})
+  async privateOrders(employeeId: string, isDone: boolean) {
     const results = await this.privateOrderModel.findMany({
-      where: { employeeId, is_done: false, status: 'CONFIRMED' },
+      where: { employeeId, is_done: isDone, status: 'CONFIRMED' },
       include: {
         customer: { include: { user: true } },
         private_service: true,

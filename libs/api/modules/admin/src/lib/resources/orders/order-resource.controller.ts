@@ -35,4 +35,8 @@ export class OrderResourceController {
   async update(@Body() body: UpdateOrderDto, @Param('id') id: string) {
     return await this.orderResourceService.update(id, body);
   }
+
+  @Get('/next-upcoming')
+  @ApiOperation({summary: "Get the next upcoming order"})
+  async nextUpcoming(@UseGuards())
 }

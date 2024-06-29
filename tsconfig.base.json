@@ -24,6 +24,9 @@
       "@shtifh/decorators": ["libs/api/shared/decorators/src/index.ts"],
       "@shtifh/entities": ["libs/api/shared/entities/src/index.ts"],
       "@shtifh/env-service": ["libs/api/shared/services/env/src/index.ts"],
+      "@shtifh/fcm-service": [
+        "libs/api/shared/services/firebase/fcm/src/index.ts"
+      ],
       "@shtifh/jwt-service": ["libs/api/shared/services/jwt/src/index.ts"],
       "@shtifh/prisma-service": [
         "libs/api/shared/services/prisma/src/index.ts"

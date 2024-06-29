@@ -27,4 +27,12 @@ export class NotificationResourceController {
   async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
     return await this.notificationResourceService.list(user.id, lang);
   }
+
+  @Get('missed')
+  @ApiOperation({ summary: 'Check if customer has missed notification' })
+  async checkMissedNotification(@GetUser() user: Payload) {
+    return await this.notificationResourceService.checkMissedNotification(
+      user.id
+    );
+  }
 }
