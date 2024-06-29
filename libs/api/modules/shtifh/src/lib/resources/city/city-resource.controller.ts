@@ -3,6 +3,7 @@ import { CityResourceService } from './city-resource.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListSlotsDto } from './dto/slots.dto';
 import { ListCarModelsByCityEntity } from './entities/list-car-models';
+import { HeaderLang, Lang } from '@shtifh/decorators';
 
 @ApiTags('City')
 @Controller('cities')
@@ -13,8 +14,8 @@ export class CityResourceController {
 
   @Get()
   @ApiOperation({ summary: 'List all cities' })
-  async list() {
-    return await this.cityResourceService.list();
+  async list(@Lang() lang: HeaderLang) {
+    return await this.cityResourceService.list(lang);
   }
 
   @Post('slots')

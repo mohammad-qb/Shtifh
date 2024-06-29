@@ -41,6 +41,8 @@ export class TakbullResourceService {
       }
     );
 
+    console.log({ result });
+
     return result.data;
   }
 }

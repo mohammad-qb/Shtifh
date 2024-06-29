@@ -14,8 +14,8 @@ export class CityResourceService {
     this.carServiceModel = prismaService.carService;
   }
 
-  async list(lang?: HeaderLang) {
-    return this.model.findMany({
+  async list(lang: HeaderLang) {
+    const results = await this.model.findMany({
       where: { active: true },
       select: {
         id: true,
@@ -24,6 +24,11 @@ export class CityResourceService {
         name_he: true,
       },
     });
+
+    return results.map((el) => ({
+      id: el.id,
+      name: el[`name_${lang}`],
+    }));
   }
 
   async slots(args: ListSlotsDto) {
