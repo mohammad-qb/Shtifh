@@ -1,6 +1,7 @@
 import { Controller, Get, Logger } from '@nestjs/common';
 import { CarBrandResourceService } from './car-brand.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { HeaderLang, Lang } from '@shtifh/decorators';
 
 @Controller('car-brands')
 @ApiTags('Car Brand')
@@ -11,7 +12,7 @@ export class CarBrandResourceController {
 
   @Get()
   @ApiOperation({ summary: 'Get all car brands' })
-  async list() {
-    return await this.service.list();
+  async list(@Lang() lang: HeaderLang) {
+    return await this.service.list(lang);
   }
 }
