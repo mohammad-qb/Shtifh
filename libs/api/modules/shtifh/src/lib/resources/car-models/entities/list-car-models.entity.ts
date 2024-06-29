@@ -8,7 +8,13 @@ class CarModelsDateEntity {
   image_url!: string;
 
   @ApiProperty()
-  name!: string;
+  name_ar!: string;
+
+  @ApiProperty()
+  name_en!: string;
+
+  @ApiProperty()
+  name_he!: string;
 }
 
 export class ListCarModelsEntity {

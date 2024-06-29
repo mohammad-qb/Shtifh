@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
@@ -8,7 +7,7 @@ export class CarBrandResourceService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  async list(lang: HeaderLang) {
+  async list() {
     const results = await this.prismaService.carBrand.findMany({
       select: {
         id: true,
@@ -19,12 +18,6 @@ export class CarBrandResourceService {
       },
     });
 
-    return results.map((el) => {
-      return {
-        id: el.id,
-        image_url: el.image_url,
-        name: el[`name_${lang}`],
-      };
-    });
+    return results;
   }
 }

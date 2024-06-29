@@ -25,6 +25,7 @@ export class CarModelResourceService {
     const results = models.map((el) => {
       return {
         id: el.id,
+        image_url: el.image_url,
         name: el[`name_${lang}`],
       };
     });
