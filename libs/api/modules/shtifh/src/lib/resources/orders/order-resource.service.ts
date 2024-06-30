@@ -96,7 +96,7 @@ export class OrderResourceService {
     };
   }
 
-  async list(customerId: string, isDone: boolean) {
+  async list(customerId: string, isDone: boolean, lang: HeaderLang) {
     const orders = await this.model.findMany({
       where: { customerId, paid: true, is_canceled: false, is_done: isDone },
       orderBy: { date: 'desc' },
@@ -138,7 +138,24 @@ export class OrderResourceService {
       },
     });
 
-    return { results: orders };
+    return {
+      results: orders.map((el) => ({
+        id: el.id,
+        time: el.time,
+        date: el.date,
+        address: el.address,
+        city: el.city[`name_${lang}`],
+        employee: el.employee,
+        service: el.service.service[`name_${lang}`],
+        car: {
+          brand: {
+            image_url: el.car.brand.image_url,
+            name: el.car.brand[`name_${lang}`],
+          },
+          model: el.car.model[`name_${lang}`],
+        },
+      })),
+    };
   }
 
   async update(orderId: string, args: UpdateOrderDto, lang: HeaderLang) {
