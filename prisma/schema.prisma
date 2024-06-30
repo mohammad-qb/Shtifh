@@ -38,21 +38,22 @@ model CarBrand {
 }
 
 model Car {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  city       City     @relation(fields: [cityId], references: [id])
-  brand      CarBrand @relation(fields: [carBrandId], references: [id])
-  plate      String?
-  model      CarModel @relation(fields: [carModelId], references: [id])
-  year       Int      @default(2010)
-  color      CarColor @default(BLACK)
-  customer   Customer @relation(fields: [customerId], references: [id])
-  orders     Order[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  customerId String   @db.ObjectId
-  carModelId String   @db.ObjectId
-  cityId     String   @db.ObjectId
-  carBrandId String   @db.ObjectId
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  city         City           @relation(fields: [cityId], references: [id])
+  brand        CarBrand       @relation(fields: [carBrandId], references: [id])
+  plate        String?
+  model        CarModel       @relation(fields: [carModelId], references: [id])
+  year         Int            @default(2010)
+  color        CarColor       @default(BLACK)
+  customer     Customer       @relation(fields: [customerId], references: [id])
+  orders       Order[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  customerId   String         @db.ObjectId
+  carModelId   String         @db.ObjectId
+  cityId       String         @db.ObjectId
+  carBrandId   String         @db.ObjectId
+  privateOrder privateOrder[]
 }
 
 model Employee {
@@ -92,6 +93,7 @@ model City {
   GlobalSchedule         GlobalSchedule[]
   RecurringDailySchedule RecurringDailySchedule[]
   DailySchedule          DailySchedule[]
+  privateOrder           privateOrder[]
 }
 
 model CarService {
@@ -184,6 +186,8 @@ model privateOrder {
   private_service  PrivateService @relation(fields: [privateServiceId], references: [id])
   is_done          Boolean        @default(false)
   status           OrderStatus    @default(PENDING)
+  car              Car            @relation(fields: [carId], references: [id])
+  city             City           @relation(fields: [cityId], references: [id])
   address          String?
   date             String?
   time             String?
@@ -192,6 +196,8 @@ model privateOrder {
   customerId       String         @db.ObjectId
   employeeId       String?        @db.ObjectId
   privateServiceId String         @db.ObjectId
+  carId            String         @db.ObjectId
+  cityId           String         @db.ObjectId
 }
 
 model User {

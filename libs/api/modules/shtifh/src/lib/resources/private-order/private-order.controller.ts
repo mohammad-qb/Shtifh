@@ -19,6 +19,7 @@ import { Payload } from '@shtifh/user-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
 import { ListPrivateOrdersEntity } from './entities/list-private-orders.entity';
 import { CreatePrivateOrderEntity } from './entities/create-private-order.entity';
+import { HeaderLang, Lang } from '@shtifh/decorators';
 
 @ApiTags('Private Orders')
 @ApiBearerAuth()
@@ -31,10 +32,10 @@ export class PrivateOrderController {
 
   @Get()
   @ApiOperation({ summary: 'List all private orders' })
-  @ApiResponse({ type: ListPrivateOrdersEntity, isArray: true })
-  async list(@GetUser() user: Payload) {
+  // @ApiResponse({ type: ListPrivateOrdersEntity, isArray: true })
+  async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
     console.log({ user });
-    return await this.privateOrderService.list(user);
+    return await this.privateOrderService.list(user, lang);
   }
 
   @Post()

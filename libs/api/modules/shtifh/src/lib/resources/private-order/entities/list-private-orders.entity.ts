@@ -6,13 +6,7 @@ class PrivateOrderData {
   id!: string;
 
   @ApiProperty()
-  name_ar!: string;
-
-  @ApiProperty()
-  name_en!: string;
-
-  @ApiProperty()
-  name_he!: string;
+  name!: string;
 
   @ApiProperty()
   createdAt!: string;
@@ -20,6 +14,15 @@ class PrivateOrderData {
 export class ListPrivateOrdersEntity {
   @ApiProperty()
   id!: string;
+
+  @ApiProperty()
+  time!: string;
+
+  @ApiProperty()
+  date!: string;
+
+  @ApiProperty()
+  address!: string;
 
   @ApiProperty({ enum: $Enums.OrderStatus })
   status!: $Enums.OrderStatus;

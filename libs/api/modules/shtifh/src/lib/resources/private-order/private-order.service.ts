@@ -2,6 +2,7 @@ import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
 import { Payload } from '@shtifh/user-service';
+import { HeaderLang } from '@shtifh/decorators';
 
 @Injectable()
 export class PrivateOrderService {
@@ -16,6 +17,11 @@ export class PrivateOrderService {
     return await this.model.create({
       data: {
         privateServiceId: args.private_service_id,
+        date: args.date,
+        time: args.time,
+        cityId: args.cityId,
+        carId: args.carId,
+        address: args.address,
         customerId,
       },
       select: {
@@ -34,8 +40,8 @@ export class PrivateOrderService {
     });
   }
 
-  async list(user: Payload) {
-    return await this.model.findMany({
+  async list(user: Payload, lang: HeaderLang) {
+    const orders = await this.model.findMany({
       where:
         user.role === 'CUSTOMER'
           ? { customerId: user.id }
@@ -43,8 +49,31 @@ export class PrivateOrderService {
       select: {
         status: true,
         id: true,
-        customer: {
-          select: { user: { select: { full_name: true, mobile: true } } },
+        time: true,
+        date: true,
+        address: true,
+        employee: {
+          select: {
+            user: {
+              select: {
+                full_name: true,
+              },
+            },
+          },
+        },
+        city: { select: { name_ar: true, name_en: true, name_he: true } },
+        car: {
+          select: {
+            brand: {
+              select: {
+                image_url: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+              },
+            },
+            model: { select: { name_ar: true, name_en: true, name_he: true } },
+          },
         },
         private_service: {
           select: {
@@ -57,6 +86,28 @@ export class PrivateOrderService {
         },
       },
     });
+
+    return orders.map((el) => ({
+      status: el.status,
+      id: el.id,
+      time: el.time,
+      date: el.date,
+      address: el.address,
+      employee: el.employee,
+      city: el.city[`name_${lang}`],
+      private_service: {
+        id: el.private_service.id,
+        createdAt: el.private_service.createdAt,
+        name: el.private_service[`name_${lang}`],
+      },
+      car: {
+        brand: {
+          image_url: el.car.brand.image_url,
+          name: el.car.brand[`name_${lang}`],
+        },
+        model: el.car.model[`name_${lang}`],
+      },
+    }));
   }
 
   async done(id: string, empId: string) {
