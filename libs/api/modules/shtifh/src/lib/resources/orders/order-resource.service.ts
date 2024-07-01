@@ -126,6 +126,7 @@ export class OrderResourceService {
         },
         car: {
           select: {
+            id: true,
             brand: {
               select: {
                 id: true,
@@ -159,6 +160,7 @@ export class OrderResourceService {
           name: el.service.service[`name_${lang}`],
         },
         car: {
+          id: el.car.id,
           brand: {
             image_url: el.car.brand.image_url,
             name: el.car.brand[`name_${lang}`],
