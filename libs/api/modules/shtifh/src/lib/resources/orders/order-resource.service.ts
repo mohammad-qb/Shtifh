@@ -105,7 +105,9 @@ export class OrderResourceService {
         time: true,
         date: true,
         address: true,
-        city: { select: { name_ar: true, name_en: true, name_he: true } },
+        city: {
+          select: { id: true, name_ar: true, name_en: true, name_he: true },
+        },
         employee: {
           select: {
             user: {
@@ -118,7 +120,7 @@ export class OrderResourceService {
         service: {
           select: {
             service: {
-              select: { name_ar: true, name_en: true, name_he: true },
+              select: { id: true, name_ar: true, name_en: true, name_he: true },
             },
           },
         },
@@ -126,13 +128,16 @@ export class OrderResourceService {
           select: {
             brand: {
               select: {
+                id: true,
                 image_url: true,
                 name_ar: true,
                 name_en: true,
                 name_he: true,
               },
             },
-            model: { select: { name_ar: true, name_en: true, name_he: true } },
+            model: {
+              select: { id: true, name_ar: true, name_en: true, name_he: true },
+            },
           },
         },
       },
@@ -144,15 +149,25 @@ export class OrderResourceService {
         time: el.time,
         date: el.date,
         address: el.address,
-        city: el.city[`name_${lang}`],
+        city: {
+          id: el.city.id,
+          name: el.city[`name_${lang}`],
+        },
         employee: el.employee,
-        service: el.service.service[`name_${lang}`],
+        service: {
+          id: el.service.service.id,
+          name: el.service.service[`name_${lang}`],
+        },
         car: {
           brand: {
             image_url: el.car.brand.image_url,
             name: el.car.brand[`name_${lang}`],
+            id: el.car.brand.id,
           },
-          model: el.car.model[`name_${lang}`],
+          model: {
+            id: el.car.model.id,
+            name: el.car.model[`name_${lang}`],
+          },
         },
       })),
     };

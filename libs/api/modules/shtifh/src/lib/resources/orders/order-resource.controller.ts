@@ -60,7 +60,7 @@ export class OrderResourceController {
 
   @Post('all')
   @ApiOperation({ summary: 'List All Orders' })
-  @ApiResponse({ type: ListOrdersEntity })
+  // @ApiResponse({ type: ListOrdersEntity })
   async list(
     @GetUser() user: Payload,
     @Body() body: ListOrdersDto,
