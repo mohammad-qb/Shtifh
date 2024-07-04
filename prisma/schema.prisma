@@ -126,6 +126,7 @@ model Order {
   address           String
   fees              Float
   tip               Int             @default(0)
+  lat_lng           String[]
   note              String?
   paid              Boolean?        @default(false)
   is_canceled       Boolean?        @default(false)
@@ -191,6 +192,7 @@ model privateOrder {
   address          String?
   date             String?
   time             String?
+  lat_lng          String[]
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt()
   customerId       String         @db.ObjectId

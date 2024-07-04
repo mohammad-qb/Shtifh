@@ -53,4 +53,10 @@ export class CreateOrderDto {
   @IsMongoId({ each: true })
   @IsArray()
   accessoriesIds!: [];
+
+  @ApiPropertyOptional()
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  lat_lng?: string[];
 }

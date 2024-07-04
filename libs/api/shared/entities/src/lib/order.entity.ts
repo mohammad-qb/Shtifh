@@ -83,4 +83,7 @@ export class OrderEntity implements Order {
 
   @ApiProperty()
   cityId!: string;
+
+  @ApiProperty()
+  lat_lng!: string[];
 }

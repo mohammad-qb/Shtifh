@@ -14,17 +14,17 @@ export class EmployeeResourceController {
   constructor(private readonly employeeService: EmployeeResourceService) {}
 
   @Get('orders')
-  async orders(@GetUser() user: Payload, @Query('isDone') isDone: boolean) {
+  async orders(@GetUser() user: Payload, @Query('isDone') isDone: string) {
     console.log({ user });
-    return await this.employeeService.orders(user.id, isDone);
+    return await this.employeeService.orders(user.id, isDone === 'true');
   }
 
   @Get('private-orders')
   async privateOrders(
     @GetUser() user: Payload,
-    @Query('isDone') isDone: boolean
+    @Query('isDone') isDone: string
   ) {
     console.log({ user });
-    return await this.employeeService.privateOrders(user.id, isDone);
+    return await this.employeeService.privateOrders(user.id, isDone === 'true');
   }
 }
