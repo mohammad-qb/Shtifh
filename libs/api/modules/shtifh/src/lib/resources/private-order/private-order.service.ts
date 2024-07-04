@@ -23,6 +23,7 @@ export class PrivateOrderService {
         carId: args.carId,
         address: args.address,
         customerId,
+        lat_lng: args.lat_lng,
       },
       select: {
         status: true,

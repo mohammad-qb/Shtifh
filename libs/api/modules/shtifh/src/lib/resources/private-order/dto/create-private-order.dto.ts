@@ -1,5 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreatePrivateOrderDto {
   @ApiProperty()
@@ -31,4 +37,10 @@ export class CreatePrivateOrderDto {
   @IsString()
   @IsNotEmpty()
   time!: string;
+
+  @ApiPropertyOptional()
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  lat_lng?: string[];
 }
