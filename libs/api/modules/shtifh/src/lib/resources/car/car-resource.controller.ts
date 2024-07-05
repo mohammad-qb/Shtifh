@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CarResourceService } from './car-resource.service';
 import {
   ApiBearerAuth,
@@ -11,6 +19,7 @@ import { Payload } from '@shtifh/user-service';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { ListCarEntity } from './entities/list-car-response.entity';
 import { Lang, HeaderLang } from '@shtifh/decorators';
+import { UpdateCarDto } from './dto/update-car.dto';
 
 @ApiTags('Car')
 @ApiBearerAuth()
@@ -25,6 +34,12 @@ export class CarResourceController {
   @ApiOperation({ summary: 'Create New Car' })
   async create(@Body() body: CreateCarDto, @GetUser() user: Payload) {
     return await this.carResourceService.create(user.id, body);
+  }
+
+  @Put()
+  @ApiOperation({ summary: 'Update Car' })
+  async update(@Body() body: UpdateCarDto, @GetUser() user: Payload) {
+    return await this.carResourceService.update(user.id, body);
   }
 
   @Get()

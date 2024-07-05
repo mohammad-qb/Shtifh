@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { HeaderLang } from '@shtifh/decorators';
+import { UpdateCarDto } from './dto/update-car.dto';
 
 @Injectable()
 export class CarResourceService {
@@ -58,5 +59,19 @@ export class CarResourceService {
       };
     });
     return { results };
+  }
+
+  async update(customerId: string, args: UpdateCarDto) {
+    const { carId, ...rest } = args;
+    const car = await this.model.findFirst({
+      where: { id: carId, customerId },
+    });
+
+    if (!car) throw new BadRequestException('car_not_exist');
+    const result = await this.model.update({
+      where: { id: carId, customerId },
+      data: rest,
+    });
+    return { car: result };
   }
 }
