@@ -31,6 +31,14 @@ export class CarResourceService {
         color: true,
         plate: true,
         year: true,
+        city: {
+          select: {
+            id: true,
+            name_ar: true,
+            name_en: true,
+            name_he: true,
+          },
+        },
         brand: {
           select: {
             image_url: true,
@@ -55,6 +63,7 @@ export class CarResourceService {
       const { model, ..._car } = el;
       return {
         ..._car,
+        city: { id: el.city.id, name: el.city[`name_${lang}`] },
         model: { name: el.model[`name_${lang}`], id: el.model.id },
       };
     });

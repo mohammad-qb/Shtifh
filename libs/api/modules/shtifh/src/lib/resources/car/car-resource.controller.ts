@@ -44,7 +44,7 @@ export class CarResourceController {
 
   @Get()
   @ApiOperation({ summary: 'List All Cars' })
-  @ApiResponse({ type: ListCarEntity })
+  // @ApiResponse({ type: ListCarEntity })
   async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
     return await this.carResourceService.list(user.id, lang);
   }
