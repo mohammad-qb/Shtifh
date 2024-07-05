@@ -41,6 +41,7 @@ export class CarResourceService {
         },
         brand: {
           select: {
+            id: true,
             image_url: true,
             name_ar: true,
             name_en: true,
