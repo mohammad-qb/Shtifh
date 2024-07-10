@@ -6,6 +6,11 @@ export class CreateCarModelDto implements Prisma.CarModelUncheckedCreateInput {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  image_url!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   name_ar!: string;
 
   @ApiProperty()

@@ -16,4 +16,9 @@ export class CreatePrivateServiceDto {
   @IsString()
   @IsNotEmpty()
   name_he!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  image_url!: string;
 }
