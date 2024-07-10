@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { $Enums } from '@prisma/client';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty()
@@ -17,6 +24,11 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   readonly mobile!: string;
+
+  @ApiProperty({ enum: $Enums.Gender })
+  @IsEnum($Enums.Gender)
+  @IsNotEmpty()
+  readonly gender!: $Enums.Gender;
 
   @ApiProperty()
   @IsString()

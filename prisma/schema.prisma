@@ -18,6 +18,7 @@ model Admin {
 model Customer {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   image_url    String?
+  gender       Gender         @default(MALE)
   user         User           @relation(fields: [userId], references: [id])
   cars         Car[]
   orders       Order[]
@@ -362,6 +363,11 @@ enum CarColor {
   GREEN
   BLUE
   OTHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum CarType {

@@ -11,6 +11,7 @@ import { RegisterDto } from './dto/register.dto';
 import { ForgetPasswordDto } from './dto/forget-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ValidateCodeDto } from './dto/validate-code.dto';
+import { generateImageUrl } from './helper/generate-image-url';
 
 @Injectable()
 export class AuthResourceService {
@@ -40,7 +41,10 @@ export class AuthResourceService {
         ...{ ...args, password: passwordCrypt },
         customer: {
           create: {
-            image_url: '',
+            image_url: generateImageUrl(
+              args.gender,
+              args.full_name.split(' ')[0]
+            ),
           },
         },
       },

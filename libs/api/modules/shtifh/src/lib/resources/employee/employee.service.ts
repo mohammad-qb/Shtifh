@@ -18,7 +18,7 @@ export class EmployeeResourceService {
       include: {
         city: true,
         customer: { include: { user: true } },
-        car: { include: { model: true } },
+        car: { include: { model: true, brand: true } },
         service: { include: { service: true } },
       },
     });
@@ -32,6 +32,8 @@ export class EmployeeResourceService {
       include: {
         customer: { include: { user: true } },
         private_service: true,
+        city: true,
+        car: { include: { model: true, brand: true } },
       },
     });
 
