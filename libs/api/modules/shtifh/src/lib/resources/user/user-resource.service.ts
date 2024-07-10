@@ -28,6 +28,7 @@ export class UserResourceService {
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },

@@ -35,12 +35,14 @@ export class AuthResourceService {
     const passwordCrypt = await this.userHelper.crypt.cryptPassword(
       args.password
     );
+    const { gender, ...rest } = args;
 
     const registerUser = await this.model.create({
       data: {
-        ...{ ...args, password: passwordCrypt },
+        ...{ ...rest, password: passwordCrypt },
         customer: {
           create: {
+            gender,
             image_url: generateImageUrl(
               args.gender,
               args.full_name.split(' ')[0]
@@ -58,6 +60,7 @@ export class AuthResourceService {
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },
@@ -94,6 +97,7 @@ export class AuthResourceService {
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },
