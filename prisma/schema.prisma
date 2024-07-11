@@ -46,6 +46,7 @@ model Car {
   model        CarModel       @relation(fields: [carModelId], references: [id])
   year         Int            @default(2010)
   color        CarColor       @default(BLACK)
+  is_active    Boolean        @default(true)
   customer     Customer       @relation(fields: [customerId], references: [id])
   orders       Order[]
   createdAt    DateTime       @default(now())
