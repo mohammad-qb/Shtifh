@@ -17,8 +17,6 @@ export class PrivateOrderService {
     return await this.model.create({
       data: {
         privateServiceId: args.private_service_id,
-        date: args.date,
-        time: args.time,
         cityId: args.cityId,
         carId: args.carId,
         address: args.address,
