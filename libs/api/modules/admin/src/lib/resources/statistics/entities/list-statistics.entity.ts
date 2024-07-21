@@ -20,6 +20,15 @@ export class ListStatisticsEntity {
   @ApiProperty()
   incompleteOrders!: number;
 
+  @ApiProperty()
+  allOrders!: number;
+
+  @ApiProperty()
+  compAllOrders!: number;
+
+  @ApiProperty()
+  incompAllOrders!: number;
+
   @ApiProperty({ type: MoneyData })
   money!: MoneyData;
 }

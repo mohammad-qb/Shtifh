@@ -31,28 +31,39 @@ export class StatisticsResourceService {
 
     console.log({ where });
 
-    const [customers, orders, completeOrders, incompleteOrders, money] =
-      await Promise.all([
-        this.prismaService.customer.count({
-          where: { user: { createdAt: where } },
-        }),
-        this.prismaService.order.count({
-          where: { createdAt: where },
-        }),
-        this.prismaService.order.count({
-          where: { createdAt: where, is_done: true },
-        }),
-        this.prismaService.order.count({
-          where: { createdAt: where, is_done: false },
-        }),
-        this.prismaService.order.aggregate({
-          _sum: {
-            fees: true,
-            tip: true,
-          },
-          where: { createdAt: where },
-        }),
-      ]).then((data) => data);
+    const [
+      customers,
+      orders,
+      completeOrders,
+      incompleteOrders,
+      money,
+      allOrders,
+      compAllOrders,
+      incompAllOrders,
+    ] = await Promise.all([
+      this.prismaService.customer.count({
+        where: { user: { createdAt: where } },
+      }),
+      this.prismaService.order.count({
+        where: { createdAt: where },
+      }),
+      this.prismaService.order.count({
+        where: { createdAt: where, is_done: true },
+      }),
+      this.prismaService.order.count({
+        where: { createdAt: where, is_done: false },
+      }),
+      this.prismaService.order.aggregate({
+        _sum: {
+          fees: true,
+          tip: true,
+        },
+        where: { createdAt: where },
+      }),
+      this.prismaService.order.count(),
+      this.prismaService.order.count({ where: { is_done: true } }),
+      this.prismaService.order.count({ where: { is_done: false } }),
+    ]).then((data) => data);
 
     return {
       customers,
@@ -60,6 +71,9 @@ export class StatisticsResourceService {
       completeOrders,
       incompleteOrders,
       money: money._sum,
+      allOrders,
+      compAllOrders,
+      incompAllOrders,
     };
   }
 }

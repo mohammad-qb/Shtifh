@@ -2,13 +2,17 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { UserService } from '@shtifh/user-service';
 
 @Injectable()
 export class EmployeeResourceService {
   private logger = new Logger(EmployeeResourceService.name);
   private model;
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService
+  ) {
     this.model = prismaService.employee;
   }
 
@@ -25,7 +29,9 @@ export class EmployeeResourceService {
             email: args.email,
             full_name: args.full_name,
             mobile: args.mobile,
-            password: '',
+            password: await this.userService.resources.crypt.cryptPassword(
+              args.password
+            ),
             role: 'EMPLOYEE',
           },
         },

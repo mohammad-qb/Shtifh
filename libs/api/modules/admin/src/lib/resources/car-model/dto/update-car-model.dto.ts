@@ -17,4 +17,9 @@ export class UpdateCarModelDto implements Prisma.CarModelUncheckedUpdateInput {
   @IsString()
   @IsOptional()
   name_he?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  image_url?: string;
 }
