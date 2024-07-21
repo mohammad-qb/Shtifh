@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Order } from '@prisma/client';
+import { $Enums } from '@prisma/client';
 import { CarServiceEntity } from './car-service.entity';
 import { CarEntity } from './car.entity';
 import { CustomerEntity } from './customer.entity';
 import { EmployeeEntity } from './employee.entity';
 
-export class OrderEntity implements Order {
+export class OrderEntity {
   @ApiProperty()
   accessoriesIds!: string[];
 

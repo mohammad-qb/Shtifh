@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Customer } from '@prisma/client';
-import { UserEntity } from './user.entity';
+import { $Enums } from '@prisma/client';
 import { CarEntity } from './car.entity';
 import { OrderEntity } from './order.entity';
+import { UserEntity } from './user.entity';
 
-export class CustomerEntity implements Customer {
+export class CustomerEntity {
   @ApiProperty()
   id!: string;
 
