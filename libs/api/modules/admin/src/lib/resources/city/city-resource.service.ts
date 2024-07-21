@@ -27,7 +27,7 @@ export class CityResourceService {
           create: {
             day: 'FRIDAY',
             start_time: '07:00',
-            end_time: '03:00',
+            end_time: '15:00',
             requests_in_hour: 2,
             is_off: false,
           },
