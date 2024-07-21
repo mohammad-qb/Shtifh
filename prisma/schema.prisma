@@ -131,6 +131,7 @@ model Order {
   note              String?
   paid              Boolean?        @default(false)
   is_canceled       Boolean?        @default(false)
+  canceled_note     String?
   type              orderType       @default(ORDER)
   city              City            @relation(fields: [cityId], references: [id])
   car               Car             @relation(fields: [carId], references: [id])
