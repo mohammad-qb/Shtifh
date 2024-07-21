@@ -53,7 +53,9 @@ export class ScheduleResourceService {
       this.prismaService.weekend.findMany({
         where: { cityId: args.cityId },
       }),
-      this.prismaService.recurringDailySchedule.findMany(),
+      this.prismaService.recurringDailySchedule.findMany({
+        where: { cityId: args.cityId },
+      }),
     ];
 
     const [
