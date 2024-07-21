@@ -35,12 +35,14 @@ export class AuthResourceService {
     const passwordCrypt = await this.userHelper.crypt.cryptPassword(
       args.password
     );
+    const { gender, ...rest } = args;
 
     const registerUser = await this.model.create({
       data: {
-        ...{ ...args, password: passwordCrypt },
+        ...{ ...rest, password: passwordCrypt },
         customer: {
           create: {
+            gender,
             image_url: generateImageUrl(
               args.gender,
               args.full_name.split(' ')[0]
@@ -58,6 +60,7 @@ export class AuthResourceService {
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },
@@ -91,9 +94,11 @@ export class AuthResourceService {
         mobile: true,
         password: true,
         role: true,
+        is_blocked: true,
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },
@@ -105,6 +110,8 @@ export class AuthResourceService {
 
     console.log({ user });
     if (!user) throw new BadRequestException('user_not_exist');
+    if (user.is_blocked) throw new UnauthorizedException('user_blocked');
+
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
       args.password,
       user.password
@@ -132,6 +139,7 @@ export class AuthResourceService {
     const user = await this.model.findFirst({ where: { email: args.email } });
 
     if (!user) throw new BadRequestException('user_wrong');
+    if (user.is_blocked) throw new UnauthorizedException('user_blocked');
 
     const code = Math.floor(Math.random() * 1000000).toString();
 

@@ -25,7 +25,7 @@ export class CarResourceService {
 
   async list(customerId: string, lang: HeaderLang) {
     const cars = await this.model.findMany({
-      where: { customerId },
+      where: { customerId, is_active: true },
       select: {
         id: true,
         color: true,
@@ -83,5 +83,20 @@ export class CarResourceService {
       data: rest,
     });
     return { car: result };
+  }
+
+  async delete(customerId: string, carId: string) {
+    const car = await this.model.findFirst({
+      where: { customerId, id: carId },
+    });
+
+    if (!car) throw new BadRequestException('car_not_exist');
+
+    await this.model.update({
+      where: { id: carId },
+      data: { is_active: false },
+    });
+
+    return { success: true };
   }
 }

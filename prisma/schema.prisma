@@ -18,7 +18,7 @@ model Admin {
 model Customer {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   image_url    String?
-  gender       Gender         @default(MALE)
+  gender       Gender?        @default(MALE)
   user         User           @relation(fields: [userId], references: [id])
   cars         Car[]
   orders       Order[]
@@ -46,6 +46,7 @@ model Car {
   model        CarModel       @relation(fields: [carModelId], references: [id])
   year         Int            @default(2010)
   color        CarColor       @default(BLACK)
+  is_active    Boolean        @default(true)
   customer     Customer       @relation(fields: [customerId], references: [id])
   orders       Order[]
   createdAt    DateTime       @default(now())
@@ -58,15 +59,17 @@ model Car {
 }
 
 model Employee {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  position     String
-  salary       Float
-  color        String
-  start_date   String
-  user         User           @relation(fields: [userId], references: [id])
-  order        Order[]
-  userId       String         @unique @db.ObjectId
-  privateOrder privateOrder[]
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  position           String
+  salary             Float
+  color              String
+  start_date         String
+  total_tips         Float          @default(0)
+  total_orders_money Float          @default(0)
+  user               User           @relation(fields: [userId], references: [id])
+  order              Order[]
+  userId             String         @unique @db.ObjectId
+  privateOrder       privateOrder[]
 }
 
 model CarModel {
@@ -132,6 +135,7 @@ model Order {
   paid              Boolean?        @default(false)
   is_canceled       Boolean?        @default(false)
   canceled_note     String?         @default("---")
+  canceled_by       Role            @default(CUSTOMER)
   type              orderType       @default(ORDER)
   city              City            @relation(fields: [cityId], references: [id])
   car               Car             @relation(fields: [carId], references: [id])
@@ -210,6 +214,7 @@ model User {
   email               String    @unique
   mobile              String
   password            String
+  is_blocked          Boolean   @default(false)
   reset_password_code String?
   role                Role      @default(CUSTOMER)
   createdAt           DateTime  @default(now())

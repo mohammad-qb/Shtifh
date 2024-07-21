@@ -1,24 +1,20 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
+  Param,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { CarResourceService } from './car-resource.service';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { CreateCarDto } from './dto/create-car.dto';
-import { Payload } from '@shtifh/user-service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
-import { ListCarEntity } from './entities/list-car-response.entity';
-import { Lang, HeaderLang } from '@shtifh/decorators';
+import { HeaderLang, Lang } from '@shtifh/decorators';
+import { Payload } from '@shtifh/user-service';
+import { CarResourceService } from './car-resource.service';
+import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 
 @ApiTags('Car')
@@ -47,5 +43,11 @@ export class CarResourceController {
   // @ApiResponse({ type: ListCarEntity })
   async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
     return await this.carResourceService.list(user.id, lang);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'delete a car' })
+  async delete(@GetUser() user: Payload, @Param('id') id: string) {
+    return await this.carResourceService.delete(user.id, id);
   }
 }

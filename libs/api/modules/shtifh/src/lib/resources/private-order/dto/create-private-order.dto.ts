@@ -28,16 +28,6 @@ export class CreatePrivateOrderDto {
   @IsNotEmpty()
   address!: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  date!: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  time!: string;
-
   @ApiPropertyOptional()
   @IsString({ each: true })
   @IsArray()

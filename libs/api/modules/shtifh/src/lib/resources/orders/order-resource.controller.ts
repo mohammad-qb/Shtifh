@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Logger,
   Param,
@@ -16,16 +15,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
-import { Payload } from '@shtifh/user-service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { ListOrdersEntity } from './entities/list-orders.entity';
-import { OrderResourceService } from './order-resource.service';
-import { CreateOrderEntity } from './entities/create-order.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
+import { Payload } from '@shtifh/user-service';
+import { CancelOrderDto } from './dto/cancel-order.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { ListOrdersDto } from './dto/list-orders.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { CreateOrderEntity } from './entities/create-order.entity';
 import { RetrieveLastInvoiceEntity } from './entities/last-invoice.entity';
 import { UpdateOrderEntity } from './entities/update-order.entity';
-import { ListOrdersDto } from './dto/list-orders.dto';
+import { OrderResourceService } from './order-resource.service';
 
 @ApiTags('Order')
 @ApiBearerAuth()
@@ -88,9 +87,13 @@ export class OrderResourceController {
     return await this.orderResourceService.nextUpcoming(user.id);
   }
 
-  @Delete(':id')
+  @Post(':id')
   @ApiOperation({ summary: 'Cancel Order' })
-  async cancelOrder(@GetUser() user: Payload, @Param('id') id: string) {
-    return await this.orderResourceService.cancelOrder(id, user.id);
+  async cancelOrder(
+    @GetUser() user: Payload,
+    @Param('id') id: string,
+    @Body() body: CancelOrderDto
+  ) {
+    return await this.orderResourceService.cancelOrder(id, user, body);
   }
 }

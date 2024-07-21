@@ -27,4 +27,9 @@ export class EmployeeResourceController {
     console.log({ user });
     return await this.employeeService.privateOrders(user.id, isDone === 'true');
   }
+
+  @Get('statistics')
+  async statistics(@GetUser() user: Payload) {
+    return await this.employeeService.statistics(user.id);
+  }
 }

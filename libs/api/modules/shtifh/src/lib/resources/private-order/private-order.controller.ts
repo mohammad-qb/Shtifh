@@ -17,7 +17,6 @@ import { PrivateOrderService } from './private-order.service';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { Payload } from '@shtifh/user-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
-import { ListPrivateOrdersEntity } from './entities/list-private-orders.entity';
 import { CreatePrivateOrderEntity } from './entities/create-private-order.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
 

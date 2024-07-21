@@ -9,6 +9,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { HeaderLang } from '@shtifh/decorators';
+import { CancelOrderDto } from './dto/cancel-order.dto';
+import { Payload } from '@shtifh/user-service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrderResourceService {
@@ -273,6 +276,13 @@ export class OrderResourceService {
     if (!order) throw new BadGatewayException('Private order not exist');
 
     await this.model.update({ where: { id }, data: { is_done: true } });
+    await this.prismaService.employee.update({
+      where: { id: empId },
+      data: {
+        total_tips: { increment: order.tip },
+        total_orders_money: { increment: order.fees },
+      },
+    });
 
     return { success: true };
   }
@@ -330,16 +340,25 @@ export class OrderResourceService {
     return order;
   }
 
-  async cancelOrder(id: string, customerId: string) {
+  async cancelOrder(id: string, user: Payload, args: CancelOrderDto) {
+    const conditions: Prisma.OrderWhereInput = { id };
+
+    if (user.role === 'CUSTOMER') conditions.customerId = user.id;
+    else conditions.employeeId = user.id;
+
     const order = await this.prismaService.order.findFirst({
-      where: { id, customerId },
+      where: conditions,
     });
 
     if (!order) throw new BadRequestException('order_not_exist');
 
     await this.prismaService.order.update({
       where: { id },
-      data: { is_canceled: true },
+      data: {
+        is_canceled: true,
+        canceled_note: args.note,
+        canceled_by: user.role,
+      },
     });
 
     return { success: true };

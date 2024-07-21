@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { UserService } from '@shtifh/user-service';
 
@@ -25,9 +30,11 @@ export class UserResourceService {
         full_name: true,
         mobile: true,
         role: true,
+        is_blocked: true,
         customer: {
           select: {
             id: true,
+            gender: true,
             image_url: true,
           },
         },
@@ -38,6 +45,7 @@ export class UserResourceService {
     });
 
     if (!user) throw new BadRequestException('user_wrong');
+    if (user.is_blocked) throw new UnauthorizedException('user_blocked');
 
     const token = await this.userHelper.jwt.signJwt({
       email: user.email,
