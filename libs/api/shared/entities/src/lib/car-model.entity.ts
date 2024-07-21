@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CarModel } from '@prisma/client';
 import { CarServiceEntity } from './car-service.entity';
 
-export class CarModelEntity implements CarModel {
+export class CarModelEntity {
   @ApiProperty()
   image_url!: string;
 

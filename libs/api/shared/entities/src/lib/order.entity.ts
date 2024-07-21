@@ -7,6 +7,12 @@ import { EmployeeEntity } from './employee.entity';
 
 export class OrderEntity implements Order {
   @ApiProperty()
+  canceled_note!: string | null;
+
+  @ApiProperty()
+  canceled_by!: $Enums.Role;
+
+  @ApiProperty()
   accessoriesIds!: string[];
 
   @ApiProperty({ default: false })

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Admin } from '@prisma/client';
+import { $Enums } from '@prisma/client';
 
-export class AdminEntity implements Admin {
+export class AdminEntity {
   @ApiProperty()
   id!: string;
 

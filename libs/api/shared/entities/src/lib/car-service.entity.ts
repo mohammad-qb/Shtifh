@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CarService } from '@prisma/client';
 import { CarModelEntity } from './car-model.entity';
 import { CityEntity } from './city.entity';
 import { OrderEntity } from './order.entity';
 
-export class CarServiceEntity implements CarService {
+export class CarServiceEntity {
   @ApiProperty()
   id!: string;
 
