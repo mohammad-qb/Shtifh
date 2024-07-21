@@ -94,6 +94,7 @@ export class AuthResourceService {
         mobile: true,
         password: true,
         role: true,
+        is_blocked: true,
         customer: {
           select: {
             id: true,
@@ -109,6 +110,8 @@ export class AuthResourceService {
 
     console.log({ user });
     if (!user) throw new BadRequestException('user_not_exist');
+    if (user.is_blocked) throw new UnauthorizedException('user_blocked');
+
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
       args.password,
       user.password
@@ -136,6 +139,7 @@ export class AuthResourceService {
     const user = await this.model.findFirst({ where: { email: args.email } });
 
     if (!user) throw new BadRequestException('user_wrong');
+    if (user.is_blocked) throw new UnauthorizedException('user_blocked');
 
     const code = Math.floor(Math.random() * 1000000).toString();
 

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
@@ -38,5 +38,16 @@ export class EmployeeResourceService {
     });
 
     return { result: results };
+  }
+
+  async statistics(employeeId: string) {
+    const result = await this.prismaService.employee.findFirst({
+      where: { id: employeeId },
+      select: { total_orders_money: true, total_tips: true },
+    });
+
+    if (!result) throw new BadRequestException('user_wrong');
+
+    return result;
   }
 }
