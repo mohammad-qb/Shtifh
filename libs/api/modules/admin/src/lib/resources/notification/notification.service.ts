@@ -14,7 +14,7 @@ export class NotificationResourceService {
   async create(args: CreateNotificationDto) {
     await this.model.create({
       data: {
-        content: args.content_en,
+        content_en: args.content_en,
         content_ar: args.content_ar,
         content_he: args.content_he,
         for_all: true,
@@ -22,5 +22,11 @@ export class NotificationResourceService {
     });
 
     return { success: true };
+  }
+
+  async list() {
+    return await this.model.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 }
