@@ -19,7 +19,7 @@ phases:
       - echo Displaying Docker version
       - docker --version
       - echo Building shtifh-admin-server Image
-      - docker build -t shtifh-admin-server -f ./apps/shtifh/server/Dockerfile .
+      - docker build -t shtifh-admin-server -f ./apps/shtifh/admin/server/Dockerfile .
       - echo Tagging shtifh-admin-server
       - docker tag shtifh-admin-server:latest 637423633134.dkr.ecr.eu-central-1.amazonaws.com/shtifh-admin-server:latest
 
