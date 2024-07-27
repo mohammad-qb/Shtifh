@@ -18,7 +18,7 @@ export class CityResourceService {
         ...args,
         GlobalSchedule: {
           create: {
-            end_time: '22:00',
+            end_time: '19:00',
             start_time: '07:00',
             requests_in_hour: 2,
           },
