@@ -35,7 +35,10 @@ export class PrivateOrderService {
 
     if (!privateOrder) throw new Error('No Private Order exist');
 
-    await this.prismaService.privateOrder.update({ where: { id }, data: args });
+    await this.prismaService.privateOrder.update({
+      where: { id },
+      data: { ...args, status: 'CONFIRMED' },
+    });
 
     return { success: true };
   }
