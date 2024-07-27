@@ -13,6 +13,7 @@ export class PrivateOrderService {
       orderBy: { createdAt: 'desc' },
       include: {
         city: true,
+        private_service: true,
         customer: {
           include: {
             user: true,
