@@ -12,6 +12,7 @@ export class PrivateOrderService {
     return await this.prismaService.privateOrder.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
+        city: true,
         customer: {
           include: {
             user: true,
