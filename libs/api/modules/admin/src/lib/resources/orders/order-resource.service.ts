@@ -33,6 +33,7 @@ export class OrderResourceService {
 
     const orders = await this.model.findMany({
       where: condition, // Assuming 'condition' is defined elsewhere
+      orderBy: { createdAt: 'desc' },
       include: {
         car: { include: { model: true } },
         city: true,
