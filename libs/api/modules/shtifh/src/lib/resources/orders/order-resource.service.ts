@@ -70,6 +70,7 @@ export class OrderResourceService {
           (modelService?.fees || 0) + accessoriesTotalPrice + (args.tip || 0),
         ref_number: refNumber,
         customerId,
+        paid: true,
         type: 'ORDER',
         accessoriesIds: args.accessoriesIds,
       },
