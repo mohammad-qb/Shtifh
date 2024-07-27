@@ -10,6 +10,7 @@ export class PrivateOrderService {
 
   async list() {
     return await this.prismaService.privateOrder.findMany({
+      orderBy: { createdAt: 'desc' },
       include: {
         customer: {
           include: {
