@@ -13,6 +13,7 @@ import { PrivateOrderModule } from './resources/private-order/private-order.modu
 import { PrivateServiceModule } from './resources/private-server/private-service.module';
 import { CarModelServiceModule } from './resources/car-model-service/car-model-service.module';
 import { ScheduleResourceModule } from './resources/schedule/schedule.module';
+import { AccessoriesResourceModule } from './resources/accessories/accessories.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ScheduleResourceModule } from './resources/schedule/schedule.module';
     PrivateServiceModule,
     CarModelServiceModule,
     ScheduleResourceModule,
+    AccessoriesResourceModule,
   ],
   providers: [],
   exports: [],

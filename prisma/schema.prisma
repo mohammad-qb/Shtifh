@@ -180,6 +180,7 @@ model Accessories {
   name_ar   String
   name_en   String
   name_he   String
+  is_active Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   orders    Order[]  @relation(fields: [ordersIds], references: [id])
