@@ -202,25 +202,114 @@ export class OrderResourceService {
       });
       const OrderTotalSum = modelService?.fees || 0;
 
-      const paymentIntent = await this.takbull.paymentIntent({
-        order_reference: order.ref_number,
-        OrderTotalSum: OrderTotalSum,
-        lang,
-        email: customer.user.email,
-        phone: customer.user.mobile,
+      await this.prismaService.order.update({
+        where: { id: orderId },
+        data: { ...args, fees: OrderTotalSum },
       });
 
-      await this.paymentModel.create({
-        data: {
-          fees: OrderTotalSum,
-          uniq_id: paymentIntent.uniqId,
-          orderId: order.id,
+      const updatedOrder = await this.model.findFirst({
+        where: { id: orderId },
+        select: {
+          id: true,
+          time: true,
+          date: true,
+          address: true,
+          city: {
+            select: { id: true, name_ar: true, name_en: true, name_he: true },
+          },
+          employee: {
+            select: {
+              user: {
+                select: {
+                  full_name: true,
+                },
+              },
+            },
+          },
+          service: {
+            select: {
+              service: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+            },
+          },
+          car: {
+            select: {
+              id: true,
+              brand: {
+                select: {
+                  id: true,
+                  image_url: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+              model: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+            },
+          },
         },
       });
 
+      if (!updatedOrder) return {};
+
+      // const paymentIntent = await this.takbull.paymentIntent({
+      //   order_reference: order.ref_number,
+      //   OrderTotalSum: OrderTotalSum,
+      //   lang,
+      //   email: customer.user.email,
+      //   phone: customer.user.mobile,
+      // });
+
+      // await this.paymentModel.create({
+      //   data: {
+      //     fees: OrderTotalSum,
+      //     uniq_id: paymentIntent.uniqId,
+      //     orderId: order.id,
+      //   },
+      // });
+
       return {
-        url: paymentIntent,
         success: true,
+        results: {
+          id: updatedOrder.id,
+          time: updatedOrder.time,
+          date: updatedOrder.date,
+          address: updatedOrder.address,
+          city: {
+            id: updatedOrder.city.id,
+            name: updatedOrder.city[`name_${lang}`],
+          },
+          employee: updatedOrder.employee,
+          service: {
+            id: updatedOrder.service.service.id,
+            name: updatedOrder.service.service[`name_${lang}`],
+          },
+          car: {
+            id: updatedOrder.car.id,
+            brand: {
+              image_url: updatedOrder.car.brand.image_url,
+              name: updatedOrder.car.brand[`name_${lang}`],
+              id: updatedOrder.car.brand.id,
+            },
+            model: {
+              id: updatedOrder.car.model.id,
+              name: updatedOrder.car.model[`name_${lang}`],
+            },
+          },
+        },
       };
     }
   }

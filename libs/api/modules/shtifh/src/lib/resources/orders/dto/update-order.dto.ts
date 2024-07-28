@@ -1,5 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdateOrderDto {
   @ApiPropertyOptional({ default: '10/10/2022:13:55:10' })
@@ -16,6 +22,12 @@ export class UpdateOrderDto {
   @IsString()
   @IsNotEmpty()
   address!: string;
+
+  @ApiPropertyOptional()
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  lat_lng?: string[];
 
   @ApiPropertyOptional()
   @IsString()
