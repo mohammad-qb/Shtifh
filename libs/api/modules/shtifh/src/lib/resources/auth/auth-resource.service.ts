@@ -100,6 +100,7 @@ export class AuthResourceService {
             id: true,
             gender: true,
             image_url: true,
+            is_removed: true,
           },
         },
         employee: {
@@ -110,6 +111,8 @@ export class AuthResourceService {
 
     console.log({ user });
     if (!user) throw new BadRequestException('user_not_exist');
+    if (user.customer?.is_removed)
+      throw new BadRequestException('user_not_exist');
     if (user.is_blocked) throw new UnauthorizedException('user_blocked');
 
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(

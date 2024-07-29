@@ -36,6 +36,7 @@ export class UserResourceService {
             id: true,
             gender: true,
             image_url: true,
+            is_removed: true,
           },
         },
         employee: {
@@ -45,6 +46,8 @@ export class UserResourceService {
     });
 
     if (!user) throw new BadRequestException('user_wrong');
+    if (user.customer?.is_removed)
+      throw new BadRequestException('user_not_exist');
     if (user.is_blocked) throw new UnauthorizedException('user_blocked');
 
     const token = await this.userHelper.jwt.signJwt({

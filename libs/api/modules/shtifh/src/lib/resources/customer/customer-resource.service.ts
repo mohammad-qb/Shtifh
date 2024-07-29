@@ -120,4 +120,12 @@ export class CustomerResourceService {
       lastOrderDate: result || '',
     };
   }
+
+  async remove(customerId: string) {
+    await this.prismaService.customer.update({
+      where: { id: customerId },
+      data: { is_removed: true },
+    });
+    return { success: true };
+  }
 }

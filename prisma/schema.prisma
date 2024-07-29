@@ -22,6 +22,7 @@ model Customer {
   user         User           @relation(fields: [userId], references: [id])
   cars         Car[]
   orders       Order[]
+  is_removed   Boolean @default(false)
   userId       String         @unique @db.ObjectId
   Notification Notification[]
   privateOrder privateOrder[]
