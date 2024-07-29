@@ -65,4 +65,62 @@ export class EmployeeResourceService {
 
     return { result: employee };
   }
+
+  async orders(employeeId: string) {
+    const data = await this.prismaService.order.findMany({
+      where: { employeeId },
+      include: {
+        customer: { include: { user: true } },
+        city: true,
+        car: { include: { brand: true, model: true } },
+        service: { include: { service: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const groupedData = data.reduce((acc: any, el) => {
+      const gDate = new Date(el.date).toDateString();
+      if (!acc[gDate]) {
+        acc[gDate] = [];
+      }
+      acc[gDate].push(el);
+      return acc;
+    }, {});
+
+    const transformedData = Object.keys(groupedData).map((date) => ({
+      date,
+      orders: groupedData[date],
+    }));
+
+    return { results: transformedData };
+  }
+
+  async privateOrders(employeeId: string) {
+    const data = await this.prismaService.privateOrder.findMany({
+      where: { employeeId },
+      include: {
+        car: { include: { model: true, brand: true } },
+        city: true,
+        customer: { include: { user: true } },
+        private_service: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const groupedData = data.reduce((acc: any, el) => {
+      const gDate = new Date(el.createdAt).toDateString();
+      if (!acc[gDate]) {
+        acc[gDate] = [];
+      }
+      acc[gDate].push(el);
+      return acc;
+    }, {});
+
+    const transformedData = Object.keys(groupedData).map((date) => ({
+      date,
+      orders: groupedData[date],
+    }));
+
+    return { results: transformedData };
+  }
 }

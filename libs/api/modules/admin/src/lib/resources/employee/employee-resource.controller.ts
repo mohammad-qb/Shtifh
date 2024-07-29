@@ -37,6 +37,18 @@ export class EmployeeResourceController {
     return await this.employeeResourceService.list();
   }
 
+  @Get('orders/:employeeId')
+  @ApiOperation({ summary: 'List All Employee orders' })
+  async orders(@Param('employeeId') employeeId: string) {
+    return await this.employeeResourceService.orders(employeeId);
+  }
+
+  @Get('private-orders/:employeeId')
+  @ApiOperation({ summary: 'List All Employee private orders' })
+  async privateOrders(@Param('employeeId') employeeId: string) {
+    return await this.employeeResourceService.privateOrders(employeeId);
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update Employee' })
   async update(
