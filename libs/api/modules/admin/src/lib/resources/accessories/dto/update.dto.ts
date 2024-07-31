@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDecimal, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UpdateAccessoriesDto {
   @ApiProperty()
@@ -23,7 +23,7 @@ export class UpdateAccessoriesDto {
   image_url!: string;
 
   @ApiProperty()
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   price!: number;
 }
