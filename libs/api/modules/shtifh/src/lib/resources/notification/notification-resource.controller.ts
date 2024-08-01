@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -10,6 +10,7 @@ import { NotificationResourceService } from './notification-resource.service';
 import { Payload } from '@shtifh/user-service';
 import { ListNotificationsEntity } from './entities/list-notifications.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
+import { ReadNotificationDto } from './dto/read.dto';
 @ApiTags('Notifications')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -33,6 +34,18 @@ export class NotificationResourceController {
   async checkMissedNotification(@GetUser() user: Payload) {
     return await this.notificationResourceService.checkMissedNotification(
       user.id
+    );
+  }
+
+  @Post('read')
+  @ApiOperation({ summary: 'read notification' })
+  async readNotification(
+    @GetUser() user: Payload,
+    @Body() body: ReadNotificationDto
+  ) {
+    return await this.notificationResourceService.makeNotificationRead(
+      user.id,
+      body.notificationId
     );
   }
 }
