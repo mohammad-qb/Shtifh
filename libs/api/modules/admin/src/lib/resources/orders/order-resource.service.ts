@@ -33,7 +33,7 @@ export class OrderResourceService {
 
     const orders = await this.model.findMany({
       where: condition, // Assuming 'condition' is defined elsewhere
-      orderBy: { createdAt: 'desc' },
+      orderBy: { date: 'desc' },
       include: {
         car: { include: { model: true } },
         city: true,
@@ -46,7 +46,7 @@ export class OrderResourceService {
     // Group orders by their creation date
     const ordersGroupedByDate = groupBy(
       orders,
-      (order) => order.createdAt.toISOString().split('T')[0]
+      (order) => new Date(order.date).toISOString().split('T')[0]
     );
 
     // For each date, group its orders by city
