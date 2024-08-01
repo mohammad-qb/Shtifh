@@ -110,6 +110,7 @@ export class OrderResourceService {
         date: true,
         address: true,
         note: true,
+        tip: true,
         city: {
           select: { id: true, name_ar: true, name_en: true, name_he: true },
         },
@@ -155,6 +156,7 @@ export class OrderResourceService {
         date: el.date,
         address: el.address,
         note: el.note,
+        tip: el.tip,
         city: {
           id: el.city.id,
           name: el.city[`name_${lang}`],
