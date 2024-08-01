@@ -161,6 +161,7 @@ export class OrderResourceService {
         },
         employee: el.employee,
         carModelServiceId: el.service.id,
+        fees: el.service.fees,
         service: {
           id: el.service.service.id,
           name: el.service.service[`name_${lang}`],
