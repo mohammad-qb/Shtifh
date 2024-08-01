@@ -122,10 +122,9 @@ export class OrderResourceService {
           },
         },
         service: {
-          select: {
-            service: {
-              select: { id: true, name_ar: true, name_en: true, name_he: true },
-            },
+          include: {
+            car_service: true,
+            service: true,
           },
         },
         car: {
@@ -159,6 +158,7 @@ export class OrderResourceService {
           name: el.city[`name_${lang}`],
         },
         employee: el.employee,
+        carModelServiceId: el.service.id,
         service: {
           id: el.service.service.id,
           name: el.service.service[`name_${lang}`],
