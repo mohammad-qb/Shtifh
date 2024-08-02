@@ -24,7 +24,7 @@ export class AccessoriesResourceService {
       id: el.id,
       image_url: el.image_url,
       name: el[`name_${lang}`],
-      price: true,
+      price: el.price,
     }));
   }
 }
