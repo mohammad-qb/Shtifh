@@ -103,7 +103,7 @@ export class OrderResourceService {
   async list(customerId: string, isDone: boolean, lang: HeaderLang) {
     const orders = await this.model.findMany({
       where: { customerId, paid: true, is_canceled: false, is_done: isDone },
-      orderBy: { date: 'desc' },
+      orderBy: { date: !isDone ? 'asc' : 'desc' },
       select: {
         id: true,
         time: true,

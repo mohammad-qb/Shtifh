@@ -22,10 +22,12 @@ model Customer {
   user         User           @relation(fields: [userId], references: [id])
   cars         Car[]
   orders       Order[]
-  is_removed   Boolean @default(false)
+  city         City           @relation(fields: [cityId], references: [id])
+  is_removed   Boolean        @default(false)
   userId       String         @unique @db.ObjectId
   Notification Notification[]
   privateOrder privateOrder[]
+  cityId       String         @db.ObjectId
 }
 
 model CarBrand {
@@ -99,6 +101,7 @@ model City {
   RecurringDailySchedule RecurringDailySchedule[]
   DailySchedule          DailySchedule[]
   privateOrder           privateOrder[]
+  Customer               Customer[]
 }
 
 model CarService {
