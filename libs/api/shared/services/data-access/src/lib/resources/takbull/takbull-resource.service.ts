@@ -29,15 +29,16 @@ export class TakbullResourceService {
       `${this.baseUrl}/GetTakbullPaymentPageRedirectUrl`,
       {
         ...args,
+        Currency: 'ILS',
         Language: args.lang === 'ar' ? 'en' : args.lang || 'en',
         CreateDocument: true,
         IPNAddress: `${this.serverUrl}/api/payments/listener`,
         RedirectAddress: `${this.serverUrl}/api/payments/success/${
           args.lang || 'en'
-        }`,
+        }?orderId=${args.order_reference}`,
         CancelReturnAddress: `${this.serverUrl}/api/payments/failed/${
           args.lang || 'en'
-        }`,
+        }?orderId=${args.order_reference}`,
       }
     );
 

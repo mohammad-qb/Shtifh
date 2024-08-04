@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PaymentResourceService } from './payment-resource.service';
 import { IpnOrderDetails } from './types/payment.type';
 
@@ -14,14 +22,20 @@ export class PaymentResourceController {
   }
 
   @Get('/success/:lang')
-  async successPayment(@Param('lang') lang: 'en' | 'he' | 'ar') {
+  async successPayment(
+    @Param('lang') lang: 'en' | 'he' | 'ar',
+    @Query('ln') orderId: string
+  ) {
     if (lang === 'ar') return 'تم الدفع بنجاح';
     else if (lang === 'he') return 'תשלום בוצע בהצלחה';
     else return 'payment successfully';
   }
 
   @Get('/failed/:lang')
-  async failedPayment(@Param('lang') lang: 'en' | 'he' | 'ar') {
+  async failedPayment(
+    @Param('lang') lang: 'en' | 'he' | 'ar',
+    @Query('ln') orderId: string
+  ) {
     if (lang === 'ar') return 'لم تتم عملية الدفع';
     else if (lang === 'he') return 'התשלום נכשל';
     else return 'payment failed';

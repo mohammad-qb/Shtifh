@@ -14,6 +14,7 @@ export class PaymentResourceService {
   }
 
   async ipn(args: IpnOrderDetails) {
+    console.log({ paymentArgs: args });
     const payment = await this.model.update({
       where: {
         uniq_id: args.uniqId,
@@ -23,10 +24,14 @@ export class PaymentResourceService {
       },
     });
 
+    console.log({ payment });
+
     const order = await this.orderModel.update({
       where: { id: payment.orderId },
       data: { paid: true },
     });
+
+    console.log({ order });
 
     return { success: true };
   }

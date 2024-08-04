@@ -94,6 +94,8 @@ export class OrderResourceService {
       },
     });
 
+    console.log({ paymentIntent });
+
     return {
       url: paymentIntent,
       success: true,
