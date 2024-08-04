@@ -33,7 +33,7 @@ export class EmployeeResourceController {
     return await this.employeeService.statistics(user.id);
   }
 
-  @Get('wallet/:employeeId')
+  @Get('wallet')
   async getWallet(@GetUser() user: Payload) {
     return this.employeeService.wallet(user.id);
   }
