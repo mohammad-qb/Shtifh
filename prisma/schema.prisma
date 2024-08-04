@@ -73,6 +73,7 @@ model Employee {
   order              Order[]
   userId             String         @unique @db.ObjectId
   privateOrder       privateOrder[]
+  wallet             Json
 }
 
 model CarModel {
@@ -129,7 +130,7 @@ model Order {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   ref_number        String
   is_done           Boolean         @default(false)
-  date              String
+  date              DateTime
   time              String
   address           String
   fees              Float

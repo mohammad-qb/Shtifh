@@ -1,5 +1,13 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
+import {
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  endOfMonth,
+} from 'date-fns';
 
 @Injectable()
 export class EmployeeResourceService {
@@ -49,5 +57,87 @@ export class EmployeeResourceService {
     if (!result) throw new BadRequestException('user_wrong');
 
     return result;
+  }
+
+  async wallet(employeeId: string) {
+    const todayStart = startOfDay(new Date());
+    const todayEnd = endOfDay(new Date());
+    const weekStart = startOfWeek(new Date());
+    const weekEnd = endOfWeek(new Date());
+    const monthStart = startOfMonth(new Date());
+    const monthEnd = endOfMonth(new Date());
+
+    const resultsToday = await this.prismaService.order.findMany({
+      where: {
+        employeeId,
+        is_done: true,
+        paid: true,
+        date: {
+          gte: todayStart,
+          lte: todayEnd,
+        },
+      },
+    });
+
+    const count = await this.prismaService.order.count({
+      where: {
+        employeeId,
+        is_done: true,
+        paid: true,
+      },
+    });
+
+    const resultsThisWeek = await this.prismaService.order.findMany({
+      where: {
+        employeeId,
+        is_done: true,
+        paid: true,
+        date: {
+          gte: weekStart,
+          lte: weekEnd,
+        },
+      },
+    });
+
+    const resultsThisMonth = await this.prismaService.order.findMany({
+      where: {
+        employeeId,
+        is_done: true,
+        paid: true,
+        date: {
+          gte: monthStart,
+          lte: monthEnd,
+        },
+      },
+    });
+
+    const totalCostToday = resultsToday.reduce(
+      (total, order) => total + order.fees,
+      0
+    );
+    const totalCostThisWeek = resultsThisWeek.reduce(
+      (total, order) => total + order.fees,
+      0
+    );
+    const totalCostThisMonth = resultsThisMonth.reduce(
+      (total, order) => total + order.fees,
+      0
+    );
+
+    return {
+      totalCount: count,
+      today: {
+        totalOrders: resultsToday.length,
+        totalCost: totalCostToday,
+      },
+      thisWeek: {
+        totalOrders: resultsThisWeek.length,
+        totalCost: totalCostThisWeek,
+      },
+      thisMonth: {
+        totalOrders: resultsThisMonth.length,
+        totalCost: totalCostThisMonth,
+      },
+    };
   }
 }

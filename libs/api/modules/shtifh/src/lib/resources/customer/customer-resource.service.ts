@@ -110,8 +110,8 @@ export class CustomerResourceService {
     ]);
 
     const result = compareDates(
-      lastOrderDate?.date,
-      lastPrivateOrderDate?.date
+      lastOrderDate?.date.toString(),
+      lastPrivateOrderDate?.date?.toString()
     );
 
     return {

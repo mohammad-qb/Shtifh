@@ -31,7 +31,7 @@ export class OrderEntity implements Order {
   ref_number!: string;
 
   @ApiProperty()
-  date!: string;
+  date!: Date;
 
   @ApiProperty()
   time!: string;
