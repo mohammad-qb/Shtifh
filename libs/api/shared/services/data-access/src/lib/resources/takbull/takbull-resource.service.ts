@@ -32,6 +32,7 @@ export class TakbullResourceService {
         Email: args.email,
         PhoneNumber: args.phone,
         Currency: 'ILS',
+        OrderTotalSum: args.OrderTotalSum,
         Language: args.lang === 'ar' ? 'en' : args.lang || 'en',
         CreateDocument: true,
         IPNAddress: `${this.serverUrl}/api/payments/listener`,
