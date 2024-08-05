@@ -28,7 +28,9 @@ export class TakbullResourceService {
     const result = await axios.post(
       `${this.baseUrl}/GetTakbullPaymentPageRedirectUrl`,
       {
-        ...args,
+        order_reference: args.order_reference,
+        Email: args.email,
+        PhoneNumber: args.phone,
         Currency: 'ILS',
         Language: args.lang === 'ar' ? 'en' : args.lang || 'en',
         CreateDocument: true,
