@@ -402,6 +402,9 @@ export class OrderResourceService {
         time: true,
         date: true,
         address: true,
+        fees: true,
+        tip: true,
+        note: true,
         city: { select: { name_ar: true, name_en: true, name_he: true } },
         employee: {
           select: {
