@@ -19,6 +19,7 @@ import { Payload } from '@shtifh/user-service';
 import { CreatePrivateOrderDto } from './dto/create-private-order.dto';
 import { CreatePrivateOrderEntity } from './entities/create-private-order.entity';
 import { HeaderLang, Lang } from '@shtifh/decorators';
+import { NextUpcomingPrivateOrderEntity } from './entities/next-upcoming-private-order.entity';
 
 @ApiTags('Private Orders')
 @ApiBearerAuth()
@@ -52,6 +53,7 @@ export class PrivateOrderController {
 
   @Get('next-upcoming')
   @ApiOperation({ summary: 'Get the next upcoming private order' })
+  @ApiResponse({ type: NextUpcomingPrivateOrderEntity })
   async nextUpcoming(@GetUser() user: Payload) {
     return await this.privateOrderService.nextUpcoming(user.id);
   }
