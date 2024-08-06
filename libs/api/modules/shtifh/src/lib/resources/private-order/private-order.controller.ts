@@ -49,4 +49,10 @@ export class PrivateOrderController {
   async done(@GetUser() user: Payload, @Param('id') id: string) {
     return await this.privateOrderService.done(id, user.id);
   }
+
+  @Get('next-upcoming')
+  @ApiOperation({ summary: 'Get the next upcoming private order' })
+  async nextUpcoming(@GetUser() user: Payload) {
+    return await this.privateOrderService.nextUpcoming(user.id);
+  }
 }

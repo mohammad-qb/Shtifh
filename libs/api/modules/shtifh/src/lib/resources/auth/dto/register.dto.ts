@@ -41,4 +41,9 @@ export class RegisterDto {
   @IsNotEmpty()
   @MinLength(6)
   readonly password!: string;
+
+  @ApiProperty({ enum: $Enums.Lang })
+  @IsEnum($Enums.Lang)
+  @IsNotEmpty()
+  lang!: $Enums.Lang;
 }

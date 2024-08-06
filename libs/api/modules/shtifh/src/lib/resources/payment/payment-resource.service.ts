@@ -35,4 +35,58 @@ export class PaymentResourceService {
 
     return { success: true };
   }
+
+  async success(id: string, lang: 'en' | 'ar' | 'he') {
+    const payment = await this.prismaService.payment.findFirst({
+      where: { orderId: id },
+      orderBy: { createAt: 'desc' },
+    });
+    console.log({ success_payment: payment });
+    if (!payment) return;
+
+    await this.model.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        status: 'SUCCESS',
+      },
+    });
+
+    await this.orderModel.update({
+      where: { id: payment.orderId },
+      data: { paid: true },
+    });
+
+    await this.prismaService.reminderOrders.create({
+      data: {
+        orderId: id,
+      },
+    });
+
+    if (lang === 'ar') return 'تم الدفع بنجاح';
+    else if (lang === 'he') return 'תשלום בוצע בהצלחה';
+    else return 'payment successfully';
+  }
+
+  async failed(id: string, lang: 'en' | 'ar' | 'he') {
+    const payment = await this.prismaService.payment.findFirst({
+      where: { orderId: id },
+      orderBy: { createAt: 'desc' },
+    });
+    console.log({ failed_payment: payment });
+    if (!payment) return;
+
+    await this.model.update({
+      where: {
+        id: payment.id,
+      },
+      data: {
+        status: 'FAILED',
+      },
+    });
+    if (lang === 'ar') return 'لم تتم عملية الدفع';
+    else if (lang === 'he') return 'התשלום נכשל';
+    else return 'payment failed';
+  }
 }

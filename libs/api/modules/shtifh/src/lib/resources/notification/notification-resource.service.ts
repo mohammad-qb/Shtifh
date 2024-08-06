@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
+import { Payload } from '@shtifh/user-service';
 
 @Injectable()
 export class NotificationResourceService {
@@ -11,9 +12,12 @@ export class NotificationResourceService {
     this.model = prismaService.notification;
   }
 
-  async list(customerId: string, lang: HeaderLang) {
+  async list(user: Payload, lang: HeaderLang) {
     const result = await this.model.findMany({
-      where: { OR: [{ customerId }, { for_all: true }] },
+      where:
+        user.role === 'CUSTOMER'
+          ? { OR: [{ userId: user.id }, { for_all: true }] }
+          : { userId: user.id },
       select: {
         content_en: true,
         content_ar: true,
@@ -32,19 +36,19 @@ export class NotificationResourceService {
           createdAt: el.createdAt,
           type: el.type,
           content: el[`content_${lang}`],
-          isRead: el.is_read.some((e) => e === customerId),
+          isRead: el.is_read.some((e) => e === user.id),
         };
       }),
     };
   }
 
-  async checkMissedNotification(customerId: string) {
+  async checkMissedNotification(userId: string) {
     const notification = await this.prismaService.notification.findFirst({
       where: {
-        customerId,
+        userId,
         NOT: {
           is_read: {
-            hasSome: [customerId],
+            hasSome: [userId],
           },
         },
       },
@@ -53,7 +57,7 @@ export class NotificationResourceService {
     return notification ? true : false;
   }
 
-  async makeNotificationRead(customerId: string, notificationId: string) {
+  async makeNotificationRead(userId: string, notificationId: string) {
     const notification = await this.prismaService.notification.findFirst({
       where: { id: notificationId },
     });
@@ -62,7 +66,7 @@ export class NotificationResourceService {
 
     await this.prismaService.notification.update({
       where: { id: notificationId },
-      data: { is_read: { push: customerId } },
+      data: { is_read: { push: userId } },
     });
 
     return { success: true };

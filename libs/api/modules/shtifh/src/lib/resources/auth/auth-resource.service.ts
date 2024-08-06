@@ -57,6 +57,7 @@ export class AuthResourceService {
         email: true,
         mobile: true,
         password: true,
+        lang: true,
         role: true,
         customer: {
           select: {
@@ -95,6 +96,7 @@ export class AuthResourceService {
         mobile: true,
         password: true,
         role: true,
+        lang: true,
         is_blocked: true,
         customer: {
           select: {

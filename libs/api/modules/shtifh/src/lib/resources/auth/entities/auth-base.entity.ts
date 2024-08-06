@@ -25,6 +25,9 @@ export class BaseAuthUserEntity
   @ApiProperty()
   mobile!: string;
 
+  @ApiProperty({ enum: $Enums.Lang })
+  lang!: $Enums.Lang;
+
   @ApiProperty({ enum: $Enums.Role })
   role!: $Enums.Role;
 

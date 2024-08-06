@@ -24,20 +24,16 @@ export class PaymentResourceController {
   @Get('/success/:lang')
   async successPayment(
     @Param('lang') lang: 'en' | 'he' | 'ar',
-    @Query('ln') orderId: string
+    @Query('orderId') orderId: string
   ) {
-    if (lang === 'ar') return 'تم الدفع بنجاح';
-    else if (lang === 'he') return 'תשלום בוצע בהצלחה';
-    else return 'payment successfully';
+    return await this.paymentService.success(orderId, lang);
   }
 
   @Get('/failed/:lang')
   async failedPayment(
     @Param('lang') lang: 'en' | 'he' | 'ar',
-    @Query('ln') orderId: string
+    @Query('orderId') orderId: string
   ) {
-    if (lang === 'ar') return 'لم تتم عملية الدفع';
-    else if (lang === 'he') return 'התשלום נכשל';
-    else return 'payment failed';
+    return await this.paymentService.failed(orderId, lang);
   }
 }

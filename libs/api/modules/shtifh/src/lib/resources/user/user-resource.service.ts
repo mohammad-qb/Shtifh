@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { UserService } from '@shtifh/user-service';
+import { SwitchLangDto } from './dto/switch-lang.dto';
 
 @Injectable()
 export class UserResourceService {
@@ -31,6 +32,7 @@ export class UserResourceService {
         mobile: true,
         role: true,
         is_blocked: true,
+        lang: true,
         customer: {
           select: {
             id: true,
@@ -61,5 +63,19 @@ export class UserResourceService {
     });
 
     return { user, token };
+  }
+
+  async lang(args: SwitchLangDto, userId: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+    });
+
+    if (!user) throw new BadRequestException('user_not_exist');
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { lang: args.lang },
+    });
+    return { success: true };
   }
 }

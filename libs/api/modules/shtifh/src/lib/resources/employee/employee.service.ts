@@ -28,6 +28,7 @@ export class EmployeeResourceService {
         customer: { include: { user: true } },
         car: { include: { model: true, brand: true } },
         service: { include: { service: true } },
+        accessories: true,
       },
     });
 

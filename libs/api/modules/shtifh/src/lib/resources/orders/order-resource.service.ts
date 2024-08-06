@@ -70,7 +70,6 @@ export class OrderResourceService {
           (modelService?.fees || 0) + accessoriesTotalPrice + (args.tip || 0),
         ref_number: refNumber,
         customerId,
-        paid: true,
         type: 'ORDER',
         accessoriesIds: args.accessoriesIds,
       },
@@ -272,21 +271,21 @@ export class OrderResourceService {
 
       if (!updatedOrder) return {};
 
-      // const paymentIntent = await this.takbull.paymentIntent({
-      //   order_reference: order.ref_number,
-      //   OrderTotalSum: OrderTotalSum,
-      //   lang,
-      //   email: customer.user.email,
-      //   phone: customer.user.mobile,
-      // });
+      const paymentIntent = await this.takbull.paymentIntent({
+        order_reference: order.ref_number,
+        OrderTotalSum: 5 || OrderTotalSum,
+        lang,
+        email: customer.user.email,
+        phone: customer.user.mobile,
+      });
 
-      // await this.paymentModel.create({
-      //   data: {
-      //     fees: OrderTotalSum,
-      //     uniq_id: paymentIntent.uniqId,
-      //     orderId: order.id,
-      //   },
-      // });
+      await this.paymentModel.create({
+        data: {
+          fees: OrderTotalSum,
+          uniq_id: paymentIntent.uniqId,
+          orderId: order.id,
+        },
+      });
 
       return {
         success: true,

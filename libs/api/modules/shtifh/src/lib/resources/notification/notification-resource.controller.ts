@@ -26,7 +26,7 @@ export class NotificationResourceController {
   @ApiOperation({ summary: 'List notifications' })
   @ApiResponse({ type: ListNotificationsEntity })
   async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
-    return await this.notificationResourceService.list(user.id, lang);
+    return await this.notificationResourceService.list(user, lang);
   }
 
   @Get('missed')
