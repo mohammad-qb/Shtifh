@@ -10,6 +10,7 @@ export class AccessoriesResourceService {
 
   async list(lang: HeaderLang) {
     const results = await this.prismaService.accessories.findMany({
+      where: { is_active: true },
       select: {
         id: true,
         name_ar: true,
