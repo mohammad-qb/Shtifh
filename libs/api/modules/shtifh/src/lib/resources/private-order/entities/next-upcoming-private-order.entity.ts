@@ -99,6 +99,8 @@ class PrivateOrderCustomerData implements Customer {
 
 class PrivateOrderServiceEntity implements PrivateService {
   @ApiProperty()
+  is_active!: boolean;
+  @ApiProperty()
   id!: string;
   @ApiProperty()
   image_url!: string;

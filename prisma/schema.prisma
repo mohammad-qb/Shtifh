@@ -102,6 +102,7 @@ model City {
   DailySchedule          DailySchedule[]
   privateOrder           privateOrder[]
   Customer               Customer[]
+  BookedSlots            BookedSlots[]
 }
 
 model CarService {
@@ -173,6 +174,7 @@ model PrivateService {
   name_ar      String
   name_en      String
   name_he      String
+  is_active    Boolean        @default(true)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   privateOrder privateOrder[]
@@ -238,6 +240,8 @@ model BookedSlots {
   time             String
   requsts_limt     Int
   current_requests Int
+  city             City     @relation(fields: [cityId], references: [id])
+  cityId           String   @db.ObjectId
 }
 
 model UnavailableSlot {

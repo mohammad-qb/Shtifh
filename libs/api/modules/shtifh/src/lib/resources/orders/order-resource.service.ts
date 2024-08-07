@@ -112,6 +112,7 @@ export class OrderResourceService {
         address: true,
         note: true,
         tip: true,
+        accessories: true,
         city: {
           select: { id: true, name_ar: true, name_en: true, name_he: true },
         },
@@ -158,6 +159,12 @@ export class OrderResourceService {
         address: el.address,
         note: el.note,
         tip: el.tip,
+        accessories: el.accessories.map((e) => ({
+          id: e.id,
+          name: e[`name_${lang}`],
+          image_url: e.image_url,
+          price: e.price,
+        })),
         city: {
           id: el.city.id,
           name: el.city[`name_${lang}`],
@@ -404,6 +411,7 @@ export class OrderResourceService {
         fees: true,
         tip: true,
         note: true,
+        accessories: true,
         city: { select: { name_ar: true, name_en: true, name_he: true } },
         employee: {
           select: {
