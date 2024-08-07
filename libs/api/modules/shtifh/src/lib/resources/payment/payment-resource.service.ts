@@ -1,7 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { IpnOrderDetails } from './types/payment.type';
-
+type PaymentArgs = {
+  lang: 'en' | 'he' | 'ar';
+  orderId: string;
+  transactionInternalNumber: string;
+  order_reference: string;
+  uniqId: string;
+  statusCode: string;
+  token: string;
+  Last4Digits: string;
+  ordernumber: string;
+};
 @Injectable()
 export class PaymentResourceService {
   private logger = new Logger(PaymentResourceService.name);
@@ -36,10 +46,9 @@ export class PaymentResourceService {
     return { success: true };
   }
 
-  async success(id: string, lang: 'en' | 'ar' | 'he') {
+  async success(args: PaymentArgs) {
     const payment = await this.prismaService.payment.findFirst({
-      where: { orderId: id },
-      orderBy: { createAt: 'desc' },
+      where: { uniq_id: args.uniqId },
     });
     console.log({ success_payment: payment });
     if (!payment) return;
@@ -60,19 +69,18 @@ export class PaymentResourceService {
 
     await this.prismaService.reminderOrders.create({
       data: {
-        orderId: id,
+        orderId: payment.orderId,
       },
     });
 
-    if (lang === 'ar') return 'تم الدفع بنجاح';
-    else if (lang === 'he') return 'תשלום בוצע בהצלחה';
+    if (args.lang === 'ar') return 'تم الدفع بنجاح';
+    else if (args.lang === 'he') return 'תשלום בוצע בהצלחה';
     else return 'payment successfully';
   }
 
-  async failed(id: string, lang: 'en' | 'ar' | 'he') {
+  async failed(args: PaymentArgs) {
     const payment = await this.prismaService.payment.findFirst({
-      where: { orderId: id },
-      orderBy: { createAt: 'desc' },
+      where: { uniq_id: args.uniqId },
     });
     console.log({ failed_payment: payment });
     if (!payment) return;
@@ -85,8 +93,8 @@ export class PaymentResourceService {
         status: 'FAILED',
       },
     });
-    if (lang === 'ar') return 'لم تتم عملية الدفع';
-    else if (lang === 'he') return 'התשלום נכשל';
+    if (args.lang === 'ar') return 'لم تتم عملية الدفع';
+    else if (args.lang === 'he') return 'התשלום נכשל';
     else return 'payment failed';
   }
 }
