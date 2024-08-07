@@ -9,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrivateServiceService } from './private-service.service';
-import { CreatePrivateServiceDto } from './private-service.dto';
+import {
+  ActivatePrivateServiceDto,
+  CreatePrivateServiceDto,
+} from './private-service.dto';
 
 @ApiTags('Private Service')
 @Controller('private-services')
@@ -34,5 +37,11 @@ export class PrivateServiceController {
   @ApiOperation({ summary: 'List Private Services' })
   async list() {
     return await this.privateServiceService.list();
+  }
+
+  @Put('activation')
+  @ApiOperation({ summary: 'Update Activation Private Order' })
+  async activate(@Body() body: ActivatePrivateServiceDto) {
+    return await this.privateServiceService.activation(body.id);
   }
 }

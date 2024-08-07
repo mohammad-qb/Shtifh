@@ -172,6 +172,7 @@ model PrivateService {
   name_ar      String
   name_en      String
   name_he      String
+  is_active    Boolean        @default(true)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt()
   privateOrder privateOrder[]
@@ -197,7 +198,6 @@ model privateOrder {
   employee              Employee?               @relation(fields: [employeeId], references: [id])
   private_service       PrivateService          @relation(fields: [privateServiceId], references: [id])
   is_done               Boolean                 @default(false)
-  is_active             Boolean                 @default(true)
   status                OrderStatus             @default(PENDING)
   car                   Car                     @relation(fields: [carId], references: [id])
   city                  City                    @relation(fields: [cityId], references: [id])

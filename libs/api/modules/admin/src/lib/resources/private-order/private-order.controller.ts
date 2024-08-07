@@ -1,10 +1,7 @@
 import { Body, Controller, Get, Logger, Param, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UpdatePrivateOrderDto } from './dto/update.dto';
 import { PrivateOrderService } from './private-order.service';
-import {
-  ActivatePrivateOrderDto,
-  UpdatePrivateOrderDto,
-} from './dto/update.dto';
 
 @ApiTags('Private Order')
 @Controller('private-orders')
@@ -23,12 +20,6 @@ export class PrivateOrderController {
   @ApiOperation({ summary: 'List all customer private orders' })
   async customer(@Param('customerId') customerId: string) {
     return await this.privateOrderService.customer(customerId);
-  }
-
-  @Put('activation')
-  @ApiOperation({ summary: 'Update Activation Private Order' })
-  async activate(@Body() body: ActivatePrivateOrderDto) {
-    return await this.privateOrderService.activation(body.id);
   }
 
   @Put(':id')

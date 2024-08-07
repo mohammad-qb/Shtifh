@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePrivateServiceDto {
   @ApiProperty()
@@ -21,4 +21,11 @@ export class CreatePrivateServiceDto {
   @IsString()
   @IsNotEmpty()
   image_url!: string;
+}
+
+export class ActivatePrivateServiceDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsMongoId()
+  id!: string;
 }
