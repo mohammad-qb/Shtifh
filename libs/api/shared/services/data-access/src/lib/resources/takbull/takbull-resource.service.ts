@@ -28,16 +28,20 @@ export class TakbullResourceService {
     const result = await axios.post(
       `${this.baseUrl}/GetTakbullPaymentPageRedirectUrl`,
       {
-        ...args,
+        order_reference: args.order_reference,
+        Email: args.email,
+        PhoneNumber: args.phone,
+        Currency: 'ILS',
+        OrderTotalSum: args.OrderTotalSum,
         Language: args.lang === 'ar' ? 'en' : args.lang || 'en',
         CreateDocument: true,
         IPNAddress: `${this.serverUrl}/api/payments/listener`,
         RedirectAddress: `${this.serverUrl}/api/payments/success/${
           args.lang || 'en'
-        }`,
+        }?orderId=${args.order_reference}`,
         CancelReturnAddress: `${this.serverUrl}/api/payments/failed/${
           args.lang || 'en'
-        }`,
+        }?orderId=${args.order_reference}`,
       }
     );
 

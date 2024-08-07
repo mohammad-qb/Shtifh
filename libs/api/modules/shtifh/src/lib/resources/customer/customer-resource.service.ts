@@ -110,8 +110,8 @@ export class CustomerResourceService {
     ]);
 
     const result = compareDates(
-      lastOrderDate?.date,
-      lastPrivateOrderDate?.date
+      lastOrderDate?.date.toString(),
+      lastPrivateOrderDate?.date?.toString()
     );
 
     return {
@@ -119,5 +119,13 @@ export class CustomerResourceService {
       ordersCount: ordersCount + privateOrdersCount,
       lastOrderDate: result || '',
     };
+  }
+
+  async remove(customerId: string) {
+    await this.prismaService.customer.update({
+      where: { id: customerId },
+      data: { is_removed: true },
+    });
+    return { success: true };
   }
 }

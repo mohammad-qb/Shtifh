@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PaymentResourceService } from './payment-resource.service';
 import { IpnOrderDetails } from './types/payment.type';
 
@@ -14,16 +22,56 @@ export class PaymentResourceController {
   }
 
   @Get('/success/:lang')
-  async successPayment(@Param('lang') lang: 'en' | 'he' | 'ar') {
-    if (lang === 'ar') return 'تم الدفع بنجاح';
-    else if (lang === 'he') return 'תשלום בוצע בהצלחה';
-    else return 'payment successfully';
+  async successPayment(
+    @Param('lang') lang: 'en' | 'he' | 'ar',
+    @Query('orderId') orderId: string,
+    @Query('transactionInternalNumber') transactionInternalNumber: string,
+    @Query('order_reference') order_reference: string,
+    @Query('uniqId') uniqId: string,
+    @Query('statusCode') statusCode: string,
+    @Query('token') token: string,
+    @Query('Last4Digits') Last4Digits: string,
+    @Query('TokenExpirationMonth') TokenExpirationMonth: string,
+    @Query('TokenExpirationYear') TokenExpirationYear: string,
+    @Query('ordernumber') ordernumber: string
+  ) {
+    return await this.paymentService.success({
+      lang,
+      Last4Digits,
+      order_reference,
+      orderId,
+      ordernumber,
+      statusCode,
+      token,
+      transactionInternalNumber,
+      uniqId,
+    });
   }
 
   @Get('/failed/:lang')
-  async failedPayment(@Param('lang') lang: 'en' | 'he' | 'ar') {
-    if (lang === 'ar') return 'لم تتم عملية الدفع';
-    else if (lang === 'he') return 'התשלום נכשל';
-    else return 'payment failed';
+  async failedPayment(
+    @Param('lang') lang: 'en' | 'he' | 'ar',
+    @Query('orderId') orderId: string,
+    @Query('transactionInternalNumber') transactionInternalNumber: string,
+    @Query('order_reference') order_reference: string,
+    @Query('uniqId') uniqId: string,
+    @Query('statusCode') statusCode: string,
+    @Query('token') token: string,
+    @Query('Last4Digits') Last4Digits: string,
+    @Query('TokenExpirationMonth') TokenExpirationMonth: string,
+    @Query('TokenExpirationYear') TokenExpirationYear: string,
+    @Query('ordernumber') ordernumber: string
+  ) {
+    return await this.paymentService.failed({
+      lang,
+      Last4Digits,
+      order_reference,
+      orderId,
+      ordernumber,
+      statusCode,
+      token,
+      transactionInternalNumber,
+      uniqId,
+    });
   }
 }

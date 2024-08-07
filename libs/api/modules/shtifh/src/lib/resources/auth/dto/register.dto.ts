@@ -3,6 +3,7 @@ import { $Enums } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsString,
   MinLength,
@@ -25,6 +26,11 @@ export class RegisterDto {
   @IsNotEmpty()
   readonly mobile!: string;
 
+  @ApiProperty()
+  @IsMongoId()
+  @IsNotEmpty()
+  readonly cityId!: string;
+
   @ApiProperty({ enum: $Enums.Gender })
   @IsEnum($Enums.Gender)
   @IsNotEmpty()
@@ -35,4 +41,9 @@ export class RegisterDto {
   @IsNotEmpty()
   @MinLength(6)
   readonly password!: string;
+
+  @ApiProperty({ enum: $Enums.Lang })
+  @IsEnum($Enums.Lang)
+  @IsNotEmpty()
+  lang!: $Enums.Lang;
 }

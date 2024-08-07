@@ -79,7 +79,7 @@ export class OrderResourceService {
       (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
-      OrderTotalSum: OrderTotalSum,
+      OrderTotalSum: 5 || OrderTotalSum,
       lang,
       email: customer.user.email,
       phone: customer.user.mobile,
@@ -93,6 +93,8 @@ export class OrderResourceService {
       },
     });
 
+    console.log({ paymentIntent });
+
     return {
       url: paymentIntent,
       success: true,
@@ -102,12 +104,14 @@ export class OrderResourceService {
   async list(customerId: string, isDone: boolean, lang: HeaderLang) {
     const orders = await this.model.findMany({
       where: { customerId, paid: true, is_canceled: false, is_done: isDone },
-      orderBy: { date: 'desc' },
+      orderBy: { date: !isDone ? 'asc' : 'desc' },
       select: {
         id: true,
         time: true,
         date: true,
         address: true,
+        note: true,
+        tip: true,
         city: {
           select: { id: true, name_ar: true, name_en: true, name_he: true },
         },
@@ -121,10 +125,9 @@ export class OrderResourceService {
           },
         },
         service: {
-          select: {
-            service: {
-              select: { id: true, name_ar: true, name_en: true, name_he: true },
-            },
+          include: {
+            car_service: true,
+            service: true,
           },
         },
         car: {
@@ -153,11 +156,15 @@ export class OrderResourceService {
         time: el.time,
         date: el.date,
         address: el.address,
+        note: el.note,
+        tip: el.tip,
         city: {
           id: el.city.id,
           name: el.city[`name_${lang}`],
         },
         employee: el.employee,
+        carModelServiceId: el.service.id,
+        fees: el.service.fees,
         service: {
           id: el.service.service.id,
           name: el.service.service[`name_${lang}`],
@@ -201,9 +208,72 @@ export class OrderResourceService {
       });
       const OrderTotalSum = modelService?.fees || 0;
 
+      await this.prismaService.order.update({
+        where: { id: orderId },
+        data: { ...args, fees: OrderTotalSum },
+      });
+
+      const updatedOrder = await this.model.findFirst({
+        where: { id: orderId },
+        select: {
+          id: true,
+          time: true,
+          date: true,
+          address: true,
+          city: {
+            select: { id: true, name_ar: true, name_en: true, name_he: true },
+          },
+          employee: {
+            select: {
+              user: {
+                select: {
+                  full_name: true,
+                },
+              },
+            },
+          },
+          service: {
+            select: {
+              service: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+            },
+          },
+          car: {
+            select: {
+              id: true,
+              brand: {
+                select: {
+                  id: true,
+                  image_url: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+              model: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!updatedOrder) return {};
+
       const paymentIntent = await this.takbull.paymentIntent({
         order_reference: order.ref_number,
-        OrderTotalSum: OrderTotalSum,
+        OrderTotalSum: 5 || OrderTotalSum,
         lang,
         email: customer.user.email,
         phone: customer.user.mobile,
@@ -218,8 +288,34 @@ export class OrderResourceService {
       });
 
       return {
-        url: paymentIntent,
         success: true,
+        results: {
+          id: updatedOrder.id,
+          time: updatedOrder.time,
+          date: updatedOrder.date,
+          address: updatedOrder.address,
+          city: {
+            id: updatedOrder.city.id,
+            name: updatedOrder.city[`name_${lang}`],
+          },
+          employee: updatedOrder.employee,
+          service: {
+            id: updatedOrder.service.service.id,
+            name: updatedOrder.service.service[`name_${lang}`],
+          },
+          car: {
+            id: updatedOrder.car.id,
+            brand: {
+              image_url: updatedOrder.car.brand.image_url,
+              name: updatedOrder.car.brand[`name_${lang}`],
+              id: updatedOrder.car.brand.id,
+            },
+            model: {
+              id: updatedOrder.car.model.id,
+              name: updatedOrder.car.model[`name_${lang}`],
+            },
+          },
+        },
       };
     }
   }
@@ -294,6 +390,7 @@ export class OrderResourceService {
         is_done: false,
         is_canceled: false,
         paid: true,
+        employeeId: { not: null },
         date: {
           gt: new Date().toISOString(),
         },
@@ -304,6 +401,9 @@ export class OrderResourceService {
         time: true,
         date: true,
         address: true,
+        fees: true,
+        tip: true,
+        note: true,
         city: { select: { name_ar: true, name_en: true, name_he: true } },
         employee: {
           select: {

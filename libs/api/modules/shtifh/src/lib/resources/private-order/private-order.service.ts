@@ -120,4 +120,26 @@ export class PrivateOrderService {
 
     return { success: true };
   }
+
+  async nextUpcoming(customerId: string) {
+    const privateOrder = await this.prismaService.privateOrder.findFirst({
+      where: {
+        customerId,
+        is_done: false,
+        status: 'CONFIRMED',
+        date: {
+          gt: new Date().toISOString(),
+        },
+      },
+      orderBy: { date: 'desc' },
+      include: {
+        city: true,
+        car: { include: { brand: true, model: true } },
+        customer: true,
+        private_service: true,
+      },
+    });
+
+    return privateOrder;
+  }
 }

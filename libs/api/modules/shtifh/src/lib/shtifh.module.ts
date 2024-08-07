@@ -14,6 +14,7 @@ import { PrivateServiceResourceModule } from './resources/private-service/privat
 import { PrivateOrderResourceModule } from './resources/private-order/private-order.module';
 import { CarBrandResourceModule } from './resources/car-brand/car-brand.module';
 import { AccessoriesResourceModule } from './resources/accessories/accessories.module';
+import { OrdersReminderModule } from './tasks/orders/orders-reminder.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AccessoriesResourceModule } from './resources/accessories/accessories.m
     EmployeeResourceModule,
     CarBrandResourceModule,
     AccessoriesResourceModule,
+    OrdersReminderModule
   ],
 })
 export class ShtifhModule {}

@@ -22,9 +22,11 @@ model Customer {
   user         User           @relation(fields: [userId], references: [id])
   cars         Car[]
   orders       Order[]
+  city         City           @relation(fields: [cityId], references: [id])
+  is_removed   Boolean        @default(false)
   userId       String         @unique @db.ObjectId
-  Notification Notification[]
   privateOrder privateOrder[]
+  cityId       String         @db.ObjectId
 }
 
 model CarBrand {
@@ -70,6 +72,7 @@ model Employee {
   order              Order[]
   userId             String         @unique @db.ObjectId
   privateOrder       privateOrder[]
+  wallet             Json
 }
 
 model CarModel {
@@ -98,6 +101,7 @@ model City {
   RecurringDailySchedule RecurringDailySchedule[]
   DailySchedule          DailySchedule[]
   privateOrder           privateOrder[]
+  Customer               Customer[]
 }
 
 model CarService {
@@ -122,36 +126,37 @@ model CarModelService {
 }
 
 model Order {
-  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
   ref_number        String
-  is_done           Boolean         @default(false)
-  date              String
+  is_done           Boolean          @default(false)
+  date              DateTime
   time              String
   address           String
   fees              Float
-  tip               Int             @default(0)
+  tip               Int              @default(0)
   lat_lng           String[]
   note              String?
-  paid              Boolean?        @default(false)
-  is_canceled       Boolean?        @default(false)
-  canceled_note     String?         @default("---")
-  canceled_by       Role            @default(CUSTOMER)
-  type              orderType       @default(ORDER)
-  city              City            @relation(fields: [cityId], references: [id])
-  car               Car             @relation(fields: [carId], references: [id])
-  customer          Customer        @relation(fields: [customerId], references: [id])
-  employee          Employee?       @relation(fields: [employeeId], references: [id])
-  service           CarModelService @relation(fields: [carModelServiceId], references: [id])
+  paid              Boolean?         @default(false)
+  is_canceled       Boolean?         @default(false)
+  canceled_note     String?          @default("---")
+  canceled_by       Role             @default(CUSTOMER)
+  type              orderType        @default(ORDER)
+  city              City             @relation(fields: [cityId], references: [id])
+  car               Car              @relation(fields: [carId], references: [id])
+  customer          Customer         @relation(fields: [customerId], references: [id])
+  employee          Employee?        @relation(fields: [employeeId], references: [id])
+  service           CarModelService  @relation(fields: [carModelServiceId], references: [id])
   Payment           Payment[]
-  accessories       Accessories[]   @relation(fields: [accessoriesIds], references: [id])
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  carId             String          @db.ObjectId
-  customerId        String          @db.ObjectId
-  employeeId        String?         @db.ObjectId
-  carModelServiceId String          @db.ObjectId
-  cityId            String          @db.ObjectId
-  accessoriesIds    String[]        @db.ObjectId
+  accessories       Accessories[]    @relation(fields: [accessoriesIds], references: [id])
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  carId             String           @db.ObjectId
+  customerId        String           @db.ObjectId
+  employeeId        String?          @db.ObjectId
+  carModelServiceId String           @db.ObjectId
+  cityId            String           @db.ObjectId
+  accessoriesIds    String[]         @db.ObjectId
+  ReminderOrders    ReminderOrders[]
 }
 
 model Service {
@@ -188,40 +193,43 @@ model Accessories {
 }
 
 model privateOrder {
-  id               String         @id @default(auto()) @map("_id") @db.ObjectId
-  customer         Customer       @relation(fields: [customerId], references: [id])
-  employee         Employee?      @relation(fields: [employeeId], references: [id])
-  private_service  PrivateService @relation(fields: [privateServiceId], references: [id])
-  is_done          Boolean        @default(false)
-  status           OrderStatus    @default(PENDING)
-  car              Car            @relation(fields: [carId], references: [id])
-  city             City           @relation(fields: [cityId], references: [id])
-  address          String?
-  date             String?
-  time             String?
-  lat_lng          String[]
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt()
-  customerId       String         @db.ObjectId
-  employeeId       String?        @db.ObjectId
-  privateServiceId String         @db.ObjectId
-  carId            String         @db.ObjectId
-  cityId           String         @db.ObjectId
+  id                    String                  @id @default(auto()) @map("_id") @db.ObjectId
+  customer              Customer                @relation(fields: [customerId], references: [id])
+  employee              Employee?               @relation(fields: [employeeId], references: [id])
+  private_service       PrivateService          @relation(fields: [privateServiceId], references: [id])
+  is_done               Boolean                 @default(false)
+  status                OrderStatus             @default(PENDING)
+  car                   Car                     @relation(fields: [carId], references: [id])
+  city                  City                    @relation(fields: [cityId], references: [id])
+  address               String?
+  date                  DateTime?
+  time                  String?
+  lat_lng               String[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt()
+  customerId            String                  @db.ObjectId
+  employeeId            String?                 @db.ObjectId
+  privateServiceId      String                  @db.ObjectId
+  carId                 String                  @db.ObjectId
+  cityId                String                  @db.ObjectId
+  ReminderPrivateOrders ReminderPrivateOrders[]
 }
 
 model User {
-  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String         @id @default(auto()) @map("_id") @db.ObjectId
   full_name           String
-  email               String    @unique
+  email               String         @unique
   mobile              String
   password            String
-  is_blocked          Boolean   @default(false)
+  is_blocked          Boolean        @default(false)
+  lang                Lang           @default(EN)
   reset_password_code String?
-  role                Role      @default(CUSTOMER)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  role                Role           @default(CUSTOMER)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
   customer            Customer?
   employee            Employee?
+  Notification        Notification[]
 }
 
 model BookedSlots {
@@ -292,15 +300,27 @@ model weekend {
 
 model Payment {
   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  uniq_id   String
+  uniq_id   String        @unique
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])
   createAt  DateTime      @default(now())
   updatedAt DateTime      @updatedAt()
   orderId   String        @db.ObjectId
+}
 
-  @@index([uniq_id])
+model ReminderOrders {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  order     Order    @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
+  orderId   String   @db.ObjectId
+}
+
+model ReminderPrivateOrders {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  order          privateOrder @relation(fields: [privateOrderId], references: [id])
+  createdAt      DateTime     @default(now())
+  privateOrderId String       @db.ObjectId
 }
 
 model Notification {
@@ -310,11 +330,11 @@ model Notification {
   content_he String
   for_all    Boolean          @default(false)
   type       NotifivationType @default(DEFAULT)
-  customer   Customer?        @relation(fields: [customerId], references: [id])
+  user       User             @relation(fields: [userId], references: [id])
   is_read    String[]         @db.ObjectId
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt()
-  customerId String?          @db.ObjectId
+  userId     String           @db.ObjectId
 }
 
 enum CarServiceModel {
@@ -354,6 +374,12 @@ enum Role {
   CUSTOMER
   EMPLOYEE
   ADMIN
+}
+
+enum Lang {
+  EN
+  HE
+  AR
 }
 
 enum CarColor {
