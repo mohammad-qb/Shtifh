@@ -134,4 +134,18 @@ export class OrderResourceService {
 
     return order;
   }
+
+  async customerOrders(customerId: string) {
+    const data = await this.prismaService.order.findMany({
+      where: { customerId },
+      orderBy: { date: 'desc' },
+      include: {
+        car: { include: { model: true, brand: true } },
+        employee: { include: { user: true } },
+        service: { include: { service: true } },
+      },
+    });
+
+    return data;
+  }
 }

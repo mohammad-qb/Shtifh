@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { UpdatePrivateOrderDto } from './dto/update.dto';
 
@@ -28,6 +28,21 @@ export class PrivateOrderService {
     });
   }
 
+  async activation(id: string) {
+    const data = await this.prismaService.privateOrder.findFirst({
+      where: { id },
+    });
+
+    if (!data) throw new BadRequestException('not_exist');
+
+    await this.prismaService.privateOrder.update({
+      where: { id },
+      data: { is_active: data.is_active },
+    });
+
+    return { success: true };
+  }
+
   async update(id: string, args: UpdatePrivateOrderDto) {
     const privateOrder = await this.prismaService.privateOrder.findFirst({
       where: { id },
@@ -41,5 +56,21 @@ export class PrivateOrderService {
     });
 
     return { success: true };
+  }
+
+  async customer(id: string) {
+    return await this.prismaService.privateOrder.findMany({
+      orderBy: { date: 'desc' },
+      where: { customerId: id },
+      include: {
+        city: true,
+        private_service: true,
+        employee: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
   }
 }

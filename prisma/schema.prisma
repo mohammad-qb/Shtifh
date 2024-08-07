@@ -72,7 +72,6 @@ model Employee {
   order              Order[]
   userId             String         @unique @db.ObjectId
   privateOrder       privateOrder[]
-  wallet             Json
 }
 
 model CarModel {
@@ -198,6 +197,7 @@ model privateOrder {
   employee              Employee?               @relation(fields: [employeeId], references: [id])
   private_service       PrivateService          @relation(fields: [privateServiceId], references: [id])
   is_done               Boolean                 @default(false)
+  is_active             Boolean                 @default(true)
   status                OrderStatus             @default(PENDING)
   car                   Car                     @relation(fields: [carId], references: [id])
   city                  City                    @relation(fields: [cityId], references: [id])
@@ -330,11 +330,11 @@ model Notification {
   content_he String
   for_all    Boolean          @default(false)
   type       NotifivationType @default(DEFAULT)
-  user       User             @relation(fields: [userId], references: [id])
+  user       User?            @relation(fields: [userId], references: [id])
   is_read    String[]         @db.ObjectId
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt()
-  userId     String           @db.ObjectId
+  userId     String?          @db.ObjectId
 }
 
 enum CarServiceModel {

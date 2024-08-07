@@ -1,13 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateNotificationDto } from './dto/create.dto';
+import { FCMService } from '@shtifh/fcm-service';
 
 @Injectable()
 export class NotificationResourceService {
   private logger = new Logger(NotificationResourceService.name);
   private model;
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly fcmService: FCMService
+  ) {
     this.model = prismaService.notification;
   }
 
@@ -20,6 +24,11 @@ export class NotificationResourceService {
         for_all: true,
       },
     });
+
+    // await this.fcmService.send({
+    //   data: {},
+    //   topic: '',
+    // });
 
     return { success: true };
   }
