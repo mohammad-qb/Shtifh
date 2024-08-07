@@ -74,6 +74,7 @@ export class EmployeeResourceService {
         city: true,
         car: { include: { brand: true, model: true } },
         service: { include: { service: true } },
+        accessories: true,
       },
       orderBy: { createdAt: 'desc' },
     });
