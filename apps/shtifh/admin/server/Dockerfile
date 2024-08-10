@@ -22,6 +22,7 @@ COPY /libs/api/shared/services/env ./libs/api/shared/services/env
 COPY /libs/api/shared/services/jwt ./libs/api/shared/services/jwt
 COPY /libs/api/shared/services/prisma ./libs/api/shared/services/prisma
 COPY /libs/api/shared/services/user ./libs/api/shared/services/user
+COPY /libs/api/shared/services/firebase ./libs/api/shared/services/firebase
 
 RUN npx prisma generate
 RUN npx nx build --project=shtifh-admin-server
