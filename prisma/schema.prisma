@@ -236,13 +236,13 @@ model User {
 }
 
 model BookedSlots {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  date    DateTime
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  date    String
   time    String
-  city    City     @relation(fields: [cityId], references: [id])
-  cityId  String   @db.ObjectId
-  order   Order    @relation(fields: [orderId], references: [id])
-  orderId String   @db.ObjectId
+  city    City   @relation(fields: [cityId], references: [id])
+  cityId  String @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @db.ObjectId
 }
 
 model UnavailableSlot {
