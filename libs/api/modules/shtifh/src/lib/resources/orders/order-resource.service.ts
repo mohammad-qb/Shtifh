@@ -79,7 +79,7 @@ export class OrderResourceService {
       (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
-      OrderTotalSum: 5 || OrderTotalSum,
+      OrderTotalSum: OrderTotalSum,
       lang,
       email: customer.user.email,
       phone: customer.user.mobile,
@@ -280,7 +280,7 @@ export class OrderResourceService {
 
       const paymentIntent = await this.takbull.paymentIntent({
         order_reference: order.ref_number,
-        OrderTotalSum: 5 || OrderTotalSum,
+        OrderTotalSum: OrderTotalSum,
         lang,
         email: customer.user.email,
         phone: customer.user.mobile,

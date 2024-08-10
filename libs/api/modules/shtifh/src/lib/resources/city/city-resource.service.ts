@@ -3,7 +3,11 @@ import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
 import { ListSlotsDto } from './dto/slots.dto';
 import { addOneHour, getDayOfWeek } from './helpers/helper';
+import { format } from 'date-fns';
 
+function formatDate(date: Date){
+  return format(new Date(date), 'dd/MM/yyyy')
+}
 @Injectable()
 export class CityResourceService {
   private logger = new Logger(CityResourceService.name);
@@ -38,7 +42,7 @@ export class CityResourceService {
     if (!city) throw new BadRequestException('city_not_exist');
 
     const bookedSlots = await this.prismaService.bookedSlots.findMany({
-      where: { date: args.date, cityId: args.cityId },
+      where: { date: formatDate(new Date(args.date)), cityId: args.cityId },
     });
 
     const dailySchedule = await this.prismaService.dailySchedule.findFirst({
@@ -61,7 +65,9 @@ export class CityResourceService {
       recurringSchedule,
       globalSchedule,
     });
-    const slots: any = [];
+    const slots: {content: string, value: string}[] = [];
+
+    let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0; 
 
     if (dailySchedule?.is_off) return slots;
     if (recurringSchedule?.is_off) return slots;
@@ -73,11 +79,13 @@ export class CityResourceService {
     if (recurringSchedule) {
       startTime = recurringSchedule.start_time;
       endTime = recurringSchedule.end_time;
+      requests_in_h = recurringSchedule.requests_in_hour;
     }
 
     if (dailySchedule) {
       startTime = dailySchedule.start_time;
       endTime = dailySchedule.end_time;
+      requests_in_h = dailySchedule.requests_in_hour;
     }
 
     let currentTime = startTime;
@@ -88,12 +96,9 @@ export class CityResourceService {
         value: `${currentTime} - ${nextTime}`,
       };
 
-      // Check if the slot is booked
-      const bookedSlot = bookedSlots.find(
-        (s) => s.time === currentTime && s.current_requests >= s.requsts_limt
-      );
+      const timeSlots = bookedSlots.filter(e => e.time === slot.content);
 
-      if (!bookedSlot) {
+      if (timeSlots.length <= requests_in_h) {
         slots.push(slot);
       }
 
@@ -101,18 +106,6 @@ export class CityResourceService {
     }
 
     return slots;
-
-    // let startSlot = 8;
-    // const _slots = Array.from({ length: 10 }).map((el) => {
-    //   const content = `${startSlot}:00 - ${startSlot + 1}:00`;
-    //   const value = startSlot;
-    //   startSlot += 1;
-    //   return {
-    //     content,
-    //     value,
-    //   };
-    // });
-    // return { result: _slots };
   }
 
   async carModels(cityId: string) {

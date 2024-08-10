@@ -158,6 +158,7 @@ model Order {
   cityId            String           @db.ObjectId
   accessoriesIds    String[]         @db.ObjectId
   ReminderOrders    ReminderOrders[]
+  BookedSlots       BookedSlots[]
 }
 
 model Service {
@@ -235,13 +236,13 @@ model User {
 }
 
 model BookedSlots {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  date             DateTime
-  time             String
-  requsts_limt     Int
-  current_requests Int
-  city             City     @relation(fields: [cityId], references: [id])
-  cityId           String   @db.ObjectId
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  date    DateTime
+  time    String
+  city    City     @relation(fields: [cityId], references: [id])
+  cityId  String   @db.ObjectId
+  order   Order    @relation(fields: [orderId], references: [id])
+  orderId String   @db.ObjectId
 }
 
 model UnavailableSlot {
