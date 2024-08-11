@@ -12,7 +12,41 @@ import { HeaderLang } from '@shtifh/decorators';
 import { CancelOrderDto } from './dto/cancel-order.dto';
 import { Payload } from '@shtifh/user-service';
 import { Prisma } from '@prisma/client';
+import { FCMService } from '@shtifh/fcm-service';
 
+const done_order_msg = {
+  AR: {
+    title: 'تم إتمام الطلب بنجاح',
+    body: 'تم إتمام طلبك بنجاح',
+  },
+
+  EN: {
+    title: 'Order Done Successfully',
+    body: 'Your order has beEN done successfully',
+  },
+
+  HE: {
+    title: 'הזמנה הושלמה בהצלחה',
+    body: 'ההזמנה שלך הושלמה בהצלחה',
+  },
+};
+
+const cancel_order_msg = {
+  AR: {
+    title: 'تم إلغاء الطلب',
+    body: 'تم إلغاء طلبك من قبل الوكيل',
+  },
+
+  EN: {
+    title: 'Order Canceled',
+    body: 'Your order has been canceled by tHE agent',
+  },
+
+  HE: {
+    title: 'ההזמנה בוטלה',
+    body: 'ההזמנה שלך בוטלה על ידי הסוכן',
+  },
+};
 @Injectable()
 export class OrderResourceService {
   private logger = new Logger(OrderResourceService.name);
@@ -24,7 +58,8 @@ export class OrderResourceService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly dataAccessService: DateAccessService
+    private readonly dataAccessService: DateAccessService,
+    private readonly fcmService: FCMService
   ) {
     this.model = prismaService.order;
     this.carModelServiceModel = prismaService.carModelService;
@@ -374,6 +409,7 @@ export class OrderResourceService {
   async done(id: string, empId: string) {
     const order = await this.model.findFirst({
       where: { id, employeeId: empId },
+      include: { customer: { include: { user: true } } },
     });
 
     if (!order) throw new BadGatewayException('Private order not exist');
@@ -385,6 +421,14 @@ export class OrderResourceService {
         total_tips: { increment: order.tip },
         total_orders_money: { increment: order.fees },
       },
+    });
+
+    const userLang = order.customer.user.lang;
+
+    this.fcmService.send({
+      data: {},
+      topic: `user-${order.customer.user.id}`,
+      notification: done_order_msg[userLang],
     });
 
     return { success: true };
@@ -456,6 +500,7 @@ export class OrderResourceService {
 
     const order = await this.prismaService.order.findFirst({
       where: conditions,
+      include: { customer: { include: { user: true } } },
     });
 
     if (!order) throw new BadRequestException('order_not_exist');
@@ -467,6 +512,14 @@ export class OrderResourceService {
         canceled_note: args.note,
         canceled_by: user.role,
       },
+    });
+
+    const userLang = order.customer.user.lang;
+
+    this.fcmService.send({
+      data: {},
+      topic: `user-${order.customer.user.id}`,
+      notification: cancel_order_msg[userLang],
     });
 
     return { success: true };

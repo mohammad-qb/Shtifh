@@ -20,6 +20,54 @@ export class EmployeeResourceService {
     this.privateOrderModel = prismaService.privateOrder;
   }
 
+  async UpcomingOrders(employeeId: string, date?: string) {
+    const useDate = date ? new Date(date) : new Date();
+
+    const results = await this.orderModel.findMany({
+      where: {
+        employeeId,
+        paid: true,
+        date: {
+          gte: startOfDay(useDate),
+          lt: endOfDay(useDate),
+        },
+      },
+      include: {
+        city: true,
+        customer: { include: { user: true } },
+        car: { include: { model: true, brand: true } },
+        service: { include: { service: true } },
+        accessories: true,
+      },
+      orderBy: { date: 'asc' },
+    });
+
+    return { results };
+  }
+
+  async UpcomingPrivateOrders(employeeId: string, date?: string) {
+    const useDate = date ? new Date(date) : new Date();
+
+    const results = await this.privateOrderModel.findMany({
+      where: {
+        employeeId,
+        status: 'CONFIRMED',
+        date: {
+          gte: startOfDay(useDate),
+          lt: endOfDay(useDate),
+        },
+      },
+      include: {
+        customer: { include: { user: true } },
+        private_service: true,
+        city: true,
+        car: { include: { model: true, brand: true } },
+      },
+    });
+
+    return { results };
+  }
+
   async orders(employeeId: string, isDone: boolean) {
     const results = await this.orderModel.findMany({
       where: { employeeId, paid: true, is_done: isDone },

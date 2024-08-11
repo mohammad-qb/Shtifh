@@ -5,8 +5,8 @@ import { ListSlotsDto } from './dto/slots.dto';
 import { addOneHour, getDayOfWeek } from './helpers/helper';
 import { format } from 'date-fns';
 
-function formatDate(date: Date){
-  return format(new Date(date), 'dd/MM/yyyy')
+function formatDate(date: Date) {
+  return format(new Date(date), 'dd/MM/yyyy');
 }
 @Injectable()
 export class CityResourceService {
@@ -64,10 +64,11 @@ export class CityResourceService {
       dailySchedule,
       recurringSchedule,
       globalSchedule,
+      dayOfWeek,
     });
-    const slots: {content: string, value: string}[] = [];
+    const slots: { content: string; value: string }[] = [];
 
-    let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0; 
+    let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0;
 
     if (dailySchedule?.is_off) return slots;
     if (recurringSchedule?.is_off) return slots;
@@ -96,7 +97,7 @@ export class CityResourceService {
         value: `${currentTime} - ${nextTime}`,
       };
 
-      const timeSlots = bookedSlots.filter(e => e.time === slot.content);
+      const timeSlots = bookedSlots.filter((e) => e.time === slot.content);
 
       if (timeSlots.length <= requests_in_h) {
         slots.push(slot);

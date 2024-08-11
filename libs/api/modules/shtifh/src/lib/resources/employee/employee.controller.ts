@@ -1,8 +1,17 @@
-import { Controller, Get, Logger, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { EmployeeResourceService } from './employee.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { Payload } from '@shtifh/user-service';
+import { UpcomingDto } from './dto/upcoming.dto';
 
 @ApiTags('Employee')
 @ApiBearerAuth()
@@ -36,5 +45,18 @@ export class EmployeeResourceController {
   @Get('wallet')
   async getWallet(@GetUser() user: Payload) {
     return this.employeeService.wallet(user.id);
+  }
+
+  @Post('upcoming-orders')
+  async upcomingOrders(@GetUser() user: Payload, @Body() body: UpcomingDto) {
+    return await this.employeeService.UpcomingOrders(user.id, body.date);
+  }
+
+  @Post('upcoming-private-orders')
+  async upcomingPrivateOrders(
+    @GetUser() user: Payload,
+    @Body() body: UpcomingDto
+  ) {
+    return await this.employeeService.UpcomingPrivateOrders(user.id, body.date);
   }
 }
