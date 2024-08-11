@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { UpdatePrivateOrderDto } from './dto/update.dto';
+import { startOfDay, endOfDay } from 'date-fns';
 
 @Injectable()
 export class PrivateOrderService {
@@ -8,8 +9,15 @@ export class PrivateOrderService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
-  async list() {
+  async list(date: string) {
+    const useDate = new Date(date);
     return await this.prismaService.privateOrder.findMany({
+      where: {
+        date: {
+          gte: startOfDay(useDate),
+          lte: endOfDay(useDate),
+        },
+      },
       orderBy: { createdAt: 'desc' },
       include: {
         city: true,

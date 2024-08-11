@@ -4,6 +4,7 @@ import { ListOrdersDto } from './dto/list.dto';
 import { Prisma } from '@prisma/client';
 import { groupBy } from 'lodash';
 import { UpdateOrderDto } from './dto/update.dto';
+import { startOfDay, endOfDay } from 'date-fns';
 
 @Injectable()
 export class OrderResourceService {
@@ -15,7 +16,13 @@ export class OrderResourceService {
   }
 
   async list(args: ListOrdersDto) {
-    const condition: Prisma.OrderWhereInput = {};
+    const useDate = new Date(args.date);
+    const condition: Prisma.OrderWhereInput = {
+      date: {
+        gte: startOfDay(useDate),
+        lte: endOfDay(useDate),
+      },
+    };
 
     // Apply filters based on the provided arguments
     if (args.isCompleted) condition.is_done = true;

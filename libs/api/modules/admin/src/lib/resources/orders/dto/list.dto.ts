@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class ListOrdersDto {
@@ -16,4 +16,9 @@ export class ListOrdersDto {
   @IsString()
   @IsOptional()
   searchText?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  date!: string;
 }

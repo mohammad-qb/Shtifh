@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Logger, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdatePrivateOrderDto } from './dto/update.dto';
 import { PrivateOrderService } from './private-order.service';
+import { ListPrivateOrdersDto } from './dto/list.dto';
 
 @ApiTags('Private Order')
 @Controller('private-orders')
@@ -10,10 +19,10 @@ export class PrivateOrderController {
 
   constructor(private readonly privateOrderService: PrivateOrderService) {}
 
-  @Get()
+  @Post()
   @ApiOperation({ summary: 'List all private orders' })
-  async list() {
-    return await this.privateOrderService.list();
+  async list(@Body() body: ListPrivateOrdersDto) {
+    return await this.privateOrderService.list(body.date);
   }
 
   @Get('customer/:customerId')
