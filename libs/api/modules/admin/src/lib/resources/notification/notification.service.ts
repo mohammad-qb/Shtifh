@@ -25,10 +25,14 @@ export class NotificationResourceService {
       },
     });
 
-    // await this.fcmService.send({
-    //   data: {},
-    //   topic: '',
-    // });
+    await this.fcmService.send({
+      data: {},
+      topic: 'public-notification',
+      notification: {
+        title: 'הודעה חדשה',
+        body: args.content_he,
+      },
+    });
 
     return { success: true };
   }
