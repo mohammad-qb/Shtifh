@@ -12,7 +12,41 @@ import { HeaderLang } from '@shtifh/decorators';
 import { CancelOrderDto } from './dto/cancel-order.dto';
 import { Payload } from '@shtifh/user-service';
 import { Prisma } from '@prisma/client';
+import { FCMService } from '@shtifh/fcm-service';
 
+const done_order_msg = {
+  AR: {
+    title: 'تم إتمام الطلب بنجاح',
+    body: 'تم إتمام طلبك بنجاح',
+  },
+
+  EN: {
+    title: 'Order Done Successfully',
+    body: 'Your order has beEN done successfully',
+  },
+
+  HE: {
+    title: 'הזמנה הושלמה בהצלחה',
+    body: 'ההזמנה שלך הושלמה בהצלחה',
+  },
+};
+
+const cancel_order_msg = {
+  AR: {
+    title: 'تم إلغاء الطلب',
+    body: 'تم إلغاء طلبك من قبل الوكيل',
+  },
+
+  EN: {
+    title: 'Order Canceled',
+    body: 'Your order has been canceled by tHE agent',
+  },
+
+  HE: {
+    title: 'ההזמנה בוטלה',
+    body: 'ההזמנה שלך בוטלה על ידי הסוכן',
+  },
+};
 @Injectable()
 export class OrderResourceService {
   private logger = new Logger(OrderResourceService.name);
@@ -24,7 +58,8 @@ export class OrderResourceService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly dataAccessService: DateAccessService
+    private readonly dataAccessService: DateAccessService,
+    private readonly fcmService: FCMService
   ) {
     this.model = prismaService.order;
     this.carModelServiceModel = prismaService.carModelService;
@@ -79,7 +114,7 @@ export class OrderResourceService {
       (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
     const paymentIntent = await this.takbull.paymentIntent({
       order_reference: refNumber,
-      OrderTotalSum: 5 || OrderTotalSum,
+      OrderTotalSum: OrderTotalSum,
       lang,
       email: customer.user.email,
       phone: customer.user.mobile,
@@ -112,6 +147,7 @@ export class OrderResourceService {
         address: true,
         note: true,
         tip: true,
+        accessories: true,
         city: {
           select: { id: true, name_ar: true, name_en: true, name_he: true },
         },
@@ -158,6 +194,12 @@ export class OrderResourceService {
         address: el.address,
         note: el.note,
         tip: el.tip,
+        accessories: el.accessories.map((e) => ({
+          id: e.id,
+          name: e[`name_${lang}`],
+          image_url: e.image_url,
+          price: e.price,
+        })),
         city: {
           id: el.city.id,
           name: el.city[`name_${lang}`],
@@ -273,7 +315,7 @@ export class OrderResourceService {
 
       const paymentIntent = await this.takbull.paymentIntent({
         order_reference: order.ref_number,
-        OrderTotalSum: 5 || OrderTotalSum,
+        OrderTotalSum: OrderTotalSum,
         lang,
         email: customer.user.email,
         phone: customer.user.mobile,
@@ -367,6 +409,7 @@ export class OrderResourceService {
   async done(id: string, empId: string) {
     const order = await this.model.findFirst({
       where: { id, employeeId: empId },
+      include: { customer: { include: { user: true } } },
     });
 
     if (!order) throw new BadGatewayException('Private order not exist');
@@ -378,6 +421,14 @@ export class OrderResourceService {
         total_tips: { increment: order.tip },
         total_orders_money: { increment: order.fees },
       },
+    });
+
+    const userLang = order.customer.user.lang;
+
+    this.fcmService.send({
+      data: {},
+      topic: `user-${order.customer.user.id}`,
+      notification: done_order_msg[userLang],
     });
 
     return { success: true };
@@ -404,6 +455,7 @@ export class OrderResourceService {
         fees: true,
         tip: true,
         note: true,
+        accessories: true,
         city: { select: { name_ar: true, name_en: true, name_he: true } },
         employee: {
           select: {
@@ -448,6 +500,7 @@ export class OrderResourceService {
 
     const order = await this.prismaService.order.findFirst({
       where: conditions,
+      include: { customer: { include: { user: true } } },
     });
 
     if (!order) throw new BadRequestException('order_not_exist');
@@ -459,6 +512,14 @@ export class OrderResourceService {
         canceled_note: args.note,
         canceled_by: user.role,
       },
+    });
+
+    const userLang = order.customer.user.lang;
+
+    this.fcmService.send({
+      data: {},
+      topic: `user-${order.customer.user.id}`,
+      notification: cancel_order_msg[userLang],
     });
 
     return { success: true };

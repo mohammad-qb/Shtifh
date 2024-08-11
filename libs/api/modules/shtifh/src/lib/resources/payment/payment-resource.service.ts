@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { IpnOrderDetails } from './types/payment.type';
+import { format } from 'date-fns';
+
 type PaymentArgs = {
   lang: 'en' | 'he' | 'ar';
   orderId: string;
@@ -62,10 +64,19 @@ export class PaymentResourceService {
       },
     });
 
-    await this.orderModel.update({
+    const order = await this.orderModel.update({
       where: { id: payment.orderId },
       data: { paid: true },
     });
+
+    await this.prismaService.bookedSlots.create({
+      data: {
+        date: format(new Date(order.date), 'dd/MM/yyyy'),
+        time: order.time,
+        cityId: order.cityId,
+        orderId: order.id
+      }
+    })
 
     await this.prismaService.reminderOrders.create({
       data: {
