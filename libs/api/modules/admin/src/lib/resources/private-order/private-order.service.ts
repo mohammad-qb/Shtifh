@@ -37,12 +37,6 @@ export class PrivateOrderService {
   }
 
   async update(id: string, args: UpdatePrivateOrderDto) {
-    const { date, ...rest } = args;
-
-    const body: any = { ...rest, status: 'CONFIRMED' };
-    if (date) {
-      body.date = new Date(date).toISOString();
-    }
     const privateOrder = await this.prismaService.privateOrder.findFirst({
       where: { id },
     });
@@ -51,7 +45,7 @@ export class PrivateOrderService {
 
     await this.prismaService.privateOrder.update({
       where: { id },
-      data: body,
+      data: { ...args, status: 'CONFIRMED' },
     });
 
     return { success: true };
