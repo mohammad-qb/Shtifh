@@ -13,6 +13,7 @@ import { RetrieveScheduleDto } from './dto/retrieve-schedule.dto';
 import { UpdateMonthDto } from './dto/update-month.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
 import { CreateUnavailableSlot } from './dto/create-unavailable-slot.dto';
+import { updateTimeInOnceDto } from './dto/update-time.dto';
 
 @ApiTags('Schedule')
 @Controller('schedule')
@@ -51,5 +52,11 @@ export class ScheduleResourceController {
   @ApiOperation({ summary: 'remove unavailable slot' })
   async removeUnavailableSlot(@Param('id') id: string) {
     return await this.scheduleResourceService.removeUnavailableSlot(id);
+  }
+
+  @Put('/time-in-one')
+  @ApiOperation({ summary: 'Update time in once' })
+  async updateInOnce(@Body() body: updateTimeInOnceDto) {
+    return await this.scheduleResourceService.updateTimeInOnce(body);
   }
 }

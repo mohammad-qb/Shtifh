@@ -4,6 +4,7 @@ import { RetrieveScheduleDto } from './dto/retrieve-schedule.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
 import { CreateUnavailableSlot } from './dto/create-unavailable-slot.dto';
 import { UpdateMonthDto } from './dto/update-month.dto';
+import { updateTimeInOnceDto } from './dto/update-time.dto';
 
 function getMonthDateRange(year: number, month: number) {
   const startDate = new Date(year, month - 1, 1); // month - 1 because JavaScript months are 0-indexed
@@ -121,6 +122,27 @@ export class ScheduleResourceService {
     if (!slot) throw new BadRequestException('No Slot');
 
     await this.prismaService.unavailableSlot.delete({ where: { id } });
+
+    return { success: true };
+  }
+
+  async updateTimeInOnce(args: updateTimeInOnceDto) {
+    await this.prismaService.recurringDailySchedule.updateMany({
+      where: {
+        cityId: args.cityId,
+        OR: [
+          { day: 'MONDAY' },
+          { day: 'SUNDAY' },
+          { day: 'THURSDAY' },
+          { day: 'TUESDAY' },
+          { day: 'WEDNESDAY' },
+        ],
+      },
+      data: {
+        start_time: args.start_time,
+        end_time: args.end_time,
+      },
+    });
 
     return { success: true };
   }
