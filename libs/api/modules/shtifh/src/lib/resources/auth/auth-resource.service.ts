@@ -13,12 +13,14 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ValidateCodeDto } from './dto/validate-code.dto';
 import { generateImageUrl } from './helper/generate-image-url';
 import { FCMService } from '@shtifh/fcm-service';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class AuthResourceService {
   private logger = new Logger(AuthResourceService.name);
   private userHelper;
   private model;
+  private transporter: nodemailer.Transporter;
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -27,6 +29,13 @@ export class AuthResourceService {
   ) {
     this.model = prismaService.user;
     this.userHelper = userService.resources;
+    this.transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'shtifaa101@gmail.com', // Your Gmail address
+        pass: 'kqri nhqw fwlh ilec', // Your Gmail password or App-specific password
+      },
+    });
   }
 
   async register(args: RegisterDto) {
@@ -186,6 +195,19 @@ export class AuthResourceService {
     });
 
     //TODO: send email
+    const mailOptions = {
+      from: 'your-email@gmail.com', // Sender address
+      to: user.email,
+      subject: 'Reset Password',
+      text: code,
+    };
+
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log('Email sent: ' + info.response);
+    } catch (error) {
+      console.error('Error sending email: ', error);
+    }
 
     return { success: true };
   }
