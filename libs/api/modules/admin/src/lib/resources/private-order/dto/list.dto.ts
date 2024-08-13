@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty } from 'class-validator';
 
 export class ListPrivateOrdersDto {
   @ApiProperty()
-  @IsString()
+  @IsMongoId()
   @IsNotEmpty()
-  date!: string;
+  cityId!: string;
 }

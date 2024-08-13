@@ -22,7 +22,7 @@ export class PrivateOrderController {
   @Post()
   @ApiOperation({ summary: 'List all private orders' })
   async list(@Body() body: ListPrivateOrdersDto) {
-    return await this.privateOrderService.list(body.date);
+    return await this.privateOrderService.list(body.cityId);
   }
 
   @Get('customer/:customerId')
