@@ -18,6 +18,7 @@ export class PrivateServiceService {
         name_ar: true,
         name_en: true,
         name_he: true,
+        description: true,
       },
     });
   }
