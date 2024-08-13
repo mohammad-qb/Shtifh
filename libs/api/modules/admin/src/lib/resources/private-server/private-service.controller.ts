@@ -27,6 +27,12 @@ export class PrivateServiceController {
     return await this.privateServiceService.create(body);
   }
 
+  @Put('activation')
+  @ApiOperation({ summary: 'Update Activation Private Order' })
+  async activate(@Body() body: ActivatePrivateServiceDto) {
+    return await this.privateServiceService.activation(body.id);
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Update Private Service' })
   async update(@Body() body: CreatePrivateServiceDto, @Param('id') id: string) {
@@ -37,11 +43,5 @@ export class PrivateServiceController {
   @ApiOperation({ summary: 'List Private Services' })
   async list() {
     return await this.privateServiceService.list();
-  }
-
-  @Put('activation')
-  @ApiOperation({ summary: 'Update Activation Private Order' })
-  async activate(@Body() body: ActivatePrivateServiceDto) {
-    return await this.privateServiceService.activation(body.id);
   }
 }
