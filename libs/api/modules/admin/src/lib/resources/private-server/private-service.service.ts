@@ -34,7 +34,7 @@ export class PrivateServiceService {
 
     await this.prismaService.privateService.update({
       where: { id },
-      data: { is_active: data.is_active },
+      data: { is_active: !data.is_active },
     });
 
     return { success: true };
