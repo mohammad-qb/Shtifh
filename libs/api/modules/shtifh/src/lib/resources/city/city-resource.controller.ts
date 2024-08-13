@@ -18,6 +18,12 @@ export class CityResourceController {
     return await this.cityResourceService.list(lang);
   }
 
+  @Get('days-off/:id')
+  @ApiOperation({ summary: 'List all days off for city' })
+  async daysOff(@Param('id') id: string) {
+    return await this.cityResourceService.daysOff(id);
+  }
+
   @Post('slots')
   @ApiOperation({ summary: 'List all City slots' })
   async slots(@Body() body: ListSlotsDto) {

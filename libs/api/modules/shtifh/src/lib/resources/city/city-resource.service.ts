@@ -126,4 +126,10 @@ export class CityResourceService {
 
     return { result };
   }
+
+  async daysOff(cityId: string) {
+    return await this.prismaService.dailySchedule.findMany({
+      where: { cityId, is_off: true },
+    });
+  }
 }
