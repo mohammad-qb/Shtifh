@@ -12,6 +12,7 @@ import { ForgetPasswordDto } from './dto/forget-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ValidateCodeDto } from './dto/validate-code.dto';
 import { generateImageUrl } from './helper/generate-image-url';
+import { FCMService } from '@shtifh/fcm-service';
 
 @Injectable()
 export class AuthResourceService {
@@ -21,7 +22,8 @@ export class AuthResourceService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly fcmService: FCMService
   ) {
     this.model = prismaService.user;
     this.userHelper = userService.resources;
@@ -83,6 +85,35 @@ export class AuthResourceService {
       id: newUser.customer?.id || '',
     });
 
+    await this.fcmService.send({
+      data: {},
+      topic: `user-${registerUser.id}`,
+      notification: {
+        title:
+          registerUser.lang === 'AR'
+            ? 'مرحبا بك'
+            : registerUser.lang === 'EN'
+            ? 'Hi, Welcome'
+            : 'שלום, ברוך הבא',
+        body:
+          registerUser.lang === 'AR'
+            ? 'مرحبا بك في تطبيقنا'
+            : registerUser.lang === 'EN'
+            ? 'Welcome to our app'
+            : 'ברוך הבא לאפליקציה שלנו',
+      },
+    });
+
+    await this.prismaService.notification.create({
+      data: {
+        content_ar: 'مرحبا بك في تطبيقنا',
+        content_en: 'Welcome to our app',
+        content_he: 'ברוך הבא לאפליקציה שלנו',
+        userId: registerUser.id,
+        is_read: [],
+        type: 'DEFAULT',
+      },
+    });
     return { user: newUser, token };
   }
 
