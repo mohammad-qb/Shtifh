@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@shtifh/auth-service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { BlockEmpDto, CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeResourceService } from './employee-resource.service';
 
@@ -29,6 +29,12 @@ export class EmployeeResourceController {
   @ApiOperation({ summary: 'Create New Employee' })
   async create(@Body() body: CreateEmployeeDto) {
     return await this.employeeResourceService.create(body);
+  }
+
+  @Post('switch-block')
+  @ApiOperation({ summary: 'Create New Employee' })
+  async block(@Body() body: BlockEmpDto) {
+    return await this.employeeResourceService.switchBlock(body.empId);
   }
 
   @Get()

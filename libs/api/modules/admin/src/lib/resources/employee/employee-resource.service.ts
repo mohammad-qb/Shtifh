@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { UserService } from '@shtifh/user-service';
+import { FCMService } from '@shtifh/fcm-service';
 
 @Injectable()
 export class EmployeeResourceService {
@@ -11,7 +12,8 @@ export class EmployeeResourceService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly fcmService: FCMService
   ) {
     this.model = prismaService.employee;
   }
@@ -23,7 +25,6 @@ export class EmployeeResourceService {
         position: args.position,
         salary: args.salary,
         start_date: args.start_date,
-        // work_days: args.work_days,
         user: {
           create: {
             email: args.email,
@@ -43,6 +44,29 @@ export class EmployeeResourceService {
   async list() {
     const employees = await this.model.findMany({ include: { user: true } });
     return { result: employees };
+  }
+
+  async switchBlock(userId: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: userId },
+    });
+    if (!user) throw new BadRequestException('user_wrong');
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { is_blocked: !user.is_blocked },
+    });
+
+    if (!user.is_blocked) {
+      await this.fcmService.send({
+        data: {},
+        topic: `block-emp-${userId}`,
+        notification: {
+          title: 'You got blocked',
+          body: "You've been blocked",
+        },
+      });
+    }
   }
 
   async update(employeeId: string, args: UpdateEmployeeDto) {

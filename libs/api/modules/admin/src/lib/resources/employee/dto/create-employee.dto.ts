@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import {
   IsInt,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -55,4 +56,11 @@ export class CreateEmployeeDto
   @IsString()
   @IsNotEmpty()
   mobile!: string;
+}
+
+export class BlockEmpDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsMongoId()
+  empId!: string;
 }
