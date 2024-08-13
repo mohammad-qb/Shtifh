@@ -27,7 +27,7 @@ export class NotificationResourceService {
 
     await this.fcmService.send({
       data: {},
-      topic: 'public-notification',
+      topic: 'public_notification',
       notification: {
         title: 'הודעה חדשה',
         body: args.content_he,
