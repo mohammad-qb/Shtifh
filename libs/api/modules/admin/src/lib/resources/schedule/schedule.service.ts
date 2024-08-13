@@ -127,9 +127,10 @@ export class ScheduleResourceService {
   }
 
   async updateTimeInOnce(args: updateTimeInOnceDto) {
+    const { cityId, ...rest } = args;
     await this.prismaService.recurringDailySchedule.updateMany({
       where: {
-        cityId: args.cityId,
+        cityId: cityId,
         OR: [
           { day: 'MONDAY' },
           { day: 'SUNDAY' },
@@ -138,10 +139,7 @@ export class ScheduleResourceService {
           { day: 'WEDNESDAY' },
         ],
       },
-      data: {
-        start_time: args.start_time,
-        end_time: args.end_time,
-      },
+      data: rest,
     });
 
     return { success: true };

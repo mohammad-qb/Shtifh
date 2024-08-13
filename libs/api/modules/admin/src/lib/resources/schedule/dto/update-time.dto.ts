@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class updateTimeInOnceDto {
   @ApiProperty()
@@ -7,13 +7,13 @@ export class updateTimeInOnceDto {
   @IsNotEmpty()
   cityId!: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
-  start_time!: string;
+  @IsOptional()
+  start_time?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
-  end_time!: string;
+  @IsOptional()
+  end_time?: string;
 }
