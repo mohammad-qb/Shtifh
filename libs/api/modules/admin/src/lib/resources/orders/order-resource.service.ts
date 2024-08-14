@@ -44,6 +44,7 @@ export class OrderResourceService {
       include: {
         car: { include: { model: true } },
         city: true,
+        accessories: true,
         customer: { include: { user: true } },
         employee: { include: { user: true } },
         service: { include: { service: true } },
