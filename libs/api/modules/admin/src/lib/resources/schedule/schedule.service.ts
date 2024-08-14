@@ -128,6 +128,7 @@ export class ScheduleResourceService {
 
   async updateTimeInOnce(args: updateTimeInOnceDto) {
     const { cityId, ...rest } = args;
+    console.log({ args });
     await this.prismaService.recurringDailySchedule.updateMany({
       where: {
         cityId: cityId,
