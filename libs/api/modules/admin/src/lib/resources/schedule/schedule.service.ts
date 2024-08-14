@@ -129,6 +129,10 @@ export class ScheduleResourceService {
   async updateTimeInOnce(args: updateTimeInOnceDto) {
     const { cityId, ...rest } = args;
     console.log({ args });
+    await this.prismaService.globalSchedule.updateMany({
+      where: { cityId },
+      data: rest,
+    });
     await this.prismaService.recurringDailySchedule.updateMany({
       where: {
         cityId: cityId,
