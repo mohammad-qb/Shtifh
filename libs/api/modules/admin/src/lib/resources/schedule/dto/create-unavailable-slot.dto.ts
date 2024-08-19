@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUnavailableSlot {
   @ApiProperty()
@@ -13,7 +13,7 @@ export class CreateUnavailableSlot {
   end_time!: string;
 
   @ApiProperty()
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
   date!: string;
 

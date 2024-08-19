@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDateString,
   IsInt,
   IsMongoId,
   IsNotEmpty,
@@ -21,7 +20,7 @@ export class UpdateDayDto {
   end_time!: string;
 
   @ApiProperty()
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
   date!: string;
 

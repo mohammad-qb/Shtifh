@@ -98,10 +98,12 @@ export class ScheduleResourceService {
     if (args.scheduleId) {
       await this.prismaService.dailySchedule.update({
         where: { id: scheduleId },
-        data: rest,
+        data: { ...rest, date: args.date + 'T00:00:00.000+00:00' },
       });
     } else {
-      await this.prismaService.dailySchedule.create({ data: rest });
+      await this.prismaService.dailySchedule.create({
+        data: { ...rest, date: args.date + 'T00:00:00.000+00:00' },
+      });
     }
 
     return { success: true };
@@ -109,7 +111,7 @@ export class ScheduleResourceService {
 
   async createUnavailableSlot(args: CreateUnavailableSlot) {
     const result = await this.prismaService.unavailableSlot.create({
-      data: args,
+      data: { ...args, date: args.date + 'T00:00:00.000+00:00' },
     });
     return result;
   }
@@ -128,7 +130,6 @@ export class ScheduleResourceService {
 
   async updateTimeInOnce(args: updateTimeInOnceDto) {
     const { cityId, ...rest } = args;
-    console.log({ args });
     await this.prismaService.globalSchedule.updateMany({
       where: { cityId },
       data: rest,
