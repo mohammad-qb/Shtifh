@@ -134,6 +134,12 @@ export class ScheduleResourceService {
       where: { cityId },
       data: rest,
     });
+
+    await this.prismaService.monthlySchedule.updateMany({
+      where: { cityId },
+      data: rest,
+    });
+
     await this.prismaService.recurringDailySchedule.updateMany({
       where: {
         cityId: cityId,
