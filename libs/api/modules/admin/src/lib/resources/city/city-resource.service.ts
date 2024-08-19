@@ -24,12 +24,23 @@ export class CityResourceService {
           },
         },
         RecurringDailySchedule: {
-          create: {
-            day: 'FRIDAY',
-            start_time: '07:00',
-            end_time: '15:00',
-            requests_in_hour: 2,
-            is_off: false,
+          createMany: {
+            data: [
+              {
+                day: 'FRIDAY',
+                start_time: '07:00',
+                end_time: '15:00',
+                requests_in_hour: 2,
+                is_off: false,
+              },
+              {
+                day: 'SATURDAY',
+                start_time: '07:00',
+                end_time: '15:00',
+                requests_in_hour: 2,
+                is_off: true,
+              },
+            ],
           },
         },
         weekend: {

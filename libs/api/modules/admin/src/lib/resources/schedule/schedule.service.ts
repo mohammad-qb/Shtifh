@@ -142,6 +142,7 @@ export class ScheduleResourceService {
           { day: 'THURSDAY' },
           { day: 'TUESDAY' },
           { day: 'WEDNESDAY' },
+          { day: 'SATURDAY' },
         ],
       },
       data: rest,
