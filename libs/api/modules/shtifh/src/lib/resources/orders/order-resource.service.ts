@@ -231,6 +231,25 @@ export class OrderResourceService {
     const order = await this.model.findFirst({ where: { id: orderId } });
     if (!order) throw new BadRequestException('order_not_exist');
 
+    if (args.date && args.time && args.cityId) {
+      const bookedSlot = await this.prismaService.bookedSlots.findFirst({
+        where: { date: args.date, time: args.time, cityId: args.cityId },
+      });
+
+      await this.prismaService.bookedSlots.delete({
+        where: { id: bookedSlot?.id },
+      });
+
+      await this.prismaService.bookedSlots.create({
+        data: {
+          date: args.date,
+          time: args.time,
+          cityId: args.cityId,
+          orderId,
+        },
+      });
+    }
+
     if (order.carModelServiceId === args.carModelServiceId) {
       await this.model.update({
         where: { id: orderId },

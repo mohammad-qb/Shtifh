@@ -37,6 +37,7 @@ export class CityResourceService {
   }
 
   async slots(args: ListSlotsDto) {
+    const formattedDate = args.date + 'T00:00:00.000+00:00';
     const city = await this.model.findFirst({ where: { id: args.cityId } });
 
     if (!city) throw new BadRequestException('city_not_exist');
@@ -46,7 +47,10 @@ export class CityResourceService {
     });
 
     const dailySchedule = await this.prismaService.dailySchedule.findFirst({
-      where: { date: args.date, cityId: args.cityId },
+      where: {
+        date: formattedDate,
+        cityId: args.cityId,
+      },
     });
 
     const dayOfWeek = getDayOfWeek(new Date(args.date));
@@ -97,9 +101,11 @@ export class CityResourceService {
         value: `${currentTime} - ${nextTime}`,
       };
 
-      const timeSlots = bookedSlots.filter((e) => e.time === slot.content);
+      const timeSlots = bookedSlots.filter((e) => {
+        return e.time === slot.content;
+      });
 
-      if (timeSlots.length <= requests_in_h) {
+      if (timeSlots.length < requests_in_h) {
         slots.push(slot);
       }
 
@@ -125,5 +131,11 @@ export class CityResourceService {
     });
 
     return { result };
+  }
+
+  async daysOff(cityId: string) {
+    return await this.prismaService.dailySchedule.findMany({
+      where: { cityId, is_off: true },
+    });
   }
 }

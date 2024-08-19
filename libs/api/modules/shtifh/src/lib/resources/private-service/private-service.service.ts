@@ -12,12 +12,14 @@ export class PrivateServiceService {
 
   async list() {
     return await this.model.findMany({
+      where: { is_active: true },
       select: {
         id: true,
         image_url: true,
         name_ar: true,
         name_en: true,
         name_he: true,
+        description: true,
       },
     });
   }
