@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateCarModelDto implements Prisma.CarModelUncheckedCreateInput {
   @ApiProperty()
@@ -17,4 +17,7 @@ export class CreateCarModelDto implements Prisma.CarModelUncheckedCreateInput {
   @IsString()
   @IsNotEmpty()
   name_he!: string;
-}
+
+  @IsOptional()
+  image_url!: string;
+  }

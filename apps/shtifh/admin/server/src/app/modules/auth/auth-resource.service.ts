@@ -24,7 +24,6 @@ export class AuthResourceService {
     });
 
     if (!admin) throw new BadRequestException('user_wrong');
-
     const isPasswordMatch = await this.userHelper.crypt.isPasswordMatch(
       args.password,
       admin.password

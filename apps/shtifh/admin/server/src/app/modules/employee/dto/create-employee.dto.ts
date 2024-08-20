@@ -50,4 +50,8 @@ export class CreateEmployeeDto
   @IsString()
   @IsNotEmpty()
   mobile!: string;
+
+
+  @IsOptional()
+  wallet!: string;
 }

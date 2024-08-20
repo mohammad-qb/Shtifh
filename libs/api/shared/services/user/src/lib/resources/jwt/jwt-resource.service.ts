@@ -16,7 +16,7 @@ export class JwtResourceService {
     return this.jwtService
       .verifyToken(token)
       .then((data) => data.payload as Payload)
-      .catch((error) => {
+      .catch((error: any) => {
         throw new UnauthorizedException('Unauthorized');
       });
   }

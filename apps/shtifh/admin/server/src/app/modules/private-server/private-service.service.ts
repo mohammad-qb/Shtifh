@@ -10,6 +10,7 @@ export class PrivateServiceService {
 
   async create(args: CreatePrivateServiceDto) {
     return await this.prismaService.privateService.create({
+      //@ts-ignore
       data: args,
     });
   }
