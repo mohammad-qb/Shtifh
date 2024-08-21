@@ -46,7 +46,7 @@ export class PrivateOrderController {
   }
 
   @Get('done/:id')
-  @ApiOperation({ summary: 'Make it done' })
+  @ApiOperation({ summary: 'Make it done , for employees' })
   async done(@GetUser() user: Payload, @Param('id') id: string) {
     return await this.privateOrderService.done(id, user.id);
   }

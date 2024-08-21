@@ -60,7 +60,6 @@ export class CarResourceService {
     });
 
     const results = cars.map((el) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { model, ..._car } = el;
       return {
         ..._car,

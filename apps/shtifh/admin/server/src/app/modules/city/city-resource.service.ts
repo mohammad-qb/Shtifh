@@ -5,12 +5,10 @@ import { UpdateCityDro } from './dto/update-city.dto';
 
 @Injectable()
 export class CityResourceService {
-  private logger = new Logger(CityResourceService.name);
-  private model;
+  private readonly logger = new Logger(CityResourceService.name);
+  private readonly model = this.prismaService.city;
 
-  constructor(private readonly prismaService: PrismaService) {
-    this.model = prismaService.city;
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(args: CreateCityDro) {
     const city = await this.model.create({

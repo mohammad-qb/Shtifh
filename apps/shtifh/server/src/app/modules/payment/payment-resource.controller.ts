@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { PaymentResourceService } from './payment-resource.service';
 import { IpnOrderDetails } from './types/payment.type';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Payments')
 @Controller('payments')
 export class PaymentResourceController {
   private logger = new Logger(PaymentResourceController.name);
