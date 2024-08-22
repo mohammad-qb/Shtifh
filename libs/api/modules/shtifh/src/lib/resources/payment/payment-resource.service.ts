@@ -1,19 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
-import { IpnOrderDetails } from './types/payment.type';
 import { format } from 'date-fns';
 
 type PaymentArgs = {
   lang: 'en' | 'he' | 'ar';
-  orderId: string;
-  transactionInternalNumber: string;
-  order_reference: string;
   uniqId: string;
   statusCode: string;
-  token: string;
   Last4Digits: string;
   ordernumber: string;
 };
+
 @Injectable()
 export class PaymentResourceService {
   private logger = new Logger(PaymentResourceService.name);
@@ -25,35 +21,12 @@ export class PaymentResourceService {
     this.orderModel = prismaService.order;
   }
 
-  async ipn(args: IpnOrderDetails) {
-    console.log({ paymentArgs: args });
-    const payment = await this.model.update({
-      where: {
-        uniq_id: args.uniqId,
-      },
-      data: {
-        status: args.StatusCode === 0 ? 'SUCCESS' : 'FAILED',
-      },
-    });
-
-    console.log({ payment });
-
-    const order = await this.orderModel.update({
-      where: { id: payment.orderId },
-      data: { paid: true },
-    });
-
-    console.log({ order });
-
-    return { success: true };
-  }
-
   async success(args: PaymentArgs) {
+    console.log(args);
     const payment = await this.prismaService.payment.findFirst({
-      where: { uniq_id: args.uniqId },
+      where: { uniq_id: args.ordernumber },
     });
-    console.log({ success_payment: payment });
-    if (!payment) return;
+    if (!payment) throw new UnauthorizedException();
 
     await this.model.update({
       where: {
@@ -74,16 +47,15 @@ export class PaymentResourceService {
         date: format(new Date(order.date), 'dd/MM/yyyy'),
         time: order.time,
         cityId: order.cityId,
-        orderId: order.id
-      }
-    })
+        orderId: order.id,
+      },
+    });
 
     await this.prismaService.reminderOrders.create({
       data: {
         orderId: payment.orderId,
       },
     });
-
     if (args.lang === 'ar') return 'تم الدفع بنجاح';
     else if (args.lang === 'he') return 'תשלום בוצע בהצלחה';
     else return 'payment successfully';
@@ -91,9 +63,8 @@ export class PaymentResourceService {
 
   async failed(args: PaymentArgs) {
     const payment = await this.prismaService.payment.findFirst({
-      where: { uniq_id: args.uniqId },
+      where: { uniq_id: args.ordernumber },
     });
-    console.log({ failed_payment: payment });
     if (!payment) return;
 
     await this.model.update({

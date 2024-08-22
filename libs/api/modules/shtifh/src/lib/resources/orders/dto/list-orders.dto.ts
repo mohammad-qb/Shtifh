@@ -6,4 +6,10 @@ export class ListOrdersDto {
   @IsBoolean()
   @IsNotEmpty()
   isDone!: boolean;
+
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsNotEmpty()
+  isPaid!: boolean;
 }

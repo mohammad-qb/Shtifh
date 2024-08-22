@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { $Enums } from '@prisma/client';
 import { PrismaService } from '@shtifh/prisma-service';
 import {
   startOfDay,
@@ -70,7 +71,7 @@ export class EmployeeResourceService {
 
   async orders(employeeId: string, isDone: boolean) {
     const results = await this.orderModel.findMany({
-      where: { employeeId, paid: true, is_done: isDone },
+      where: { employeeId, paid: isDone, is_done: isDone },
       include: {
         city: true,
         customer: { include: { user: true } },
@@ -83,9 +84,9 @@ export class EmployeeResourceService {
     return { result: results };
   }
 
-  async privateOrders(employeeId: string, isDone: boolean) {
+  async privateOrders(employeeId: string, status: $Enums.OrderStatus) {
     const results = await this.privateOrderModel.findMany({
-      where: { employeeId, is_done: isDone, status: 'CONFIRMED' },
+      where: { employeeId, status },
       include: {
         customer: { include: { user: true } },
         private_service: true,

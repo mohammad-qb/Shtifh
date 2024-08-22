@@ -112,23 +112,21 @@ export class OrderResourceService {
 
     const OrderTotalSum =
       (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
-    const paymentIntent = await this.takbull.paymentIntent({
-      order_reference: refNumber,
-      OrderTotalSum: OrderTotalSum,
-      lang,
+    const paymentIntent = await this.takbull.PaymentHY({
+      order: refNumber,
+      amount: OrderTotalSum,
       email: customer.user.email,
       phone: customer.user.mobile,
+      fullname: customer.user.full_name,
     });
-
+    console.log(paymentIntent);
     await this.paymentModel.create({
       data: {
         fees: OrderTotalSum,
-        uniq_id: paymentIntent.uniqId,
+        uniq_id: paymentIntent.order as string,
         orderId: order.id,
       },
     });
-
-    console.log({ paymentIntent });
 
     return {
       url: paymentIntent,
@@ -136,9 +134,14 @@ export class OrderResourceService {
     };
   }
 
-  async list(customerId: string, isDone: boolean, lang: HeaderLang) {
+  async list(
+    customerId: string,
+    isDone: boolean,
+    isPaid: boolean,
+    lang: HeaderLang
+  ) {
     const orders = await this.model.findMany({
-      where: { customerId, paid: true, is_canceled: false, is_done: isDone },
+      where: { customerId, paid: isPaid, is_canceled: false, is_done: isDone },
       orderBy: { date: !isDone ? 'asc' : 'desc' },
       select: {
         id: true,

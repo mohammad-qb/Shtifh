@@ -12,6 +12,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser, JwtAuthGuard } from '@shtifh/auth-service';
 import { Payload } from '@shtifh/user-service';
 import { UpcomingDto } from './dto/upcoming.dto';
+import { OrderStatusArgs } from './dto/privateOrder-status.args';
+import { $Enums } from '@prisma/client';
 
 @ApiTags('Employee')
 @ApiBearerAuth()
@@ -24,17 +26,16 @@ export class EmployeeResourceController {
 
   @Get('orders')
   async orders(@GetUser() user: Payload, @Query('isDone') isDone: string) {
-    console.log({ user });
     return await this.employeeService.orders(user.id, isDone === 'true');
   }
 
   @Get('private-orders')
   async privateOrders(
     @GetUser() user: Payload,
-    @Query('isDone') isDone: string
+    @Query() args: OrderStatusArgs
   ) {
     console.log({ user });
-    return await this.employeeService.privateOrders(user.id, isDone === 'true');
+    return await this.employeeService.privateOrders(user.id, args.status as $Enums.OrderStatus);
   }
 
   @Get('statistics')

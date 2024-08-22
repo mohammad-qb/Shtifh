@@ -58,14 +58,19 @@ export class OrderResourceController {
   }
 
   @Post('all')
-  @ApiOperation({ summary: 'List All Orders' })
+  @ApiOperation({ summary: 'List customer self orders' })
   // @ApiResponse({ type: ListOrdersEntity })
   async list(
     @GetUser() user: Payload,
     @Body() body: ListOrdersDto,
     @Lang() lang: HeaderLang
   ) {
-    return await this.orderResourceService.list(user.id, body.isDone, lang);
+    return await this.orderResourceService.list(
+      user.id,
+      body.isDone,
+      body.isPaid,
+      lang
+    );
   }
 
   @Get('last-invoice')

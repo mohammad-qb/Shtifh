@@ -34,7 +34,6 @@ export class PrivateOrderController {
   @ApiOperation({ summary: 'List all private orders' })
   // @ApiResponse({ type: ListPrivateOrdersEntity, isArray: true })
   async list(@GetUser() user: Payload, @Lang() lang: HeaderLang) {
-    console.log({ user });
     return await this.privateOrderService.list(user, lang);
   }
 
@@ -46,7 +45,7 @@ export class PrivateOrderController {
   }
 
   @Get('done/:id')
-  @ApiOperation({ summary: 'Make it done' })
+  @ApiOperation({ summary: 'Make it done , for employees' })
   async done(@GetUser() user: Payload, @Param('id') id: string) {
     return await this.privateOrderService.done(id, user.id);
   }
