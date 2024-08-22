@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@shtifh/auth-service';
+import { Body, Controller, Logger, Param, Post, Put } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OrderResourceService } from './order-resource.service';
 import { ListOrdersDto } from './dto/list.dto';
 import { UpdateOrderDto } from './dto/update.dto';
@@ -36,7 +26,7 @@ export class OrderResourceController {
     return await this.orderResourceService.update(id, body);
   }
 
-  @Get('/next-upcoming')
-  @ApiOperation({summary: "Get the next upcoming order"})
-  async nextUpcoming(@UseGuards())
+  // @Get('/next-upcoming')
+  // @ApiOperation({summary: "Get the next upcoming order"})
+  // async nextUpcoming(@UseGuards())
 }

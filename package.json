@@ -2,7 +2,11 @@
   "name": "@shtifh/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev:server": "npx nx serve shtifh-server",
+    "dev:admin": "npx nx serve shtifh-admin-server",
+    "dev:all": "npx nx run-many --target=serve --projects=shtifh-server,shtifh-admin-server --parallel"
+  },
   "private": true,
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",

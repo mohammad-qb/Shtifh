@@ -26,6 +26,11 @@ export class CreateEmployeeDto
   @IsNotEmpty()
   color!: string;
 
+  // @ApiProperty()
+  @IsString()
+  @IsOptional()
+  wallet!: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
