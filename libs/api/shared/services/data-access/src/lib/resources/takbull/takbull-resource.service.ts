@@ -59,7 +59,6 @@ export class TakbullResourceService {
       }
     );
 
-
     return result.data;
   }
 
@@ -68,7 +67,13 @@ export class TakbullResourceService {
     const [firstname, lastname] = fullname.split(' ');
 
     // const paymenturl = `${this.HybaseUrl}?action=APISign&What=SIGN&KEY=7110eda4d09e062aa5e4a390b0a572ac0d2c0220&ClientName=${firstname}&ClientLName=${lastname}&PassP=yaad&Masof=0010131918&Order=${order}&Info=test-api&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=ENG&tmp=9`;
-    const paymenturl = `${this.HybaseUrl}?action=APISign&What=SIGN&KEY=${this.HyKey}&ClientName=${firstname}&ClientLName=${lastname}&PassP=yaad.net&Masof=${this.HyMasof}&Order=${order}&Info=Shitfh App&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=ENG&tmp=9`;
+    const paymenturl = `${this.HybaseUrl}?action=APISign&What=SIGN&KEY=${
+      this.HyKey
+    }&ClientName=${firstname || lastname}&ClientLName=${
+      lastname || ''
+    }&PassP=yaad.net&Masof=${
+      this.HyMasof
+    }&Order=${order}&Info=Shitfh App&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=ENG&tmp=9`;
     const { data } = await axios.get(paymenturl);
 
     const params = new URLSearchParams(data);
