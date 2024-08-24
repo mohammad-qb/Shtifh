@@ -22,7 +22,6 @@ export class PaymentResourceService {
   }
 
   async success(args: PaymentArgs) {
-    console.log(args);
     const payment = await this.prismaService.payment.findFirst({
       where: { uniq_id: args.ordernumber },
     });
@@ -56,9 +55,25 @@ export class PaymentResourceService {
         orderId: payment.orderId,
       },
     });
-    if (args.lang === 'ar') return 'تم الدفع بنجاح';
-    else if (args.lang === 'he') return 'תשלום בוצע בהצלחה';
-    else return 'payment successfully';
+    if (args.lang === 'ar')
+      return {
+        title: 'نجاح!',
+        message: 'تمت العملية بنجاح. شكراً لاستخدامك خدمتنا.',
+        redirectUrl: '/',
+      };
+    else if (args.lang === 'he')
+      return {
+        title: 'הצלחה!',
+        message: 'הפעולה שלך הצליחה. תודה שהשתמשת בשירות שלנו.',
+        redirectUrl: '/',
+      };
+    else
+      return {
+        title: 'Success!',
+        message:
+          'Your operation was successful. Thank you for using our service.',
+        redirectUrl: '/',
+      };
   }
 
   async failed(args: PaymentArgs) {
@@ -75,8 +90,22 @@ export class PaymentResourceService {
         status: 'FAILED',
       },
     });
-    if (args.lang === 'ar') return 'لم تتم عملية الدفع';
-    else if (args.lang === 'he') return 'התשלום נכשל';
-    else return 'payment failed';
+    if (args.lang === 'ar')
+      return {
+        title: 'فشلت العملية',
+        message: 'للأسف، لم تتم العملية بنجاح. يرجى المحاولة مرة أخرى لاحقاً.',
+      };
+    else if (args.lang === 'he')
+      return {
+        title: 'הפעולה נכשלה',
+        message:
+          'לצערנו, לא ניתן היה להשלים את הפעולה. אנא נסה שוב מאוחר יותר.',
+      };
+    else
+      return {
+        title: 'Operation Failed',
+        message:
+          'Unfortunately, your operation could not be completed. Please try again later.',
+      };
   }
 }

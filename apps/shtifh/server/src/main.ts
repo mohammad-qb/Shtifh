@@ -7,11 +7,19 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  // Set the directory for views
+  app.setBaseViewsDir(join(__dirname, './', 'assets/templates'));
+
+  // Set Handlebars as the template engine
+  app.setViewEngine('hbs');
 
   // Set up Swagger
   const config = new DocumentBuilder()

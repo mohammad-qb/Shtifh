@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query, Render } from '@nestjs/common';
 import { PaymentResourceService } from './payment-resource.service';
 
 @Controller('payments')
@@ -7,6 +7,7 @@ export class PaymentResourceController {
 
   constructor(private readonly paymentService: PaymentResourceService) {}
 
+  @Render('success-page')
   @Get('/success/:lang')
   async successPayment(
     @Param('lang') lang: 'en' | 'he' | 'ar',
@@ -22,7 +23,6 @@ export class PaymentResourceController {
     // @Query('Fild2') email: string,
     // @Query('UserId') UserId: string,
 
-
     // @Query('Tmonth') TokenExpirationMonth: string,
     // @Query('Tyear') TokenExpirationYear: string,
   ) {
@@ -35,6 +35,7 @@ export class PaymentResourceController {
     });
   }
 
+  @Render('failed-page')
   @Get('/failed/:lang')
   async failedPayment(
     @Param('lang') lang: 'en' | 'he' | 'ar',
@@ -49,7 +50,6 @@ export class PaymentResourceController {
     // @Query('Fild1') fullname: string,
     // @Query('Fild2') email: string,
     // @Query('UserId') UserId: string,
-
 
     // @Query('Tmonth') TokenExpirationMonth: string,
     // @Query('Tyear') TokenExpirationYear: string,
