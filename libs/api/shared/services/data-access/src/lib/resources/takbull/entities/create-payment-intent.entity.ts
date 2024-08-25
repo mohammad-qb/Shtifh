@@ -10,6 +10,7 @@ export class GetSigntureDTO {
   fullname!: string;
   email!: string;
   phone!: string;
+  lang!: string;
 }
 
 export interface paymentQueryData {

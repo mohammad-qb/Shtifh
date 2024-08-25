@@ -45,7 +45,6 @@ export class CityResourceService {
     const bookedSlots = await this.prismaService.bookedSlots.findMany({
       where: { date: formatDate(new Date(args.date)), cityId: args.cityId },
     });
-
     const dailySchedule = await this.prismaService.dailySchedule.findFirst({
       where: {
         date: formattedDate,

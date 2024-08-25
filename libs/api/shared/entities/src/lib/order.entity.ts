@@ -43,6 +43,9 @@ export class OrderEntity implements Order {
   address!: string;
 
   @ApiProperty()
+  wallet!: string;
+
+  @ApiProperty()
   tip!: number;
 
   @ApiProperty({ nullable: true })

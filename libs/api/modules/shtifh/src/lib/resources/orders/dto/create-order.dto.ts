@@ -1,17 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
-  IsDateString,
   IsEnum,
   IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
 } from 'class-validator';
 
 export class CreateOrderDto {
   @ApiPropertyOptional({ default: '2024-08-21' })
-  @IsDateString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Date must be in the format YYYY-MM-DD',
+  })
   @IsOptional()
   date!: string;
 

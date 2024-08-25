@@ -1,6 +1,8 @@
 import {
   BadGatewayException,
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
 } from '@nestjs/common';
@@ -13,6 +15,7 @@ import { CancelOrderDto } from './dto/cancel-order.dto';
 import { Payload } from '@shtifh/user-service';
 import { Prisma } from '@prisma/client';
 import { FCMService } from '@shtifh/fcm-service';
+import { getDayOfWeek } from '../city/helpers/helper';
 
 const done_order_msg = {
   AR: {
@@ -70,17 +73,55 @@ export class OrderResourceService {
 
   async create(customerId: string, lang: HeaderLang, args: CreateOrderDto) {
     const refNumber = Math.floor(Math.random() * 90000000) + 10000000 + '';
+    const formattedDate = args.date + 'T00:00:00.000+00:00';
 
     const customer = await this.customerModel.findFirst({
       where: { id: customerId },
       include: { user: true },
     });
 
-    if (!customer) throw new BadRequestException('user_wrong');
+    if (!customer) throw new BadRequestException('User not found');
 
     const modelService = await this.carModelServiceModel.findFirst({
       where: { id: args.carModelServiceId },
     });
+
+    const dailySchedule = await this.prismaService.dailySchedule.findFirst({
+      where: {
+        date: formattedDate,
+        cityId: args.cityId,
+      },
+    });
+
+    const dayOfWeek = getDayOfWeek(new Date(args.date));
+    const recurringSchedule =
+      await this.prismaService.recurringDailySchedule.findFirst({
+        where: { day: dayOfWeek, cityId: args.cityId },
+      });
+
+    const globalSchedule = await this.prismaService.globalSchedule.findFirst({
+      where: { cityId: args.cityId },
+    });
+
+    let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0;
+
+    if (recurringSchedule) {
+      requests_in_h = recurringSchedule.requests_in_hour;
+    }
+
+    if (dailySchedule) {
+      requests_in_h = dailySchedule.requests_in_hour;
+    }
+    const orderbyTime = await this.model.findMany({
+      where: {
+        date: formattedDate,
+        time: args.time,
+      },
+    });
+
+    if (requests_in_h <= orderbyTime.length) {
+      throw new HttpException('Max number of bookings exceeded, please try later', HttpStatus.BAD_REQUEST);
+    }
 
     const accessories =
       args.accessoriesIds.length > 0
@@ -93,14 +134,15 @@ export class OrderResourceService {
           })
         : [];
 
-    let accessoriesTotalPrice = 0;
-    for (const acc of accessories) {
-      accessoriesTotalPrice += acc.price;
-    }
+    const accessoriesTotalPrice = accessories.reduce(
+      (total, acc) => total + acc.price,
+      0
+    );
 
     const order = await this.model.create({
       data: {
         ...args,
+        date: formattedDate,
         fees:
           (modelService?.fees || 0) + accessoriesTotalPrice + (args.tip || 0),
         ref_number: refNumber,
@@ -112,14 +154,16 @@ export class OrderResourceService {
 
     const OrderTotalSum =
       (modelService?.fees || 0) + (args.tip || 0) + accessoriesTotalPrice;
+
     const paymentIntent = await this.takbull.PaymentHY({
+      lang,
       order: refNumber,
       amount: OrderTotalSum,
       email: customer.user.email,
       phone: customer.user.mobile,
       fullname: customer.user.full_name,
     });
-    console.log(paymentIntent);
+
     await this.paymentModel.create({
       data: {
         fees: OrderTotalSum,
@@ -284,6 +328,7 @@ export class OrderResourceService {
           time: true,
           date: true,
           address: true,
+          ref_number: true,
           city: {
             select: { id: true, name_ar: true, name_en: true, name_he: true },
           },
@@ -335,18 +380,19 @@ export class OrderResourceService {
 
       if (!updatedOrder) return {};
 
-      const paymentIntent = await this.takbull.paymentIntent({
-        order_reference: order.ref_number,
-        OrderTotalSum: OrderTotalSum,
+      const paymentIntent = await this.takbull.PaymentHY({
         lang,
+        order: updatedOrder.ref_number,
+        amount: OrderTotalSum,
         email: customer.user.email,
         phone: customer.user.mobile,
+        fullname: customer.user.full_name,
       });
 
       await this.paymentModel.create({
         data: {
           fees: OrderTotalSum,
-          uniq_id: paymentIntent.uniqId,
+          uniq_id: String(paymentIntent.order),
           orderId: order.id,
         },
       });
