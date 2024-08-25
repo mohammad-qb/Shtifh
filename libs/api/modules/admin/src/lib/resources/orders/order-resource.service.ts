@@ -23,7 +23,6 @@ export class OrderResourceService {
         lte: endOfDay(useDate),
       },
     };
-
     // Apply filters based on the provided arguments
     if (args.isCompleted) condition.is_done = true;
     if (args.unCompleted) condition.is_done = false;

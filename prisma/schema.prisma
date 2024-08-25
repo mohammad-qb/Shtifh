@@ -156,6 +156,7 @@ model Order {
   carModelServiceId String           @db.ObjectId
   cityId            String           @db.ObjectId
   accessoriesIds    String[]         @db.ObjectId
+  wallet       Json?  // Make the `wallet` field optional (nullable)
   ReminderOrders    ReminderOrders[]
   BookedSlots       BookedSlots[]
 }
@@ -388,18 +389,32 @@ enum Lang {
 }
 
 enum CarColor {
-  BLACK
-  WHITE
-  GRAY
-  SILVER
-  RED
-  ORANGE
-  YELLOW
-  BROWN
-  PURPLE
-  GOLD
-  GREEN
   BLUE
+  LIGHT_SEA_GREEN
+  TURQUOISE
+  WHITE
+  BLACK
+  ULTRAMARINE_BLUE
+  DARK_OLIVE_GREEN
+  SKY_BLUE
+  MEDIUM_SLATE_BLUE
+  CADET_BLUE
+  LIGHT_SKY_BLUE
+  MEDIUM_AQUAMARINE
+  SPRING_GREEN
+  CRIMSON
+  DIM_GRAY
+  LAVENDER
+  LIGHT_GRAY
+  VERY_LIGHT_GRAY
+  ORANGE
+  PINK
+  RED
+  LIGHT_CORAL
+  HOT_PINK
+  LIGHT_PINK
+  PEACH
+  YELLOW
   OTHER
 }
 
