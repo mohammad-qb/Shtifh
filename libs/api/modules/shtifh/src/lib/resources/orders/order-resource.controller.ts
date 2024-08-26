@@ -20,7 +20,7 @@ import { Payload } from '@shtifh/user-service';
 import { CancelOrderDto } from './dto/cancel-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ListOrdersDto } from './dto/list-orders.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { UpdateOrderDto, UpdateOrderServicesDto } from './dto/update-order.dto';
 import { CreateOrderEntity } from './entities/create-order.entity';
 import { RetrieveLastInvoiceEntity } from './entities/last-invoice.entity';
 import { UpdateOrderEntity } from './entities/update-order.entity';
@@ -47,14 +47,21 @@ export class OrderResourceController {
   }
 
   @Put('/:id')
-  @ApiOperation({ summary: 'Update Order' })
+  @ApiOperation({ summary: 'Update Order ' })
   @ApiResponse({ type: UpdateOrderEntity })
-  async update(
+  async update(@Param('id') id: string, @Body() body: UpdateOrderDto) {
+    return await this.orderResourceService.updateBookSlots(id, body);
+  }
+
+  @Put('/service/:id')
+  @ApiOperation({ summary: 'Update Order model services' })
+  @ApiResponse({ type: UpdateOrderEntity })
+  async updateServiceModel(
     @Param('id') id: string,
     @Lang() lang: HeaderLang,
-    @Body() body: UpdateOrderDto
+    @Body() body: UpdateOrderServicesDto
   ) {
-    return await this.orderResourceService.update(id, body, lang);
+    return await this.orderResourceService.updateBookService(id, body, lang);
   }
 
   @Post('all')

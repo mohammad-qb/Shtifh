@@ -50,6 +50,7 @@ export class PrivateOrderService {
         id: true,
         time: true,
         date: true,
+        price: true,
         address: true,
         employee: {
           select: {
@@ -92,6 +93,7 @@ export class PrivateOrderService {
       time: el.time,
       date: el.date,
       address: el.address,
+      price: el.price,
       employee: el.employee,
       city: el.city[`name_${lang}`],
       private_service: {
@@ -135,7 +137,7 @@ export class PrivateOrderService {
       include: {
         city: true,
         car: { include: { brand: true, model: true } },
-        customer: true,
+        customer: { include: { user: true } },
         private_service: true,
       },
     });

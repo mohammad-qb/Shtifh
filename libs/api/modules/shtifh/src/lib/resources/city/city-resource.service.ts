@@ -6,7 +6,7 @@ import { addOneHour, getDayOfWeek } from './helpers/helper';
 import { format } from 'date-fns';
 
 function formatDate(date: Date) {
-  return format(new Date(date), 'dd/MM/yyyy');
+  return format(new Date(date), 'yyyy-MM-dd');
 }
 @Injectable()
 export class CityResourceService {
@@ -62,14 +62,18 @@ export class CityResourceService {
       where: { cityId: args.cityId },
     });
 
-    console.log({
-      bookedSlots,
-      dailySchedule,
-      recurringSchedule,
-      globalSchedule,
-      dayOfWeek,
-    });
-    const slots: { content: string; value: string }[] = [];
+    // console.log({
+    //   bookedSlots,
+    //   dailySchedule,
+    //   recurringSchedule,
+    //   globalSchedule,
+    //   dayOfWeek,
+    // });
+    const slots: {
+      content: string;
+      value: string;
+      requests_in_h: number;
+    }[] = [];
 
     let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0;
 
@@ -98,12 +102,11 @@ export class CityResourceService {
       const slot = {
         content: `${currentTime} - ${nextTime}`,
         value: `${currentTime} - ${nextTime}`,
+        requests_in_h,
       };
-
       const timeSlots = bookedSlots.filter((e) => {
         return e.time === slot.content;
       });
-
       if (timeSlots.length < requests_in_h) {
         slots.push(slot);
       }

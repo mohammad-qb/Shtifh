@@ -43,7 +43,7 @@ export class PaymentResourceService {
 
     await this.prismaService.bookedSlots.create({
       data: {
-        date: format(new Date(order.date), 'dd/MM/yyyy'),
+        date: format(new Date(order.date), 'yyyy-MM-dd'),
         time: order.time,
         cityId: order.cityId,
         orderId: order.id,

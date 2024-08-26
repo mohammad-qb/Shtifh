@@ -23,11 +23,21 @@ export class EmployeeResourceService {
 
   async UpcomingOrders(employeeId: string, date?: string) {
     const useDate = date ? new Date(date) : new Date();
-
+    console.log(
+      {
+        date: {
+          gte: startOfDay(useDate),
+          lt: endOfDay(useDate),
+        },
+      },
+      employeeId
+    );
     const results = await this.orderModel.findMany({
       where: {
         employeeId,
         paid: true,
+        is_done: false,
+        is_canceled: false,
         date: {
           gte: startOfDay(useDate),
           lt: endOfDay(useDate),
@@ -53,6 +63,7 @@ export class EmployeeResourceService {
       where: {
         employeeId,
         status: 'CONFIRMED',
+        is_done: false,
         date: {
           gte: startOfDay(useDate),
           lt: endOfDay(useDate),

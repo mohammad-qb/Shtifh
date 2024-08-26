@@ -5,15 +5,18 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
 } from 'class-validator';
 
 export class UpdateOrderDto {
-  @ApiPropertyOptional({ default: '10/10/2022:13:55:10' })
-  @IsString()
+  @ApiPropertyOptional({ default: '2024-08-21' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Date must be in the format YYYY-MM-DD',
+  })
   @IsOptional()
   date?: string;
 
-  @ApiPropertyOptional({ default: '12:00:00' })
+  @ApiPropertyOptional({ default: '06:00 - 07:00' })
   @IsString()
   @IsOptional()
   time?: string;
@@ -43,7 +46,8 @@ export class UpdateOrderDto {
   @IsMongoId()
   @IsNotEmpty()
   cityId!: string;
-
+}
+export class UpdateOrderServicesDto {
   @ApiPropertyOptional()
   @IsMongoId()
   @IsNotEmpty()
