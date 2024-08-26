@@ -20,12 +20,14 @@ export class PrivateOrderService {
         cityId: args.cityId,
         carId: args.carId,
         address: args.address,
+        note: args.note,
         customerId,
         lat_lng: args.lat_lng,
       },
       select: {
         status: true,
         id: true,
+        note: true,
         private_service: {
           select: {
             id: true,
@@ -51,6 +53,7 @@ export class PrivateOrderService {
         time: true,
         date: true,
         price: true,
+        note: true,
         address: true,
         employee: {
           select: {
@@ -94,6 +97,7 @@ export class PrivateOrderService {
       date: el.date,
       address: el.address,
       price: el.price,
+      note: el.note,
       employee: el.employee,
       city: el.city[`name_${lang}`],
       private_service: {

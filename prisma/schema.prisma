@@ -210,6 +210,7 @@ model privateOrder {
   address               String?
   date                  DateTime?
   time                  String?
+  note                  String?
   price                 Int?
   lat_lng               String[]
   createdAt             DateTime                @default(now())

@@ -24,6 +24,9 @@ export class ListPrivateOrdersEntity {
   @ApiProperty()
   address!: string;
 
+  @ApiProperty()
+  note!: string;
+
   @ApiProperty({ enum: $Enums.OrderStatus })
   status!: $Enums.OrderStatus;
 

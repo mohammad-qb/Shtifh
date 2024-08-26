@@ -33,4 +33,9 @@ export class CreatePrivateOrderDto {
   @IsArray()
   @IsOptional()
   lat_lng?: string[];
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  note?: string;
 }

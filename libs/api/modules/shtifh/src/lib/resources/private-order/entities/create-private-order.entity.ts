@@ -24,6 +24,9 @@ export class CreatePrivateOrderEntity {
   @ApiProperty({ enum: $Enums.OrderStatus })
   status!: $Enums.OrderStatus;
 
+  @ApiProperty()
+  note!: string;
+
   @ApiProperty({ type: PrivateOrderData })
   private_service!: PrivateOrderData;
 }
