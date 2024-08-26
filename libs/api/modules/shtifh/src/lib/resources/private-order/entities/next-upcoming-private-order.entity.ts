@@ -99,7 +99,11 @@ class PrivateOrderCustomerData implements Customer {
 
 class PrivateOrderServiceEntity implements PrivateService {
   @ApiProperty()
-  description!: string;
+  description_ar!: string;
+  @ApiProperty()
+  description_en!: string;
+  @ApiProperty()
+  description_he!: string;
   @ApiProperty()
   is_active!: boolean;
   @ApiProperty()
@@ -145,6 +149,8 @@ export class NextUpcomingPrivateOrderEntity implements privateOrder {
   privateServiceId!: string;
   @ApiProperty()
   carId!: string;
+  @ApiProperty()
+  price!: number;
   @ApiProperty()
   cityId!: string;
   @ApiProperty({ type: PrivateOrderCarData })

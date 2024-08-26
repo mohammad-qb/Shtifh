@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class UpdatePrivateOrderDto {
   @ApiPropertyOptional()
@@ -16,4 +16,9 @@ export class UpdatePrivateOrderDto {
   @IsString()
   @IsOptional()
   time?: string;
+
+  @ApiPropertyOptional({ type: Number })
+  @IsInt()
+  @IsOptional()
+  price?: number;
 }

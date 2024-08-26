@@ -25,7 +25,17 @@ export class CreatePrivateServiceDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  description!: string;
+  description_ar!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  description_en!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  description_he!: string;
 }
 
 export class ActivatePrivateServiceDto {

@@ -18,6 +18,7 @@ export class OrderResourceService {
   async list(args: ListOrdersDto) {
     const useDate = new Date(args.date);
     const condition: Prisma.OrderWhereInput = {
+      // paid: true,
       date: {
         gte: startOfDay(useDate),
         lte: endOfDay(useDate),
@@ -48,6 +49,12 @@ export class OrderResourceService {
         employee: { include: { user: true } },
         service: { include: { service: true } },
       },
+    });
+    //sort order based on time by format ( HH.MM - HH.MM )
+    orders.sort((a, b) => {
+      const timeA = a.time.split(' - ')[0];
+      const timeB = b.time.split(' - ')[0];
+      return timeA.localeCompare(timeB);
     });
 
     // Group orders by their creation date
