@@ -75,7 +75,7 @@ export class TakbullResourceService {
       this.HyMasof
     }&Order=${order}&Info=Shitfh App&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=${
       lang === 'he' ? 'HEB' : 'ENG'
-    }&tmp=9`;
+    }&tmp=5`;
 
     const { data } = await axios.get(paymenturl);
 
