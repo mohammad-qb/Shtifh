@@ -51,6 +51,7 @@ export class CarResourceService {
         model: {
           select: {
             id: true,
+            image_url: true,
             name_ar: true,
             name_en: true,
             name_he: true,
@@ -58,14 +59,17 @@ export class CarResourceService {
         },
       },
     });
-
     const results = cars.map((el) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { model, ..._car } = el;
       return {
         ..._car,
         city: { id: el.city.id, name: el.city[`name_${lang}`] },
-        model: { name: el.model[`name_${lang}`], id: el.model.id },
+        model: {
+          image_url: model.image_url,
+          name: el.model[`name_${lang}`],
+          id: el.model.id,
+        },
       };
     });
     return { results };
