@@ -144,6 +144,8 @@ export class NextUpcomingPrivateOrderEntity implements privateOrder {
   @ApiProperty()
   customerId!: string;
   @ApiProperty()
+  note!: string;
+  @ApiProperty()
   employeeId!: string | null;
   @ApiProperty()
   privateServiceId!: string;
