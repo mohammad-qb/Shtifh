@@ -18,7 +18,7 @@ export class OrderResourceService {
   async list(args: ListOrdersDto) {
     const useDate = new Date(args.date);
     const condition: Prisma.OrderWhereInput = {
-      // paid: true,
+      paid: true,
       date: {
         gte: startOfDay(useDate),
         lte: endOfDay(useDate),
@@ -39,7 +39,7 @@ export class OrderResourceService {
     }
 
     const orders = await this.model.findMany({
-      where: condition, // Assuming 'condition' is defined elsewhere
+      where: condition, 
       orderBy: { date: 'desc' },
       include: {
         car: { include: { model: true } },
