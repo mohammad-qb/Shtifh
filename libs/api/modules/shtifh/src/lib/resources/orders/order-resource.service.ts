@@ -198,7 +198,7 @@ export class OrderResourceService {
               },
             },
             model: {
-              select: { id: true, name_ar: true, name_en: true, name_he: true },
+              select: { id: true, name_ar: true, name_en: true, name_he: true, image_url: true },
             },
           },
         },
@@ -240,6 +240,7 @@ export class OrderResourceService {
           model: {
             id: el.car.model.id,
             name: el.car.model[`name_${lang}`],
+            image_url: el.car.model.image_url,
           },
         },
       })),
@@ -541,7 +542,7 @@ export class OrderResourceService {
                 name_he: true,
               },
             },
-            model: { select: { name_ar: true, name_en: true, name_he: true } },
+            model: { select: { id: true, name_ar: true, name_en: true, name_he: true, image_url: true, } },
           },
         },
       },
