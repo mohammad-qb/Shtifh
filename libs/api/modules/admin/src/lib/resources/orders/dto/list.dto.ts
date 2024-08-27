@@ -1,5 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class ListOrdersDto {
   @ApiPropertyOptional()
@@ -21,4 +27,9 @@ export class ListOrdersDto {
   @IsString()
   @IsOptional()
   date!: string;
+
+  @ApiProperty()
+  @IsMongoId()
+  @IsNotEmpty()
+  cityId!: string;
 }

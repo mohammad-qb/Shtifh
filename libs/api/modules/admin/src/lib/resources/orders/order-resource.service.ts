@@ -19,6 +19,7 @@ export class OrderResourceService {
     const useDate = new Date(args.date);
     const condition: Prisma.OrderWhereInput = {
       paid: true,
+      cityId: args.cityId,
       date: {
         gte: startOfDay(useDate),
         lte: endOfDay(useDate),
@@ -39,7 +40,7 @@ export class OrderResourceService {
     }
 
     const orders = await this.model.findMany({
-      where: condition, 
+      where: condition,
       orderBy: { date: 'desc' },
       include: {
         car: { include: { model: true } },
