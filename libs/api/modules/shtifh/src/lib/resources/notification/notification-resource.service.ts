@@ -45,16 +45,12 @@ export class NotificationResourceService {
   async checkMissedNotification(userId: string) {
     const notification = await this.prismaService.notification.findFirst({
       where: {
-        userId,
-        NOT: {
-          is_read: {
-            hasSome: [userId],
-          },
+        is_read: {
+          has: userId,
         },
       },
     });
-
-    return notification ? true : false;
+    return !notification ? true : false;
   }
 
   async makeNotificationRead(userId: string, notificationId: string) {

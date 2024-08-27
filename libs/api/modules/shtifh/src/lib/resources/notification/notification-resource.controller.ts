@@ -44,7 +44,7 @@ export class NotificationResourceController {
     @Body() body: ReadNotificationDto
   ) {
     return await this.notificationResourceService.makeNotificationRead(
-      user.id,
+      user.userId,
       body.notificationId
     );
   }
