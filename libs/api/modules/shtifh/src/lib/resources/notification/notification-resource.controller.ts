@@ -32,8 +32,9 @@ export class NotificationResourceController {
   @Get('missed')
   @ApiOperation({ summary: 'Check if customer has missed notification' })
   async checkMissedNotification(@GetUser() user: Payload) {
+    console.log(user);
     return await this.notificationResourceService.checkMissedNotification(
-      user.userId
+      user.id
     );
   }
 
@@ -44,7 +45,7 @@ export class NotificationResourceController {
     @Body() body: ReadNotificationDto
   ) {
     return await this.notificationResourceService.makeNotificationRead(
-      user.userId,
+      user.id,
       body.notificationId
     );
   }
