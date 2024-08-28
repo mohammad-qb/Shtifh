@@ -501,7 +501,6 @@ export class OrderResourceService {
         is_done: false,
         is_canceled: false,
         paid: true,
-        employeeId: { not: null },
         date: {
           gt: new Date().toISOString(),
         },
