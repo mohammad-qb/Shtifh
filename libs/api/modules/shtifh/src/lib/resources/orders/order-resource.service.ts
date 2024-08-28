@@ -391,6 +391,7 @@ export class OrderResourceService {
 
     return {
       success: true,
+      url: paymentIntent.url,
       results: {
         id: updatedOrder.id,
         time: updatedOrder.time,

@@ -145,7 +145,7 @@ export class PrivateOrderService {
       include: {
         city: true,
         car: { include: { brand: true, model: true } },
-        customer: { include: { user: true } },
+        employee: { include: { user: true } },
         private_service: true,
       },
     });

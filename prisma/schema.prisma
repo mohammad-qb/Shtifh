@@ -72,7 +72,6 @@ model Employee {
   order              Order[]
   userId             String         @unique @db.ObjectId
   privateOrder       privateOrder[]
-  wallet             Json
 }
 
 model CarModel {
@@ -310,7 +309,7 @@ model weekend {
 
 model Payment {
   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  uniq_id   String        @unique
+  uniq_id   String
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])

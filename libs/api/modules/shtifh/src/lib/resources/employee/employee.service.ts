@@ -52,6 +52,7 @@ export class EmployeeResourceService {
       },
       orderBy: { date: 'asc' },
     });
+    console.log(results);
 
     return { results };
   }
@@ -76,6 +77,7 @@ export class EmployeeResourceService {
         car: { include: { model: true, brand: true } },
       },
     });
+    console.log(results);
 
     return { results };
   }

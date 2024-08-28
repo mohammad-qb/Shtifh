@@ -3,6 +3,7 @@ import { FCMService } from '@shtifh/fcm-service';
 import { PrismaService } from '@shtifh/prisma-service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { $Enums } from '@prisma/client';
+import moment = require('moment');
 
 function setNotificationText(
   lang: $Enums.Lang,
@@ -55,17 +56,24 @@ export class OrdersReminderService {
 
   @Cron(CronExpression.EVERY_DAY_AT_10PM, { timeZone: 'Asia/Jerusalem' })
   async execute() {
-    console.log('Start Reminder');
+    try {
+      console.log('Start Reminder');
     const currentDate = new Date();
     const nextDay = new Date();
+    const sDate = moment(currentDate).format('YYYY-MM-DD');
     nextDay.setDate(currentDate.getDate() + 1);
+    const eDate = moment(nextDay).format('YYYY-MM-DD');
+    console.log( {
+      gte: sDate + 'T00:00:00.000Z',
+      lt: eDate + 'T00:00:00.000Z',
+    });
 
     const orders = await this.prismaService.reminderOrders.findMany({
       where: {
         order: {
           date: {
-            gte: currentDate.toISOString(),
-            lt: nextDay.toISOString(),
+            gte: sDate + 'T00:00:00.000Z',
+            lt: eDate + 'T00:00:00.000Z',
           },
         },
       },
@@ -84,8 +92,8 @@ export class OrdersReminderService {
         where: {
           order: {
             date: {
-              gte: currentDate.toISOString(),
-              lt: nextDay.toISOString(),
+              gte: sDate + 'T00:00:00.000Z',
+              lt: eDate + 'T00:00:00.000Z',
             },
           },
         },
@@ -113,7 +121,7 @@ export class OrdersReminderService {
         ),
       });
 
-      await this.prismaService.notification.create({
+      element.order.employee && await this.prismaService.notification.create({
         data: {
           for_all: false,
           userId: element.order.employee?.userId || '',
@@ -158,7 +166,7 @@ export class OrdersReminderService {
         ),
       });
 
-      await this.prismaService.notification.create({
+      element.order.customer && await this.prismaService.notification.create({
         data: {
           for_all: false,
           userId: element.order.customer?.userId || '',
@@ -205,7 +213,7 @@ export class OrdersReminderService {
         ),
       });
 
-      await this.prismaService.notification.create({
+      element.order.employee && await this.prismaService.notification.create({
         data: {
           for_all: false,
           userId: element.order.employee?.userId || '',
@@ -250,7 +258,7 @@ export class OrdersReminderService {
         ),
       });
 
-      await this.prismaService.notification.create({
+      element.order.customer && await this.prismaService.notification.create({
         data: {
           for_all: false,
           userId: element.order.customer?.userId || '',
@@ -295,5 +303,8 @@ export class OrdersReminderService {
     console.log(
       `Reminder Sent for ${orders.length} Orders and private orders ${privateOrders.length}`
     );
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
