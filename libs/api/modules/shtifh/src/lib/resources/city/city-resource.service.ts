@@ -58,6 +58,13 @@ export class CityResourceService {
       },
     });
 
+    const unavailableSlots = await this.prismaService.unavailableSlot.findMany({
+      where: {
+        date: formattedDate,
+        cityId: args.cityId,
+      },
+    });
+
     const dayOfWeek = getDayOfWeek(new Date(args.date));
     const recurringSchedule =
       await this.prismaService.recurringDailySchedule.findFirst({
@@ -113,6 +120,7 @@ export class CityResourceService {
       const timeSlots = bookedSlots.filter((e) => {
         return e.time === slot.content;
       });
+
       if (timeSlots.length < requests_in_h) {
         slots.push(slot);
       }
