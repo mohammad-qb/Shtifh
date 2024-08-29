@@ -70,6 +70,10 @@ export class EmployeeResourceService {
           lt: endOfDay(useDate),
         },
       },
+      orderBy: {
+        date: "asc",
+        time: "asc",
+      },
       include: {
         customer: { include: { user: true } },
         private_service: true,
