@@ -65,6 +65,11 @@ export class CityResourceService {
       },
     });
 
+    const unavailableSlotsJson = new Map<string, boolean>();
+    for (let index = 0; index < unavailableSlots.length; index++) {
+      unavailableSlotsJson.set(`${unavailableSlots[index].start_time} - ${unavailableSlots[index].end_time}`, true);
+    }
+
     const dayOfWeek = getDayOfWeek(new Date(args.date));
     const recurringSchedule =
       await this.prismaService.recurringDailySchedule.findFirst({
@@ -110,6 +115,7 @@ export class CityResourceService {
     }
 
     let currentTime = startTime;
+    var count = 1;
     while (currentTime < endTime) {
       const nextTime = addOneHour(currentTime);
       const slot = {
@@ -121,11 +127,12 @@ export class CityResourceService {
         return e.time === slot.content;
       });
 
-      if (timeSlots.length < requests_in_h) {
+      if (timeSlots.length < requests_in_h && !(unavailableSlotsJson.get(slot.value) ?? false)) {
         slots.push(slot);
       }
 
       currentTime = nextTime;
+      count++;
     }
 
     return slots;
