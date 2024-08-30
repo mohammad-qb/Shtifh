@@ -4,11 +4,8 @@ import { PrismaService } from '@shtifh/prisma-service';
 import { ListSlotsDto } from './dto/slots.dto';
 import { addOneHour, getDayOfWeek } from './helpers/helper';
 import {
-  addMonths,
   eachWeekOfInterval,
-  endOfMonth,
   format,
-  startOfMonth,
 } from 'date-fns';
 
 function formatDate(date: Date) {
@@ -160,6 +157,7 @@ export class CityResourceService {
     const weekendDays = await this.prismaService.weekend.findMany({
       where: { cityId },
     });
+
     const dailySchedule = await this.prismaService.dailySchedule.findMany({
       where: { cityId, is_off: true },
     });
@@ -170,9 +168,8 @@ export class CityResourceService {
     );
 
     // Calculate the range for the next 6 months
-    const now = new Date();
-    const start = startOfMonth(now);
-    const end = endOfMonth(addMonths(now, 6));
+    const start = new Date();
+    const end = new Date(new Date().setDate(start.getDate() + 190));
 
     // Generate all weekends within the range for each month
     const weekends = eachWeekOfInterval({ start, end }).flatMap(
