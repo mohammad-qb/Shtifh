@@ -11,6 +11,23 @@ import {
 function formatDate(date: Date) {
   return format(new Date(date), 'yyyy-MM-dd');
 }
+
+function generateDateArrayAndMonths() {
+  const dates: { date: string; day: string }[] = [];
+  const today = new Date();
+
+  for (let i = 0; i <= 31; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const formattedDate = date.toISOString().split('T')[0];
+    const day = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+    dates.push({ date: formattedDate, day: day.toUpperCase() });
+  }
+
+  return dates;
+}
+
 @Injectable()
 export class CityResourceService {
   private logger = new Logger(CityResourceService.name);
@@ -156,83 +173,47 @@ export class CityResourceService {
 
     return { result };
   }
+
   async daysOff(cityId: string) {
+    const dates = generateDateArrayAndMonths();
+
     // Fetch existing weekend days and daily schedules
     const weekendDays = await this.prismaService.weekend.findMany({
       where: { cityId },
     });
 
+    const recurringSchedule =
+      await this.prismaService.recurringDailySchedule.findMany({
+        where: { cityId, is_off: true },
+      });
+
     const dailySchedule = await this.prismaService.dailySchedule.findMany({
-      where: { cityId, is_off: true },
-    });
-
-    // Create a set of day names from the weekend days
-    const weekendDaysArray = Array.from(
-      new Set(weekendDays.map((w) => w.day.toUpperCase()))
-    );
-
-    // Calculate the range for the next 6 months
-    const start = new Date();
-    const end = new Date(new Date().setDate(start.getDate() + 190));
-
-    // Generate all weekends within the range for each month
-    const weekends = eachWeekOfInterval({ start, end }).flatMap(
-      (startOfWeek) => {
-        return weekendDaysArray.map((dayName) => {
-          const dayOffset = (weekDays[dayName] - startOfWeek.getDay() + 7) % 7;
-          const dayDate = new Date(startOfWeek);
-          dayDate.setDate(startOfWeek.getDate() + dayOffset);
-          // Set the time to midnight UTC
-          dayDate.setUTCHours(0, 0, 0, 0);
-          return dayDate.toISOString(); // Return in ISO string format
-        });
-      }
-    );
-
-    // Filter to ensure dates are within the 6-month range
-    const validWeekends = weekends.filter(
-      (date) => new Date(date) >= start && new Date(date) <= end
-    );
-
-    // Fetch daily schedules that are not off on valid weekend days
-    const dailyScheduleOn = await this.prismaService.dailySchedule.findMany({
       where: {
         cityId,
         date: {
-          in: validWeekends,
+          gte: dates[0].date + 'T00:00:00.000Z',
+          lte: dates[dates.length - 1].date + 'T23:59:59.999Z',
         },
       },
     });
 
-    // Extract dates with is_off: false
-    const nonOffDates = new Set(
-      dailyScheduleOn.map((schedule) => schedule.date.toISOString())
-    );
+    const result = dates.map((el) => {
+      const date = dailySchedule.find(
+        (e) => e.date.toISOString().split('T')[0] === el.date
+      );
+      if (date) {
+        return date.is_off ? el.date : null;
+      } else if (weekendDays.some((e) => e.day === el.day)) {
+        return el.date;
+      } else if (recurringSchedule.some((e) => e.day === el.day)) {
+        return el.date;
+      } else return null;
+    });
 
-    // Create day off entries for each valid weekend day not present in dailyScheduleOn
-    const dayOffSchedules = validWeekends
-      .filter((date) => !nonOffDates.has(date))
-      .map((date) => ({
-        id: `weekend-${date}`, // Use ISO string as unique ID
-        date,
-        start_time: '00:00',
-        end_time: '23:59',
-        requests_in_hour: 0,
-        is_off: true,
-        cityId,
-      }));
-
-    // Combine existing daily schedules with generated day off schedules
-    const allSchedules = [...dailySchedule, ...dayOffSchedules];
-
-    // Sort combined schedules by date
-    const sortedSchedules = allSchedules.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-
-    return sortedSchedules;
+    return result.filter((el) => el !== null && el !== undefined);
   }
 }
+
 // Helper to map day names to week day indices
 const weekDays: { [key: string]: number } = {
   SATURDAY: 0,
