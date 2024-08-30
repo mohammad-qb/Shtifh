@@ -77,18 +77,16 @@ export class CityResourceService {
       where: { cityId: args.cityId },
     });
 
-    // console.log({
-    //   bookedSlots,
-    //   dailySchedule,
-    //   recurringSchedule,
-    //   globalSchedule,
-    //   dayOfWeek,
-    // });
     const slots: {
       content: string;
       value: string;
       requests_in_h: number;
     }[] = [];
+
+    const unavailableSlotsHours = unavailableSlots.map((e) => ({
+      startTimeHour: parseInt(e.start_time.split(':')[0]),
+      endTimeHour: parseInt(e.end_time.split(':')[0]),
+    }));
 
     let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0;
 
@@ -112,7 +110,6 @@ export class CityResourceService {
     }
 
     let currentTime = startTime;
-    var count = 1;
     while (currentTime < endTime) {
       const nextTime = addOneHour(currentTime);
       const slot = {
@@ -124,12 +121,19 @@ export class CityResourceService {
         return e.time === slot.content;
       });
 
-      if (timeSlots.length < requests_in_h && !(unavailableSlotsJson.get(slot.value) ?? false)) {
+      const matchWithSlotUnavailable = unavailableSlotsHours.find((el) => {
+        const timeHourNumber = parseInt(currentTime.split(':')[0]);
+
+        return (
+          timeHourNumber >= el.startTimeHour && timeHourNumber < el.endTimeHour
+        );
+      });
+
+      if (timeSlots.length < requests_in_h && !matchWithSlotUnavailable) {
         slots.push(slot);
       }
 
       currentTime = nextTime;
-      count++;
     }
 
     return slots;
