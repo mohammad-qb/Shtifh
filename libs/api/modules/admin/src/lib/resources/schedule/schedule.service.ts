@@ -154,6 +154,7 @@ export class ScheduleResourceService {
           { day: 'THURSDAY' },
           { day: 'TUESDAY' },
           { day: 'WEDNESDAY' },
+          { day: 'FRIDAY' },
           { day: 'SATURDAY' },
         ],
       },
