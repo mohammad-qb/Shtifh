@@ -104,6 +104,14 @@ export class CityResourceService {
       endTimeHour: parseInt(e.end_time.split(':')[0]),
     }));
 
+    const monthlySchedule = await this.prismaService.monthlySchedule.findFirst({
+      where: {
+        cityId: args.cityId,
+        month: new Date(args.date).getMonth() + 1,
+        year: new Date(args.date).getFullYear(),
+      },
+    });
+
     let requests_in_h = globalSchedule ? globalSchedule.requests_in_hour : 0;
 
     if (dailySchedule?.is_off) return slots;
@@ -112,6 +120,12 @@ export class CityResourceService {
     // Generate slots based on the schedules
     let startTime = globalSchedule ? globalSchedule.start_time : '07:00';
     let endTime = globalSchedule ? globalSchedule.end_time : '18:00';
+
+    if (monthlySchedule) {
+      startTime = monthlySchedule.start_time;
+      endTime = monthlySchedule.end_time;
+      requests_in_h = monthlySchedule.requests_in_hour;
+    }
 
     if (recurringSchedule) {
       startTime = recurringSchedule.start_time;
