@@ -72,7 +72,6 @@ export class EmployeeResourceService {
       },
       orderBy: {
         date: "asc",
-        time: "asc",
       },
       include: {
         customer: { include: { user: true } },
