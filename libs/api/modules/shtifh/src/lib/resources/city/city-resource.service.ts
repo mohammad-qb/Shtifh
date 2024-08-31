@@ -97,7 +97,6 @@ export class CityResourceService {
     const slots: {
       content: string;
       value: string;
-      requests_in_h: number;
     }[] = [];
 
     const unavailableSlotsHours = unavailableSlots.map((e) => ({
@@ -132,7 +131,6 @@ export class CityResourceService {
       const slot = {
         content: `${currentTime} - ${nextTime}`,
         value: `${currentTime} - ${nextTime}`,
-        requests_in_h,
       };
       const timeSlots = bookedSlots.filter((e) => {
         return e.time === slot.content;
