@@ -8,7 +8,7 @@ import {
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { DateAccessService } from '@shtifh/date-access-service';
-import { UpdateOrderDto, UpdateOrderServicesDto } from './dto/update-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 import { HeaderLang } from '@shtifh/decorators';
 import { CancelOrderDto } from './dto/cancel-order.dto';
 import { Payload } from '@shtifh/user-service';
@@ -198,13 +198,18 @@ export class OrderResourceService {
               },
             },
             model: {
-              select: { id: true, name_ar: true, name_en: true, name_he: true, image_url: true },
+              select: {
+                id: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+                image_url: true,
+              },
             },
           },
         },
       },
     });
-
     return {
       results: orders.map((el) => ({
         id: el.id,
@@ -247,16 +252,24 @@ export class OrderResourceService {
     };
   }
 
-  async updateBookSlots(
-    orderId: string,
-    args: UpdateOrderDto
-  ): Promise<{ success: boolean; url: string | null }> {
+  async update(orderId: string, args: UpdateOrderDto, lang: HeaderLang) {
     const order = await this.model.findFirst({ where: { id: orderId } });
     if (!order) throw new BadRequestException('order_not_exist');
 
     if (args.date && args.time && args.cityId) {
       const formattedDate = format(order.date, 'yyyy-MM-dd');
-
+      const availableSlots = await this.cityResourceService.slots({
+        cityId: args.cityId,
+        date: args.date,
+      });
+      if (
+        order.time !== args.time &&
+        !availableSlots.find((p) => p.value === args.time)
+      ) {
+        throw new NotFoundException(
+          'Time is Not available for selected day, please try anthor time'
+        );
+      }
       const bookedSlot = await this.prismaService.bookedSlots.findFirst({
         where: {
           date: formattedDate,
@@ -281,145 +294,146 @@ export class OrderResourceService {
       });
     }
 
-    await this.model.update({
-      where: { id: orderId },
-      data: { ...args, date: args.date + 'T00:00:00.000+00:00' },
-    });
+    if (order.carModelServiceId === args.carModelServiceId) {
+      await this.model.update({
+        where: { id: orderId },
+        data: { ...args, date: args.date + 'T00:00:00.000+00:00' },
+      });
 
-    return { success: true, url: null };
-  }
+      return { success: true, url: null };
+    } else {
+      const customer = await this.customerModel.findFirst({
+        where: { id: order.customerId },
+        include: { user: true },
+      });
+      if (!customer) throw new BadRequestException('user_not_exist');
 
-  async updateBookService(
-    orderId: string,
-    args: UpdateOrderServicesDto,
-    lang: HeaderLang
-  ) {
-    const order = await this.model.findFirst({ where: { id: orderId } });
-    if (!order) throw new BadRequestException('order_not_exist');
-
-    const customer = await this.customerModel.findFirst({
-      where: { id: order.customerId },
-      include: { user: true },
-    });
-    if (!customer) throw new BadRequestException('user_not_exist');
-
-    const modelService = await this.carModelServiceModel.findFirst({
-      where: { id: args.carModelServiceId },
-    });
-    const OrderTotalSum = modelService?.fees || 0;
-
-    await this.prismaService.order.update({
-      where: { id: orderId },
-      data: { ...args, fees: OrderTotalSum },
-    });
-    const updatedOrder = await this.model.findFirst({
-      where: { id: orderId },
-      select: {
-        id: true,
-        time: true,
-        date: true,
-        address: true,
-        ref_number: true,
-        city: {
-          select: { id: true, name_ar: true, name_en: true, name_he: true },
+      const modelService = await this.carModelServiceModel.findFirst({
+        where: { id: args.carModelServiceId },
+      });
+      const OrderTotalSum = modelService?.fees || 0;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { date, ...rest } = args;
+      await this.prismaService.order.update({
+        where: { id: orderId },
+        data: {
+          ...rest,
+          fees: OrderTotalSum,
         },
-        employee: {
-          select: {
-            user: {
-              select: {
-                full_name: true,
+      });
+      const updatedOrder = await this.model.findFirst({
+        where: { id: orderId },
+        select: {
+          id: true,
+          time: true,
+          date: true,
+          address: true,
+          ref_number: true,
+          city: {
+            select: { id: true, name_ar: true, name_en: true, name_he: true },
+          },
+          employee: {
+            select: {
+              user: {
+                select: {
+                  full_name: true,
+                },
+              },
+            },
+          },
+          service: {
+            select: {
+              service: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+            },
+          },
+          car: {
+            select: {
+              id: true,
+              brand: {
+                select: {
+                  id: true,
+                  image_url: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
+              },
+              model: {
+                select: {
+                  id: true,
+                  name_ar: true,
+                  name_en: true,
+                  name_he: true,
+                },
               },
             },
           },
         },
-        service: {
-          select: {
-            service: {
-              select: {
-                id: true,
-                name_ar: true,
-                name_en: true,
-                name_he: true,
-              },
-            },
+      });
+
+      if (!updatedOrder) return {};
+
+      let paymentIntent: { order?: string; url?: string } = {};
+      if (OrderTotalSum > order.fees) {
+        paymentIntent = await this.takbull.PaymentHY({
+          lang,
+          order: updatedOrder.ref_number,
+          amount: OrderTotalSum - order.fees,
+          email: customer.user.email,
+          phone: customer.user.mobile,
+          fullname: customer.user.full_name,
+        });
+
+        console.log(paymentIntent);
+
+        await this.paymentModel.create({
+          data: {
+            fees: OrderTotalSum - order.fees,
+            uniq_id: String(paymentIntent.order),
+            orderId: order.id,
           },
-        },
-        car: {
-          select: {
-            id: true,
+        });
+      }
+
+      return {
+        success: true,
+        url: paymentIntent.url || null,
+        results: {
+          id: updatedOrder.id,
+          time: updatedOrder.time,
+          date: updatedOrder.date,
+          address: updatedOrder.address,
+          city: {
+            id: updatedOrder.city.id,
+            name: updatedOrder.city[`name_${lang}`],
+          },
+          employee: updatedOrder.employee,
+          service: {
+            id: updatedOrder.service.service.id,
+            name: updatedOrder.service.service[`name_${lang}`],
+          },
+          car: {
+            id: updatedOrder.car.id,
             brand: {
-              select: {
-                id: true,
-                image_url: true,
-                name_ar: true,
-                name_en: true,
-                name_he: true,
-              },
+              image_url: updatedOrder.car.brand.image_url,
+              name: updatedOrder.car.brand[`name_${lang}`],
+              id: updatedOrder.car.brand.id,
             },
             model: {
-              select: {
-                id: true,
-                name_ar: true,
-                name_en: true,
-                name_he: true,
-              },
+              id: updatedOrder.car.model.id,
+              name: updatedOrder.car.model[`name_${lang}`],
             },
           },
         },
-      },
-    });
-
-    if (!updatedOrder) return {};
-
-    const paymentIntent = await this.takbull.PaymentHY({
-      lang,
-      order: updatedOrder.ref_number,
-      amount: OrderTotalSum,
-      email: customer.user.email,
-      phone: customer.user.mobile,
-      fullname: customer.user.full_name,
-    });
-    console.log(paymentIntent);
-
-    await this.paymentModel.create({
-      data: {
-        fees: OrderTotalSum,
-        uniq_id: String(paymentIntent.order),
-        orderId: order.id,
-      },
-    });
-
-    return {
-      success: true,
-      url: paymentIntent.url,
-      results: {
-        id: updatedOrder.id,
-        time: updatedOrder.time,
-        date: updatedOrder.date,
-        address: updatedOrder.address,
-        city: {
-          id: updatedOrder.city.id,
-          name: updatedOrder.city[`name_${lang}`],
-        },
-        employee: updatedOrder.employee,
-        service: {
-          id: updatedOrder.service.service.id,
-          name: updatedOrder.service.service[`name_${lang}`],
-        },
-        car: {
-          id: updatedOrder.car.id,
-          brand: {
-            image_url: updatedOrder.car.brand.image_url,
-            name: updatedOrder.car.brand[`name_${lang}`],
-            id: updatedOrder.car.brand.id,
-          },
-          model: {
-            id: updatedOrder.car.model.id,
-            name: updatedOrder.car.model[`name_${lang}`],
-          },
-        },
-      },
-    };
+      };
+    }
   }
 
   async lastInvoice(customerId: string) {
@@ -542,7 +556,15 @@ export class OrderResourceService {
                 name_he: true,
               },
             },
-            model: { select: { id: true, name_ar: true, name_en: true, name_he: true, image_url: true, } },
+            model: {
+              select: {
+                id: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+                image_url: true,
+              },
+            },
           },
         },
       },

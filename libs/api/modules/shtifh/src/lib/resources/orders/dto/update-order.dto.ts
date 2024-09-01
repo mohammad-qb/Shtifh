@@ -44,10 +44,9 @@ export class UpdateOrderDto {
 
   @ApiPropertyOptional()
   @IsMongoId()
-  @IsNotEmpty()
+  @IsOptional()
   cityId!: string;
-}
-export class UpdateOrderServicesDto {
+
   @ApiPropertyOptional()
   @IsMongoId()
   @IsNotEmpty()
