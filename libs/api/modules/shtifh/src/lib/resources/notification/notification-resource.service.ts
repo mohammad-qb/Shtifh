@@ -16,8 +16,8 @@ export class NotificationResourceService {
     const result = await this.model.findMany({
       where:
         user.role === 'CUSTOMER'
-          ? { OR: [{ userId: user.id }, { for_all: true }] }
-          : { userId: user.id },
+          ? { OR: [{ userId: user.userId }, { for_all: true }] }
+          : { userId: user.userId },
       select: {
         content_en: true,
         content_ar: true,

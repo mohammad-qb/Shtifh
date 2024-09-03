@@ -3,10 +3,7 @@ import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
 import { ListSlotsDto } from './dto/slots.dto';
 import { addOneHour, getDayOfWeek } from './helpers/helper';
-import {
-  eachWeekOfInterval,
-  format,
-} from 'date-fns';
+import { format } from 'date-fns';
 
 function formatDate(date: Date) {
   return format(new Date(date), 'yyyy-MM-dd');
@@ -81,7 +78,10 @@ export class CityResourceService {
 
     const unavailableSlotsJson = new Map<string, boolean>();
     for (let index = 0; index < unavailableSlots.length; index++) {
-      unavailableSlotsJson.set(`${unavailableSlots[index].start_time} - ${unavailableSlots[index].end_time}`, true);
+      unavailableSlotsJson.set(
+        `${unavailableSlots[index].start_time} - ${unavailableSlots[index].end_time}`,
+        true
+      );
     }
 
     const dayOfWeek = getDayOfWeek(new Date(args.date));
@@ -225,14 +225,3 @@ export class CityResourceService {
     return result.filter((el) => el !== null && el !== undefined);
   }
 }
-
-// Helper to map day names to week day indices
-const weekDays: { [key: string]: number } = {
-  SATURDAY: 0,
-  SUNDAY: 1,
-  MONDAY: 2,
-  TUESDAY: 3,
-  WEDNESDAY: 4,
-  THURSDAY: 5,
-  FRIDAY: 6,
-};
