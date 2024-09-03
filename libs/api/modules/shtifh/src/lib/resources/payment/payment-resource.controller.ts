@@ -15,7 +15,8 @@ export class PaymentResourceController {
     @Query('CCode') CCode: string,
     @Query('UID') uniqId: string,
     @Query('L4digit') Last4Digits: string,
-    @Query('Order') ordernumber: string
+    @Query('Order') ordernumber: string,
+    @Query('mode') mode: 'create' | 'update'
     // @Query('Sign') sign: string,
     // @Query('Amount') Amount: string,
     // @Query('ACode') ACode: string,
@@ -31,6 +32,7 @@ export class PaymentResourceController {
       Last4Digits,
       ordernumber,
       statusCode: CCode,
+      mode,
       uniqId, ////
     });
   }
@@ -43,7 +45,8 @@ export class PaymentResourceController {
     @Query('CCode') CCode: string,
     @Query('UID') uniqId: string,
     @Query('L4digit') Last4Digits: string,
-    @Query('Order') ordernumber: string
+    @Query('Order') ordernumber: string,
+    @Query('mode') mode: 'create' | 'update'
     // @Query('Sign') sign: string,
     // @Query('Amount') Amount: string,
     // @Query('ACode') ACode: string,
@@ -60,6 +63,7 @@ export class PaymentResourceController {
       ordernumber,
       statusCode: CCode,
       uniqId,
+      mode,
     });
   }
 }

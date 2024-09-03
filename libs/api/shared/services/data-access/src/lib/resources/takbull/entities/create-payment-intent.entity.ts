@@ -11,6 +11,7 @@ export class GetSigntureDTO {
   email!: string;
   phone!: string;
   lang!: string;
+  mode?: 'create' | 'update';
 }
 
 export interface paymentQueryData {
