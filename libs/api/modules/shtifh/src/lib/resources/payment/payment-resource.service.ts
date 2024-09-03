@@ -8,6 +8,7 @@ type PaymentArgs = {
   statusCode: string;
   Last4Digits: string;
   ordernumber: string;
+  mode: 'create' | 'update';
 };
 
 @Injectable()
@@ -41,14 +42,31 @@ export class PaymentResourceService {
       data: { paid: true },
     });
 
-    await this.prismaService.bookedSlots.create({
-      data: {
-        date: format(new Date(order.date), 'yyyy-MM-dd'),
-        time: order.time,
-        cityId: order.cityId,
-        orderId: order.id,
-      },
+    const bookedSlot = await this.prismaService.bookedSlots.findFirst({
+      where: { orderId: order.id },
     });
+
+    if (bookedSlot) {
+      await this.prismaService.bookedSlots.delete({
+        where: { id: bookedSlot.id },
+      });
+    } else {
+      await this.prismaService.bookedSlots.create({
+        data: {
+          date: format(new Date(order.date), 'yyyy-MM-dd'),
+          time: order.time,
+          cityId: order.cityId,
+          orderId: order.id,
+        },
+      });
+    }
+
+    if (args.mode === 'update') {
+      await this.orderModel.update({
+        where: { id: order.id },
+        data: order.updatedData as any,
+      });
+    }
 
     await this.prismaService.reminderOrders.create({
       data: {

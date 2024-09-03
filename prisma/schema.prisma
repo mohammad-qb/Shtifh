@@ -158,6 +158,7 @@ model Order {
   accessoriesIds    String[]         @db.ObjectId
   ReminderOrders    ReminderOrders[]
   BookedSlots       BookedSlots[]
+  updatedData       Json?
 }
 
 model Service {

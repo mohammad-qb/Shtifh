@@ -14,7 +14,6 @@ import { CancelOrderDto } from './dto/cancel-order.dto';
 import { Payload } from '@shtifh/user-service';
 import { Prisma } from '@prisma/client';
 import { FCMService } from '@shtifh/fcm-service';
-import { format } from 'date-fns';
 import { CityResourceService } from '../city/city-resource.service';
 
 const done_order_msg = {
@@ -255,164 +254,87 @@ export class OrderResourceService {
   }
 
   async update(orderId: string, args: UpdateOrderDto, lang: HeaderLang) {
-    const order = await this.model.findFirst({ where: { id: orderId } });
+    const order = await this.model.findFirst({
+      where: { id: orderId },
+      include: {
+        customer: { include: { user: true } },
+        employee: true,
+        service: { include: { service: true } },
+        car: { include: { brand: true, model: true } },
+        city: true,
+      },
+    });
     if (!order) throw new BadRequestException('order_not_exist');
 
-    if (args.date && args.time && args.cityId) {
-      const formattedDate = format(order.date, 'yyyy-MM-dd');
-      const availableSlots = await this.cityResourceService.slots({
-        cityId: args.cityId,
-        date: args.date,
-      });
-      if (
-        order.time !== args.time &&
-        !availableSlots.find((p) => p.value === args.time)
-      ) {
-        throw new NotFoundException(
-          'Time is Not available for selected day, please try anthor time'
-        );
-      }
-      const bookedSlot = await this.prismaService.bookedSlots.findFirst({
+    const modelService = await this.carModelServiceModel.findFirst({
+      where: { id: args.carModelServiceId },
+    });
+
+    if (!modelService) throw new BadRequestException('service_not_exist');
+
+    let bookedSlot: {
+      id: string;
+      date: string;
+      time: string;
+      cityId: string;
+      orderId: string;
+    } | null = null;
+
+    if (args.date) {
+      // const formattedDate = format(args.date, 'yyyy-MM-dd');
+      bookedSlot = await this.prismaService.bookedSlots.findFirst({
         where: {
-          date: formattedDate,
-          time: order.time,
-          cityId: order.cityId,
-        },
-      });
-
-      if (bookedSlot) {
-        await this.prismaService.bookedSlots.delete({
-          where: { id: bookedSlot.id },
-        });
-      }
-
-      await this.prismaService.bookedSlots.create({
-        data: {
-          date: args.date,
-          time: args.time,
-          cityId: args.cityId,
-          orderId,
+          orderId: orderId,
         },
       });
     }
 
-    if (order.carModelServiceId === args.carModelServiceId) {
-      await this.model.update({
+    if (order.fees >= modelService.fees) {
+      if (args.time !== order.time) {
+        //remove old slot
+        bookedSlot &&
+          (await this.prismaService.bookedSlots.delete({
+            where: { id: bookedSlot.id },
+          }));
+        // create new slot
+        args.date &&
+          args.time &&
+          (await this.prismaService.bookedSlots.create({
+            data: {
+              date: args.date,
+              time: args.time,
+              cityId: args.cityId,
+              orderId,
+            },
+          }));
+      }
+
+      const updatedOrder = await this.model.update({
         where: { id: orderId },
         data: { ...args, date: args.date + 'T00:00:00.000+00:00' },
+        include: {
+          employee: true,
+          service: { include: { service: true } },
+          car: { include: { brand: true, model: true } },
+          city: true,
+        },
       });
 
-      return { success: true, url: null };
-    } else {
-      const customer = await this.customerModel.findFirst({
-        where: { id: order.customerId },
-        include: { user: true },
+      await this.prismaService.reminderOrders.deleteMany({
+        where: { orderId },
       });
-      if (!customer) throw new BadRequestException('user_not_exist');
 
-      const modelService = await this.carModelServiceModel.findFirst({
-        where: { id: args.carModelServiceId },
-      });
-      const OrderTotalSum = modelService?.fees || 0;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { date, ...rest } = args;
-      await this.prismaService.order.update({
-        where: { id: orderId },
+      await this.prismaService.reminderOrders.create({
         data: {
-          ...rest,
-          fees: OrderTotalSum,
+          orderId,
         },
       });
-      const updatedOrder = await this.model.findFirst({
-        where: { id: orderId },
-        select: {
-          id: true,
-          time: true,
-          date: true,
-          address: true,
-          ref_number: true,
-          city: {
-            select: { id: true, name_ar: true, name_en: true, name_he: true },
-          },
-          employee: {
-            select: {
-              user: {
-                select: {
-                  full_name: true,
-                },
-              },
-            },
-          },
-          service: {
-            select: {
-              service: {
-                select: {
-                  id: true,
-                  name_ar: true,
-                  name_en: true,
-                  name_he: true,
-                },
-              },
-            },
-          },
-          car: {
-            select: {
-              id: true,
-              brand: {
-                select: {
-                  id: true,
-                  image_url: true,
-                  name_ar: true,
-                  name_en: true,
-                  name_he: true,
-                },
-              },
-              model: {
-                select: {
-                  id: true,
-                  name_ar: true,
-                  name_en: true,
-                  name_he: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!updatedOrder) return {};
-
-      let paymentIntent: { order?: string; url?: string } = {};
-      if (OrderTotalSum > order.fees) {
-        // await this.prismaService.order.update({
-        //   where: { id: orderId },
-        //   data: {
-        //     paid: false,
-        //   },
-        // });
-        paymentIntent = await this.takbull.PaymentHY({
-          lang,
-          order: updatedOrder.ref_number,
-          amount: OrderTotalSum - order.fees,
-          email: customer.user.email,
-          phone: customer.user.mobile,
-          fullname: customer.user.full_name,
-        });
-
-        await this.paymentModel.create({
-          data: {
-            fees: OrderTotalSum - order.fees,
-            uniq_id: String(paymentIntent.order),
-            orderId: order.id,
-          },
-        });
-      }
 
       return {
         success: true,
-        url: paymentIntent.url || null,
+        url: null,
         results: {
-          id: updatedOrder.id,
+          id: orderId,
           time: updatedOrder.time,
           date: updatedOrder.date,
           address: updatedOrder.address,
@@ -435,6 +357,71 @@ export class OrderResourceService {
             model: {
               id: updatedOrder.car.model.id,
               name: updatedOrder.car.model[`name_${lang}`],
+            },
+          },
+        },
+      };
+    } else {
+      const amount = modelService.fees - order.fees;
+      const paymentIntent = await this.takbull.PaymentHY({
+        lang,
+        order: order.ref_number,
+        amount,
+        email: order.customer.user.email,
+        phone: order.customer.user.mobile,
+        fullname: order.customer.user.full_name,
+        mode: 'update',
+      });
+
+      paymentIntent.order &&
+        (await this.paymentModel.create({
+          data: {
+            fees: amount,
+            uniq_id: String(paymentIntent.order),
+            orderId: order.id,
+          },
+        }));
+
+      await this.model.update({
+        where: { id: orderId },
+        data: {
+          updatedData: { ...args, date: args.date + 'T00:00:00.000+00:00' },
+        },
+        include: {
+          employee: true,
+          service: { include: { service: true } },
+          car: { include: { brand: true, model: true } },
+          city: true,
+        },
+      });
+
+      return {
+        success: true,
+        url: paymentIntent.url,
+        results: {
+          id: orderId,
+          time: order.time,
+          date: order.date,
+          address: order.address,
+          city: {
+            id: order.city.id,
+            name: order.city[`name_${lang}`],
+          },
+          employee: order.employee,
+          service: {
+            id: order.service.service.id,
+            name: order.service.service[`name_${lang}`],
+          },
+          car: {
+            id: order.car.id,
+            brand: {
+              image_url: order.car.brand.image_url,
+              name: order.car.brand[`name_${lang}`],
+              id: order.car.brand.id,
+            },
+            model: {
+              id: order.car.model.id,
+              name: order.car.model[`name_${lang}`],
             },
           },
         },
