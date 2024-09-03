@@ -384,12 +384,12 @@ export class OrderResourceService {
 
       let paymentIntent: { order?: string; url?: string } = {};
       if (OrderTotalSum > order.fees) {
-        await this.prismaService.order.update({
-          where: { id: orderId },
-          data: {
-            paid: false,
-          },
-        });
+        // await this.prismaService.order.update({
+        //   where: { id: orderId },
+        //   data: {
+        //     paid: false,
+        //   },
+        // });
         paymentIntent = await this.takbull.PaymentHY({
           lang,
           order: updatedOrder.ref_number,
