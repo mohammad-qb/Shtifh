@@ -164,6 +164,7 @@ export class OrderResourceService {
         time: true,
         date: true,
         address: true,
+        lat_lng: true,
         note: true,
         tip: true,
         accessories: true,
@@ -216,6 +217,7 @@ export class OrderResourceService {
         time: el.time,
         date: el.date,
         address: el.address,
+        lat_lng: el.lat_lng,
         note: el.note,
         tip: el.tip,
         accessories: el.accessories.map((e) => ({
