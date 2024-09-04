@@ -14,7 +14,6 @@ export class NotificationResourceService {
 
   async list(user: Payload, lang: HeaderLang) {
     const result = await this.model.findMany({
-      orderBy: { createdAt: 'desc' },
       where:
         user.role === 'CUSTOMER'
           ? { OR: [{ userId: user.userId }, { for_all: true }] }
