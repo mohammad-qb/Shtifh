@@ -71,7 +71,7 @@ export class EmployeeResourceService {
         },
       },
       orderBy: {
-        date: "asc",
+        date: 'asc',
       },
       include: {
         customer: { include: { user: true } },
@@ -133,76 +133,139 @@ export class EmployeeResourceService {
     const monthStart = startOfMonth(new Date());
     const monthEnd = endOfMonth(new Date());
 
-    const resultsToday = await this.prismaService.order.findMany({
-      where: {
-        employeeId,
-        is_done: true,
-        paid: true,
-        date: {
-          gte: todayStart,
-          lte: todayEnd,
+    const promises = [
+      //PRIVATE ORDERS
+      this.prismaService.privateOrder.findMany({
+        where: {
+          employeeId,
+          status: 'DONE',
+          date: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
         },
-      },
-    });
-
-    const count = await this.prismaService.order.count({
-      where: {
-        employeeId,
-        is_done: true,
-        paid: true,
-      },
-    });
-
-    const resultsThisWeek = await this.prismaService.order.findMany({
-      where: {
-        employeeId,
-        is_done: true,
-        paid: true,
-        date: {
-          gte: weekStart,
-          lte: weekEnd,
+      }),
+      this.prismaService.privateOrder.count({
+        where: {
+          employeeId,
+          status: 'DONE',
         },
-      },
-    });
-
-    const resultsThisMonth = await this.prismaService.order.findMany({
-      where: {
-        employeeId,
-        is_done: true,
-        paid: true,
-        date: {
-          gte: monthStart,
-          lte: monthEnd,
+      }),
+      this.prismaService.privateOrder.findMany({
+        where: {
+          employeeId,
+          status: 'DONE',
+          date: {
+            gte: weekStart,
+            lte: weekEnd,
+          },
         },
-      },
-    });
+      }),
+      this.prismaService.privateOrder.findMany({
+        where: {
+          employeeId,
+          status: 'DONE',
+          date: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+      }),
+      //ORDERS
+      this.prismaService.order.findMany({
+        where: {
+          employeeId,
+          is_done: true,
+          paid: true,
+          date: {
+            gte: todayStart,
+            lte: todayEnd,
+          },
+        },
+      }),
+      this.prismaService.order.count({
+        where: {
+          employeeId,
+          is_done: true,
+          paid: true,
+        },
+      }),
+      this.prismaService.order.findMany({
+        where: {
+          employeeId,
+          is_done: true,
+          paid: true,
+          date: {
+            gte: weekStart,
+            lte: weekEnd,
+          },
+        },
+      }),
+      this.prismaService.order.findMany({
+        where: {
+          employeeId,
+          is_done: true,
+          paid: true,
+          date: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+      }),
+    ];
 
-    const totalCostToday = resultsToday.reduce(
+    const [
+      privateOrdersToday,
+      privateOrdersCount,
+      privateOrderWeek,
+      privateOrdersMonth,
+      ordersToday,
+      ordersCount,
+      ordersWeek,
+      ordersMonth,
+    ] = await Promise.all(promises);
+
+    const totalPrivateOrdersCostToday = (
+      privateOrdersToday as { price: number }[]
+    ).reduce((total, order) => total + order.price, 0);
+
+    const totalPrivateOrdersCostThisWeek = (
+      privateOrderWeek as { price: number }[]
+    ).reduce((total, order) => total + order.price, 0);
+
+    const totalPrivateOrdersCostThisMonth = (
+      privateOrdersMonth as { price: number }[]
+    ).reduce((total, order) => total + order.price, 0);
+
+    const totalOrdersCostToday = (ordersToday as { fees: number }[]).reduce(
       (total, order) => total + order.fees,
       0
     );
-    const totalCostThisWeek = resultsThisWeek.reduce(
+    const totalOrdersCostThisWeek = (ordersWeek as { fees: number }[]).reduce(
       (total, order) => total + order.fees,
       0
     );
-    const totalCostThisMonth = resultsThisMonth.reduce(
+    const totalOrdersCostThisMonth = (ordersMonth as { fees: number }[]).reduce(
       (total, order) => total + order.fees,
       0
     );
 
     return {
-      totalCount: count,
+      totalCount: (privateOrdersCount as number) + (ordersCount as number),
       today: {
-        totalOrders: resultsToday.length,
-        totalCost: totalCostToday,
+        totalOrders:
+          (privateOrdersToday as []).length + (ordersToday as []).length,
+        totalCost: totalPrivateOrdersCostToday + totalOrdersCostToday,
       },
       thisWeek: {
-        totalOrders: resultsThisWeek.length,
-        totalCost: totalCostThisWeek,
+        totalOrders:
+          (privateOrderWeek as []).length + (ordersWeek as []).length,
+        totalCost: totalPrivateOrdersCostThisWeek + totalOrdersCostThisWeek,
       },
       thisMonth: {
-        totalOrders: resultsThisMonth.length,
-        totalCost: totalCostThisMonth,
+        totalOrders:
+          (privateOrdersMonth as []).length + (ordersMonth as []).length,
+        totalCost: totalPrivateOrdersCostThisMonth + totalOrdersCostThisMonth,
       },
     };
   }

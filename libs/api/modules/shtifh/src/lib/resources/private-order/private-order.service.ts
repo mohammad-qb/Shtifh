@@ -75,7 +75,15 @@ export class PrivateOrderService {
                 name_he: true,
               },
             },
-            model: { select: { id: true, name_ar: true, name_en: true, name_he: true, image_url: true } },
+            model: {
+              select: {
+                id: true,
+                name_ar: true,
+                name_en: true,
+                name_he: true,
+                image_url: true,
+              },
+            },
           },
         },
         private_service: {
@@ -126,7 +134,18 @@ export class PrivateOrderService {
 
     if (!privateOrder) throw new BadGatewayException('Private order not exist');
 
-    await this.model.update({ where: { id }, data: { is_done: true , status: 'DONE'} });
+    await this.model.update({
+      where: { id },
+      data: { is_done: true, status: 'DONE' },
+    });
+
+    privateOrder.price &&
+      (await this.prismaService.employee.update({
+        where: { id: empId },
+        data: {
+          total_orders_money: { increment: privateOrder.price },
+        },
+      }));
 
     return { success: true };
   }
