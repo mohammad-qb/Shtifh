@@ -160,7 +160,7 @@ export class PrivateOrderService {
           gt: new Date().toISOString(),
         },
       },
-      orderBy: { date: 'desc' },
+      orderBy: { date: 'asc' },
       include: {
         city: true,
         car: { include: { brand: true, model: true } },
