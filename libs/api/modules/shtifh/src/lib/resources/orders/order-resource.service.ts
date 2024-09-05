@@ -512,7 +512,7 @@ export class OrderResourceService {
           gt: new Date().toISOString(),
         },
       },
-      orderBy: { date: 'desc' },
+      orderBy: { date: 'asc' },
       select: {
         id: true,
         time: true,
