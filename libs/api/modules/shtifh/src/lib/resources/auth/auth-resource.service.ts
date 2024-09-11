@@ -106,10 +106,10 @@ export class AuthResourceService {
             : 'שלום, ברוך הבא',
         body:
           registerUser.lang === 'AR'
-            ? 'مرحبا بك في تطبيقنا'
+            ? 'مرحبا بك في التطبيق، Shtifa101.'
             : registerUser.lang === 'EN'
-            ? 'Welcome to our app'
-            : 'ברוך הבא לאפליקציה שלנו',
+            ? 'Welcome to the app, Shtifa101.'
+            : 'ברוך הבא לאפליקציה، Shtifa101.',
       },
     });
 
