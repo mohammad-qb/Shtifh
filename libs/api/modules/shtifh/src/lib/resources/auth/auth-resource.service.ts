@@ -115,9 +115,9 @@ export class AuthResourceService {
 
     await this.prismaService.notification.create({
       data: {
-        content_ar: 'مرحبا بك في تطبيقنا',
-        content_en: 'Welcome to our app',
-        content_he: 'ברוך הבא לאפליקציה שלנו',
+        content_ar: 'مرحبا بك في التطبيق، Shtifa101.',
+        content_en: 'Welcome to the app, Shtifa101.',
+        content_he: 'ברוך הבא לאפליקציה، Shtifa101.',
         userId: registerUser.id,
         is_read: [],
         type: 'DEFAULT',
