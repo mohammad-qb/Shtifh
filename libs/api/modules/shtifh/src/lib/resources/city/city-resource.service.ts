@@ -13,7 +13,7 @@ function generateDateArrayAndMonths() {
   const dates: { date: string; day: string }[] = [];
   const today = new Date();
 
-  for (let i = 0; i <= 31; i++) {
+  for (let i = 0; i <= 62; i++) {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
     const formattedDate = date.toISOString().split('T')[0];
