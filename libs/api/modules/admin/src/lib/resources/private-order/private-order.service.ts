@@ -15,6 +15,7 @@ export class PrivateOrderService {
       },
       orderBy: { createdAt: 'desc' },
       include: {
+        car: { include: { model: true } },
         city: true,
         private_service: true,
         customer: {
