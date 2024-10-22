@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { HeaderLang } from '@shtifh/decorators';
 import { PrismaService } from '@shtifh/prisma-service';
 import { Payload } from '@shtifh/user-service';
@@ -7,17 +8,29 @@ import { Payload } from '@shtifh/user-service';
 export class NotificationResourceService {
   private logger = new Logger(NotificationResourceService.name);
   private model;
+  private prisma = new PrismaClient();
 
   constructor(private readonly prismaService: PrismaService) {
     this.model = prismaService.notification;
   }
 
   async list(user: Payload, lang: HeaderLang) {
+
+    const usr = await this.prisma.user.findFirst({
+      where: {
+        id: user.userId,
+      }
+    });
+
     const result = await this.model.findMany({
-      where:
-        user.role === 'CUSTOMER'
+      where: {
+        AND: [
+          user.role === 'CUSTOMER'
           ? { OR: [{ userId: user.userId }, { for_all: true }] }
           : { userId: user.userId },
+          { createdAt: { gt: usr?.createdAt } }
+        ],
+      },
       select: {
         content_en: true,
         content_ar: true,

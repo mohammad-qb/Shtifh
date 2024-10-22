@@ -87,7 +87,7 @@ export class EmployeeResourceService {
 
   async orders(employeeId: string, isDone: boolean) {
     const results = await this.orderModel.findMany({
-      where: { employeeId, paid: isDone, is_done: isDone },
+      where: { employeeId, paid: true, OR: [ {is_done: true}, {is_canceled: true} ] },
       include: {
         city: true,
         customer: { include: { user: true } },
@@ -102,7 +102,7 @@ export class EmployeeResourceService {
 
   async privateOrders(employeeId: string, status: $Enums.OrderStatus) {
     const results = await this.privateOrderModel.findMany({
-      where: { employeeId, status },
+      where: { employeeId, status: {in: ['DONE', 'DECLINED']}, },
       include: {
         customer: { include: { user: true } },
         private_service: true,
