@@ -90,9 +90,17 @@ export class EmployeeResourceService {
     return { result: employee };
   }
 
-  async orders(employeeId: string) {
+  async orders(employeeId: string, year: number, month: number) {
+    const startTime = new Date(Date.UTC(year, month - 1, 1));
+    const endTime = new Date(Date.UTC(year, month, 0));
+
     const data = await this.prismaService.order.findMany({
-      where: { employeeId },
+      where: {
+        employeeId,
+        AND: {
+          createdAt: { gte: startTime, lte: endTime },
+        },
+      },
       include: {
         customer: { include: { user: true } },
         city: true,
@@ -120,9 +128,17 @@ export class EmployeeResourceService {
     return { results: transformedData };
   }
 
-  async privateOrders(employeeId: string) {
+  async privateOrders(employeeId: string, year: number, month: number) {
+    const startTime = new Date(Date.UTC(year, month - 1, 1));
+    const endTime = new Date(Date.UTC(year, month, 0));
+
     const data = await this.prismaService.privateOrder.findMany({
-      where: { employeeId },
+      where: {
+        employeeId,
+        AND: {
+          createdAt: { gte: startTime, lte: endTime },
+        },
+      },
       include: {
         car: { include: { model: true, brand: true } },
         city: true,

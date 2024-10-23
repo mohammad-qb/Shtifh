@@ -43,16 +43,16 @@ export class EmployeeResourceController {
     return await this.employeeResourceService.list();
   }
 
-  @Get('orders/:employeeId')
+  @Get('orders/:employeeId/:year/:month')
   @ApiOperation({ summary: 'List All Employee orders' })
-  async orders(@Param('employeeId') employeeId: string) {
-    return await this.employeeResourceService.orders(employeeId);
+  async orders(@Param('employeeId') employeeId: string, @Param('year') year: number, @Param('month') month: number) {
+    return await this.employeeResourceService.orders(employeeId, year, month);
   }
 
-  @Get('private-orders/:employeeId')
+  @Get('private-orders/:employeeId/:year/:month')
   @ApiOperation({ summary: 'List All Employee private orders' })
-  async privateOrders(@Param('employeeId') employeeId: string) {
-    return await this.employeeResourceService.privateOrders(employeeId);
+  async privateOrders(@Param('employeeId') employeeId: string, @Param('year') year: number, @Param('month') month: number) {
+    return await this.employeeResourceService.privateOrders(employeeId, year, month);
   }
 
   @Put(':id')

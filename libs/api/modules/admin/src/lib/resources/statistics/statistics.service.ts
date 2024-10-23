@@ -33,6 +33,7 @@ export class StatisticsResourceService {
 
     const [
       customers,
+      allCustomers,
       orders,
       completeOrders,
       incompleteOrders,
@@ -44,6 +45,7 @@ export class StatisticsResourceService {
       this.prismaService.customer.count({
         where: { user: { createdAt: where } },
       }),
+      this.prismaService.customer.count(),
       this.prismaService.order.count({
         where: { createdAt: where },
       }),
@@ -67,6 +69,7 @@ export class StatisticsResourceService {
 
     return {
       customers,
+      allCustomers,
       orders,
       completeOrders,
       incompleteOrders,
