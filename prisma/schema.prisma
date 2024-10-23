@@ -310,7 +310,7 @@ model weekend {
 
 model Payment {
   id        String        @id @default(auto()) @map("_id") @db.ObjectId
-  uniq_id   String
+  uniq_id   String        @unique
   fees      Float
   status    PaymentStatus @default(PENDING)
   order     Order         @relation(fields: [orderId], references: [id])
