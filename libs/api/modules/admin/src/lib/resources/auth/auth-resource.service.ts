@@ -44,6 +44,8 @@ export class AuthResourceService {
   }
 
   async create(args: CreateAdminDto) {
+    const s = await this.prismaService.accessory.findFirst();
+    s?.name
     const password = await this.userHelper.crypt.cryptPassword(args.password);
     return await this.model.create({ data: { ...args, password } });
   }

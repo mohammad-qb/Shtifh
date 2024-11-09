@@ -1,3 +1,4 @@
 export * from './lib/decorators.module';
-export * from './lib/user/lang.decorator';
-export * from './lib/user/types/user-decorators.type';
+export * from './lib/auth/user.decorator';
+export * from './lib/lang/lang.decorator';
+export * from './lib/lang/lang.type';

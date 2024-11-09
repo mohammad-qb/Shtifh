@@ -1,9 +1,9 @@
 import { $Enums } from '@prisma/client';
 
-export type Payload = {
+export type UserPayload = {
   id: string;
   email: string;
   full_name: string;
-  role: $Enums.Role;
+  role: $Enums.UserRole;
   userId: string;
 };

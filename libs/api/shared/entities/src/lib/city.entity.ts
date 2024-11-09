@@ -1,25 +1,28 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CarServiceEntity } from './car-service.entity';
+import { Field } from '@nestjs/graphql';
+import { City } from '@prisma/client';
+import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
+import { PrismaCityScheduleJsonEntity } from './common/prisma-city-schedule-json.entity';
+import { PrismaCityCarModelServiceJsonEntity } from './common/prisma-city-car-model-service-json.entity';
 
-export class CityEntity {
-  @ApiProperty()
+export class CityEntity implements City {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
-  name_ar!: string;
+  @Field(() => PrismaNameJsonEntity)
+  name!: PrismaNameJsonEntity;
 
-  @ApiProperty()
-  name_en!: string;
+  @Field(() => Boolean)
+  is_active!: boolean;
 
-  @ApiProperty()
-  name_he!: string;
+  @Field(() => PrismaCityScheduleJsonEntity)
+  schedule!: PrismaCityScheduleJsonEntity;
 
-  @ApiProperty()
-  car_services!: CarServiceEntity;
+  @Field(() => PrismaCityCarModelServiceJsonEntity)
+  car_model_services!: PrismaCityCarModelServiceJsonEntity[];
 
-  @ApiProperty()
-  carServiceId!: string;
+  @Field(() => Date)
+  createdAt!: Date;
 
-  @ApiProperty()
-  workTimeId!: string;
+  @Field(() => Date)
+  updatedAt!: Date;
 }

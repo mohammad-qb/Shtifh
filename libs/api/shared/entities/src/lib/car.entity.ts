@@ -1,45 +1,34 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { $Enums } from '@prisma/client';
-import { CustomerEntity } from './customer.entity';
-import { OrderEntity } from './order.entity';
+import { Field, Int } from '@nestjs/graphql';
+import { Car } from '@prisma/client';
 
-export class CarEntity {
-  @ApiProperty({ nullable: true })
-  building_number!: string | null;
-
-  @ApiProperty()
-  cityId!: string;
-
-  @ApiProperty()
+export class CarEntity implements Car {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty({ nullable: true })
-  plate!: string | null;
+  @Field(() => String)
+  plate_number!: string;
 
-  @ApiProperty()
-  carModelId!: string;
-
-  @ApiProperty()
+  @Field(() => Int)
   year!: number;
 
-  @ApiProperty()
-  name!: string;
+  @Field(() => String)
+  color!: string;
 
-  @ApiProperty({ enum: $Enums.CarColor })
-  color!: $Enums.CarColor;
+  @Field(() => Boolean)
+  is_active!: boolean;
 
-  @ApiProperty()
-  customer!: CustomerEntity;
-
-  @ApiProperty()
-  orders!: OrderEntity[];
-
-  @ApiProperty()
+  @Field(() => Date)
   createdAt!: Date;
 
-  @ApiProperty()
+  @Field(() => Date)
   updatedAt!: Date;
 
-  @ApiProperty()
+  @Field(() => String)
   customerId!: string;
+
+  @Field(() => String)
+  carBrandId!: string;
+
+  @Field(() => String)
+  carModelId!: string;
 }

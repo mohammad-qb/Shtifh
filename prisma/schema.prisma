@@ -170,18 +170,18 @@ model Service {
 }
 
 model PrivateService {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  image_url    String
-  name_ar      String
-  name_en      String
-  name_he      String
-  description_ar  String?         @default("---")
-  description_en  String?         @default("---")
-  description_he  String?         @default("---")
-  is_active    Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt()
-  privateOrder privateOrder[]
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  image_url      String
+  name_ar        String
+  name_en        String
+  name_he        String
+  description_ar String?        @default("---")
+  description_en String?        @default("---")
+  description_he String?        @default("---")
+  is_active      Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt()
+  privateOrder   privateOrder[]
 }
 
 model Accessories {
@@ -340,11 +340,11 @@ model Notification {
   content_he String
   for_all    Boolean          @default(false)
   type       NotifivationType @default(DEFAULT)
-  user       User?             @relation(fields: [userId], references: [id])
+  user       User?            @relation(fields: [userId], references: [id])
   is_read    String[]         @db.ObjectId
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt()
-  userId     String?           @db.ObjectId
+  userId     String?          @db.ObjectId
 }
 
 enum CarServiceModel {

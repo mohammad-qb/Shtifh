@@ -1,22 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CarServiceEntity } from './car-service.entity';
+import { Field } from '@nestjs/graphql';
+import { CarModel } from '@prisma/client';
+import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
 
-export class CarModelEntity {
-  @ApiProperty()
-  image_url!: string;
-
-  @ApiProperty()
+export class CarModelEntity implements CarModel {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
-  name_ar!: string;
+  @Field(() => PrismaNameJsonEntity)
+  name!: PrismaNameJsonEntity;
 
-  @ApiProperty()
-  name_en!: string;
+  @Field(() => String)
+  image_url!: string;
 
-  @ApiProperty()
-  name_he!: string;
+  @Field(() => Date)
+  createdAt!: Date;
 
-  @ApiProperty()
-  car_services!: CarServiceEntity[];
+  @Field(() => Date)
+  updatedAt!: Date;
 }
