@@ -90,20 +90,38 @@ model CarOrder {
   tips         Float
   note         String?
   address      String
+  /// [CarOrderLogJson]
+  logs         Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
+  /// [CarOrderAccessoriesJson]
+  accessories  Json[] // {accessoryId: "", quantity: 0}
   type         OrderType    @default(NORMAL)
+  service      Service      @relation(fields: [serviceId], references: [id])
   car          Car          @relation(fields: [carId], references: [id])
   customer     Customer     @relation(fields: [customerId], references: [id])
-  employee     Employee     @relation(fields: [employeeId], references: [id])
+  employee     Employee?    @relation(fields: [employeeId], references: [id])
   city         City         @relation(fields: [cityId], references: [id])
   car_location String[] // lat and lon
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt()
   carId        String       @db.ObjectId
   customerId   String       @db.ObjectId
-  employeeId   String       @db.ObjectId
   cityId       String       @db.ObjectId
+  serviceId    String       @db.ObjectId
+  employeeId   String?      @db.ObjectId
   payments     Payment[]
   bookedSlots  BookedSlot[]
+}
+
+model Service {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  /// [NameJson]
+  name      Json // {ar: "", en: "", he: ""}
+  type      ServiceType @default(PUBLIC)
+  image_url String?
+  is_active Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  CarOrder  CarOrder[]
 }
 
 model City {
@@ -139,10 +157,10 @@ model Payment {
   amount         Float
   transaction_id String?
   status         PaymentStatus @default(PENDING)
-  carOrder       CarOrder      @relation(fields: [carOrderId], references: [id])
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt()
-  carOrderId     String        @db.ObjectId
+  CarOrder       CarOrder?     @relation(fields: [carOrderId], references: [id])
+  carOrderId     String?       @db.ObjectId
 }
 
 model User {
@@ -215,39 +233,12 @@ enum Day {
   WEDNESDAY
 }
 
-// import {
-//   ClassSerializerInterceptor,
-//   Module,
-//   ValidationPipe,
-// } from '@nestjs/common';
-
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-// import { ShtifhModule } from '@shtifh/shtifh-module';
-// import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-// import { EnvModule } from '@shtifh/env-service';
-// import { ScheduleModule } from '@nestjs/schedule';
-
-// @Module({
-//   imports: [
-//     ShtifhModule,
-//     EnvModule.forRoot(process.env),
-//     ScheduleModule.forRoot(),
-//   ],
-//   controllers: [AppController],
-//   providers: [
-//     AppService,
-//     {
-//       provide: APP_INTERCEPTOR,
-//       useClass: ClassSerializerInterceptor,
-//     },
-//     {
-//       provide: APP_PIPE,
-//       useValue: new ValidationPipe({
-//         forbidNonWhitelisted: true,
-//         whitelist: true,
-//       }),
-//     },
-//   ],
-// })
-// export class AppModule {}
+enum CarOrderLogStatus {
+  CREATED
+  PENDING_PAYMENT
+  PROCESSING
+  COMPLETED
+  CONFIRMED
+  CANCELED_BY_CUSTOMER
+  CANCELED_BY_EMPLOYEE
+}

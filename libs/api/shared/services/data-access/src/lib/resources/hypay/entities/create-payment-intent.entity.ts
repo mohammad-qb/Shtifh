@@ -4,10 +4,10 @@ export class CreatePaymentIntentEntity {
   url!: string;
 }
 
-export class GetSigntureDTO {
-  order!: string;
+export class GetSignatureDTO {
+  orderRefNumber!: string;
   amount!: number;
-  fullname!: string;
+  fullName!: string;
   email!: string;
   phone!: string;
   lang!: string;
@@ -50,6 +50,5 @@ export interface paymentQueryData {
 
 export interface paymentURL {
   url?: string;
-  signture?: string;
-  order?: string;
+  signature?: string;
 }

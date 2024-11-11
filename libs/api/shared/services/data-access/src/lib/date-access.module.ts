@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { DateAccessService } from './date-access.service';
-import { TakbullResourceModule } from './resources/takbull/takbull-resource.module';
+import { HyPayResourceModule } from './resources/hypay/hypay-resource.module';
 
 @Module({
-  imports: [TakbullResourceModule],
+  imports: [HyPayResourceModule],
   providers: [DateAccessService],
   exports: [DateAccessService],
 })

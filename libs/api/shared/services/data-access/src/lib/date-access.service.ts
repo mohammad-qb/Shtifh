@@ -1,14 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { TakbullResourceService } from './resources/takbull/takbull-resource.service';
+import { HyPayResourceService } from './resources/hypay/hypay-resource.service';
 
 @Injectable()
 export class DateAccessService {
   private logger = new Logger(DateAccessService.name);
   resources;
 
-  constructor(private readonly takbullResourceService: TakbullResourceService) {
+  constructor(private readonly hyPayResourceService: HyPayResourceService) {
     this.resources = {
-      takbull: this.takbullResourceService,
+      hyPay: this.hyPayResourceService,
     };
   }
 }

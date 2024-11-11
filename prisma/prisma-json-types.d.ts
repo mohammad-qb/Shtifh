@@ -1,3 +1,5 @@
+import { $Enums } from "@prisma/client"
+
 namespace PrismaJson {
     export interface NameJson { ar: string, en: string, he: string };
     export interface EmployeeWalletSummaryJson { total_tips: number, total_orders_earn: number };
@@ -30,6 +32,14 @@ namespace PrismaJson {
         is_off: boolean,
       }[],
     };
+    export interface CarOrderLogJson {
+      status: string,
+      createdAt: Date
+    }
+    export interface CarOrderAccessoriesJson {
+      accessoryId: string,
+      quantity: number,
+    }
     export interface CityCarModelServiceJson {
       carModelId: string,
       serviceId: string,
