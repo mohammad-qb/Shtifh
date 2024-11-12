@@ -5,6 +5,7 @@ import { UpdateCarService } from "./services/update/update-car.service";
 import { CreateCarInput } from "./dtos/create-car.dto";
 import { HeaderLanguage } from "@shtifh/decorators";
 import { UpdateCarInput } from "./dtos/update-car.dto";
+import { DeactivateCarService } from "./services/deactivate/deactivate-car.service";
 
 @Injectable()
 export class CarResourceService {
@@ -14,6 +15,7 @@ export class CarResourceService {
     private readonly createCarService: CreateCarService,
     private readonly listCarsService: ListCarsService,
     private readonly updateCarService: UpdateCarService,
+    private readonly deactivateCarService: DeactivateCarService
   ) {}
 
   async create(customerId: string, input: CreateCarInput) {
@@ -28,5 +30,9 @@ export class CarResourceService {
   async update(customerId: string, lang: HeaderLanguage, input: UpdateCarInput) {
     await this.updateCarService.updateCar(customerId, lang, input);
     return true;
+  }
+
+  async deactivate(customerId: string, carId: string, lang: HeaderLanguage) {
+    return await this.deactivateCarService.deactivate(customerId, carId, lang);
   }
 }

@@ -6,6 +6,7 @@ import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UserPayload } from '@shtifh/user-service';
 import { UpdateCarInput } from './dtos/update-car.dto';
 import { ListCarsEntity } from './entities/list-cars.entity';
+import { DeactivateCarInput } from './dtos/deactivate-car.dto';
 
 @Resolver()
 export class CarResourceResolver {
@@ -19,6 +20,19 @@ export class CarResourceResolver {
     @GqlUser() user: UserPayload
   ) {
     return await this.carResourceService.create(user.id, input);
+  }
+
+  @Mutation(() => Boolean, { name: 'deactivateCar' })
+  async deactivate(
+    @Args('DeactivateCarInput') input: DeactivateCarInput,
+    @GqlUser() user: UserPayload,
+    @GqlLang() language: HeaderLanguage
+  ) {
+    return await this.carResourceService.deactivate(
+      user.id,
+      input.carId,
+      language
+    );
   }
 
   @Mutation(() => Boolean, { name: 'updateCar' })

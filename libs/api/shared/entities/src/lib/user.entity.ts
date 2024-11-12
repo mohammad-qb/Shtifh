@@ -1,39 +1,39 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { $Enums } from '@prisma/client';
-import { CustomerEntity } from './customer.entity';
-import { EmployeeEntity } from './employee.entity';
+import { Field, registerEnumType } from '@nestjs/graphql';
+import { $Enums, User } from '@prisma/client';
 
-export class UserEntity {
-  @ApiProperty()
+registerEnumType($Enums.Lang, { name: 'Lang' });
+registerEnumType($Enums.UserRole, { name: 'UserRole' });
+export class UserEntity implements User {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
+  @Field(() => String)
   full_name!: string;
 
-  @ApiProperty()
+  @Field(() => String)
   email!: string;
 
-  @ApiProperty()
-  mobile!: string;
+  @Field(() => String)
+  phone!: string;
 
-  @ApiProperty()
+  @Field(() => String)
   password!: string;
 
-  @ApiProperty()
+  @Field(() => Boolean)
+  is_blocked!: boolean;
+
+  @Field(() => $Enums.Lang)
+  language!: $Enums.Lang;
+
+  @Field(() => String, { nullable: true })
   reset_password_code!: string | null;
 
-  @ApiProperty({ enum: $Enums.Role })
-  role!: $Enums.Role;
+  @Field(() => $Enums.UserRole)
+  role!: $Enums.UserRole;
 
-  @ApiProperty()
+  @Field(() => Date)
   createdAt!: Date;
 
-  @ApiProperty()
+  @Field(() => Date)
   updatedAt!: Date;
-
-  @ApiProperty()
-  customer!: CustomerEntity;
-
-  @ApiProperty()
-  employee!: EmployeeEntity;
 }

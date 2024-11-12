@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { IsArray, IsDateString, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
 @InputType()
-class CarOrderAccessoriesDto {
+class CarOrderAccessoriesInput {
   @Field(() => String)
   @IsMongoId()
   @IsNotEmpty()
@@ -16,7 +16,7 @@ class CarOrderAccessoriesDto {
 }
 
 @InputType()
-export class CreateNormalCarOrderDto {
+export class CreateNormalCarOrderInput {
   @Field(() => String)
   @IsDateString()
   @IsNotEmpty()
@@ -58,12 +58,12 @@ export class CreateNormalCarOrderDto {
   @IsNotEmpty()
   carId!: string;
 
-  @Field(() => [CarOrderAccessoriesDto])
-  @Type(() => CarOrderAccessoriesDto)
+  @Field(() => [CarOrderAccessoriesInput])
+  @Type(() => CarOrderAccessoriesInput)
   @ValidateNested({ each: true })
   @IsArray()
   @IsNotEmpty()
-  accessories!: CarOrderAccessoriesDto[];
+  accessories!: CarOrderAccessoriesInput[];
 
   @Field(() => String)
   @IsMongoId()
@@ -72,7 +72,7 @@ export class CreateNormalCarOrderDto {
 }
 
 @InputType()
-export class CreatePrivateCarOrderDto {
+export class CreatePrivateCarOrderInput {
   @Field(() => String)
   @IsString()
   @IsNotEmpty()

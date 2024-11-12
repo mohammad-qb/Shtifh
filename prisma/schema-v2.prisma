@@ -3,9 +3,8 @@ generator client {
 }
 
 generator jsonTypes {
-  provider  = "prisma-json-types-generator"
-  namespace = "PrismaJson"
-  output    = "./prisma-json-type.d.ts"
+  provider = "prisma-json-types-generator"
+  // namespace = "PrismaJson"
 }
 
 datasource db {
@@ -231,14 +230,4 @@ enum Day {
   MONDAY
   TUESDAY
   WEDNESDAY
-}
-
-enum CarOrderLogStatus {
-  CREATED
-  PENDING_PAYMENT
-  PROCESSING
-  COMPLETED
-  CONFIRMED
-  CANCELED_BY_CUSTOMER
-  CANCELED_BY_EMPLOYEE
 }

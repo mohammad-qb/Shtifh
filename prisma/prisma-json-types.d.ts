@@ -1,9 +1,10 @@
 import { $Enums } from "@prisma/client"
 
+declare global{
 namespace PrismaJson {
-    export interface NameJson { ar: string, en: string, he: string };
-    export interface EmployeeWalletSummaryJson { total_tips: number, total_orders_earn: number };
-    export interface CityScheduleJson {
+    type NameJson = { ar: string, en: string, he: string };
+    type EmployeeWalletSummaryJson ={ total_tips: number, total_orders_earn: number };
+    type CityScheduleJson = {
       global: {
         start_time: string,
         end_time: string,
@@ -32,18 +33,19 @@ namespace PrismaJson {
         is_off: boolean,
       }[],
     };
-    export interface CarOrderLogJson {
-      status: string,
+    type CarOrderLogJson = {
+      status: number,
       createdAt: Date
     }
-    export interface CarOrderAccessoriesJson {
+    type CarOrderAccessoriesJson = {
       accessoryId: string,
       quantity: number,
     }
-    export interface CityCarModelServiceJson {
+    type CityCarModelServiceJson = {
       carModelId: string,
       serviceId: string,
       is_active: boolean,
       fees: number
     };
   }
+}

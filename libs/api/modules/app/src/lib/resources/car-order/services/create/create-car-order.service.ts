@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import {
-  CreateNormalCarOrderDto,
-  CreatePrivateCarOrderDto,
+  CreateNormalCarOrderInput,
+  CreatePrivateCarOrderInput,
 } from '../../dtos/create-car-order.dto';
 import { newDate } from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
@@ -29,7 +29,7 @@ export class CreateCarOrderService {
     customerId: string,
     userId: string,
     lang: HeaderLanguage,
-    data: CreateNormalCarOrderDto
+    data: CreateNormalCarOrderInput
   ) {
     this.logger.log(`Create car order`);
 
@@ -132,7 +132,7 @@ export class CreateCarOrderService {
   async createPrivateOrder(
     customerId: string,
     lang: HeaderLanguage,
-    data: CreatePrivateCarOrderDto
+    data: CreatePrivateCarOrderInput
   ) {
     this.logger.log(`Create private car order`);
 

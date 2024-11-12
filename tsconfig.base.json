@@ -41,6 +41,6 @@
       "@shtifh/user-service": ["libs/api/shared/services/user/src/index.ts"]
     }
   },
-  "includes": ["prisma-json-type.d.ts"],
+  "includes": ["prisma/prisma-json-type.d.ts"],
   "exclude": ["node_modules", "tmp"]
 }

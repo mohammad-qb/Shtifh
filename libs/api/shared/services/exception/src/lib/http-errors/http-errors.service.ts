@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { httpErrorMessages } from "../constants/messages";
-import { HeaderLanguage } from "@shtifh/decorators";
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { httpErrorMessages } from '../constants/messages';
+import { HeaderLanguage } from '@shtifh/decorators';
 
 @Injectable()
 export class HttpErrorsService {
@@ -13,7 +18,9 @@ export class HttpErrorsService {
 
   emailAlreadyTaken(email: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Email ${email} already taken`);
-    return new BadRequestException(httpErrorMessages.__email_already_taken[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__email_already_taken[lang]
+    );
   }
 
   userNotFound(id: string, lang: HeaderLanguage = 'en') {
@@ -33,16 +40,39 @@ export class HttpErrorsService {
 
   serviceNotPublic(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Service with id ${id} is not public`);
-    return new BadRequestException(httpErrorMessages.__service_not_public[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__service_not_public[lang]
+    );
   }
 
-    serviceNotPrivate(id: string, lang: HeaderLanguage = 'en') {
+  serviceNotPrivate(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Service with id ${id} is not private`);
-    return new BadRequestException(httpErrorMessages.__service_not_private[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__service_not_private[lang]
+    );
   }
 
   serviceNotAvailable(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Service with id ${id} is not available`);
-    return new BadRequestException(httpErrorMessages.__service_not_available[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__service_not_available[lang]
+    );
+  }
+
+  invalidPassword(lang: HeaderLanguage = 'en') {
+    this.logger.error(`Invalid password`);
+    return new BadRequestException(httpErrorMessages.__invalid_password[lang]);
+  }
+
+  invalidLoginCredential(email: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Invalid login credential for email ${email}`);
+    return new BadRequestException(
+      httpErrorMessages.__invalid_login_credential[lang]
+    );
+  }
+
+  orderNotFound(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Order with id ${id} not found`);
+    return new NotFoundException(httpErrorMessages.__order_not_found[lang]);
   }
 }

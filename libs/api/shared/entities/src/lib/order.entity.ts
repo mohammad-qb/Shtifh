@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
-import { CarServiceEntity } from './car-service.entity';
+import { CarServiceEntity } from './car-order.entity';
 import { CarEntity } from './car.entity';
 import { CustomerEntity } from './customer.entity';
 import { EmployeeEntity } from './employee.entity';

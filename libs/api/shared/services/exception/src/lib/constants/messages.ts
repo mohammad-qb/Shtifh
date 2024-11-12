@@ -43,5 +43,20 @@ export const httpErrorMessages = {
     ar: 'الخدمة غير متوفرة في هذه المدينة',
     en: 'Service not available in this city',
     he: 'השירות לא זמין בעיר זו'
+  },
+  __invalid_password: {
+    ar: 'كلمة المرور غير صحيحة',
+    en: 'Invalid password',
+    he: 'סיסמה שגויה'
+  },
+  __invalid_login_credential: {
+    ar: 'بيانات الدخول غير صحيحة',
+    en: 'Invalid login credential',
+    he: 'פרטי כניסה שגויים'
+  },
+  __order_not_found: {
+    ar: 'الطلب غير موجود',
+    en: 'Order not found',
+    he: 'ההזמנה לא נמצאה'
   }
 }
