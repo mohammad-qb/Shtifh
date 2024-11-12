@@ -71,7 +71,6 @@ class PrismaCityDailyScheduleJsonEntity {
 
 @ObjectType()
 export class PrismaCityScheduleJsonEntity
-  implements PrismaJson.CityScheduleJson
 {
   @Field(() => PrismaCityGlobalScheduleJsonEntity)
   global!: PrismaCityGlobalScheduleJsonEntity;

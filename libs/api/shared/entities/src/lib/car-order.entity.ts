@@ -1,73 +1,69 @@
-
-
-
-import { registerEnumType } from '@nestjs/graphql';
+import { registerEnumType, Field } from '@nestjs/graphql';
 import { $Enums, CarOrder } from '@prisma/client';
+import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
+import { PrismaCarOrderAccessoriesJsonEntity } from './common/prisma-car-order-accessories-json.entity';
 
-import { Field } from 'formik';
-
-registerEnumType($Enums.OrderStatus, {name: "OrderStatus"});
+registerEnumType($Enums.OrderStatus, { name: 'OrderStatus' });
+registerEnumType($Enums.OrderType, { name: 'OrderType' });
 
 export class CarOrderEntity implements CarOrder {
   @Field(() => String)
   id!: string;
 
-    @Field(() => String)
+  @Field(() => String)
   ref_number!: string;
 
-    @Field(() => $Enums.OrderStatus)
+  @Field(() => $Enums.OrderStatus)
   status!: $Enums.OrderStatus;
 
-    @Field(() => Date, {nullable: true})
+  @Field(() => Date, { nullable: true })
   order_date!: Date | null;
 
-    @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   order_time!: string | null;
 
-    @Field(() => String)
+  @Field(() => String)
   fees!: number;
 
-    @Field(() => String)
+  @Field(() => String)
   tips!: number;
 
-    @Field(() => String)
+  @Field(() => String, {nullable: true})
   note!: string | null;
 
-    @Field(() => String)
+  @Field(() => String)
   address!: string;
 
-    @Field(() => String)
-  logs!: PrismaJson.CarOrderLogJson[];
+  @Field(() => [PrismaCarOrderLogJsonEntity])
+  logs!: PrismaCarOrderLogJsonEntity[];
 
-    @Field(() => String)
-  accessories!: PrismaJson.CarOrderAccessoriesJson[];
+  @Field(() => [PrismaCarOrderAccessoriesJsonEntity])
+  accessories!: PrismaCarOrderAccessoriesJsonEntity[];
 
-    @Field(() => String)
+  @Field(() => $Enums.OrderType)
   type!: $Enums.OrderType;
 
-    @Field(() => String)
+  @Field(() => [String])
   car_location!: string[];
 
-    @Field(() => String)
+  @Field(() => Date)
   createdAt!: Date;
 
-    @Field(() => String)
+  @Field(() => Date)
   updatedAt!: Date;
 
-    @Field(() => String)
+  @Field(() => String)
   carId!: string;
 
-    @Field(() => String)
+  @Field(() => String)
   customerId!: string;
 
-    @Field(() => String)
+  @Field(() => String)
   cityId!: string;
 
-    @Field(() => String)
+  @Field(() => String)
   serviceId!: string;
 
-    @Field(() => String)
+  @Field(() => String, {nullable: true})
   employeeId!: string | null;
-
-
 }
