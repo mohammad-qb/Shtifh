@@ -75,4 +75,24 @@ export class HttpErrorsService {
     this.logger.error(`Order with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__order_not_found[lang]);
   }
+
+  orderNotBelongToCustomer(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Order with id ${id} not belong to customer`);
+    return new BadRequestException(httpErrorMessages.__order_not_belong_to_customer[lang]);
+  }
+
+  orderNotNormalType(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Order with id ${id} is not normal type`);
+    return new BadRequestException(httpErrorMessages.__order_not_normal_type[lang]);
+  }
+
+  serviceNotAvailableForCity(serviceId: string, cityId: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Service with id ${serviceId} is not available for city with id ${cityId}`);
+    return new BadRequestException(httpErrorMessages.__service_not_available_for_city[lang]);
+  }
+
+  serviceNotAvailableForCarModel(serviceId: string, carModelId: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Service with id ${serviceId} is not available for car model with id ${carModelId}`);
+    return new BadRequestException(httpErrorMessages.__service_not_available_for_car_model[lang]);
+  }
 }

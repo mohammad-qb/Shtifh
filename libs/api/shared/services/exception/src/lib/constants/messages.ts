@@ -58,5 +58,25 @@ export const httpErrorMessages = {
     ar: 'الطلب غير موجود',
     en: 'Order not found',
     he: 'ההזמנה לא נמצאה'
-  }
+  },
+  __order_not_belong_to_customer: {
+    ar: 'الطلب لا ينتمي للعميل',
+    en: 'Order not belong to customer',
+    he: 'ההזמנה לא שייכת ללקוח'
+  },
+  __order_not_normal_type: {
+    ar: 'الطلب ليس من نوع عادي',
+    en: 'Order is not normal type',
+    he: 'ההזמנה אינה מסוג רגיל'
+   },
+   __service_not_available_for_city: {
+    ar: 'الخدمة غير متوفرة في هذه المدينة',
+    en: 'Service not available for this city',
+    he: 'השירות לא זמין לעיר זו'
+   },
+   __service_not_available_for_car_model: {
+    ar: 'الخدمة غير متوفرة لهذا النموذج',
+    en: 'Service not available for this car model',
+    he: 'השירות לא זמין לדגם הזה'
+   }
 }

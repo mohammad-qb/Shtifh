@@ -42,7 +42,7 @@ export class CarOrderResourceService {
     );
   }
 
-  async listOrders(customerId: string) {
+  async list(customerId: string) {
     return await this.listCarOrdersService.listCarOrders(customerId);
   }
 

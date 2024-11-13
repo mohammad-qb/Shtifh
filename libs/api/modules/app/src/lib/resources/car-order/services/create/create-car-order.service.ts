@@ -4,7 +4,7 @@ import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
 } from '../../dtos/create-car-order.dto';
-import { newDate } from '@shtifh/helpers';
+import { CarOrderLogStatus, newDate } from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
@@ -96,11 +96,11 @@ export class CreateCarOrderService {
         accessories: data.accessories,
         logs: [
           {
-            status: 'CREATED',
+            status: CarOrderLogStatus.CREATED,
             createdAt: newDate(),
           },
           {
-            status: 'PENDING_PAYMENT',
+            status: CarOrderLogStatus.PENDING_PAYMENT,
             createdAt: newDate(),
           },
         ],
@@ -169,7 +169,7 @@ export class CreateCarOrderService {
         note: data.note || null,
         logs: [
           {
-            status: 'CREATED',
+            status: CarOrderLogStatus.CREATED,
             createdAt: newDate(),
           },
         ],

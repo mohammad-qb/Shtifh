@@ -1,29 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { OrderEntity } from './order.entity';
-import { UserEntity } from './user.entity';
+import { Field, Float } from '@nestjs/graphql';
+import { Employee } from '@prisma/client';
+import { PrismaEmployeeWalletSummaryJsonEntity } from './common/prisma-employee-wallet-summary-json.entity';
 
-export class EmployeeEntity {
-  @ApiProperty()
+export class EmployeeEntity implements Employee {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
+  @Field(() => String)
   position!: string;
 
-  @ApiProperty()
+  @Field(() => Float)
   salary!: number;
 
-  @ApiProperty()
+  @Field(() => String)
   color!: string;
 
-  @ApiProperty()
-  start_date!: string;
+  @Field(() => Date)
+  start_work_date!: Date;
 
-  @ApiProperty()
-  user!: UserEntity;
+  @Field(() => PrismaEmployeeWalletSummaryJsonEntity)
+  wallet_summary!: PrismaEmployeeWalletSummaryJsonEntity;
 
-  @ApiProperty()
-  orders!: OrderEntity[];
-
-  @ApiProperty()
+  @Field(() => String)
   userId!: string;
 }

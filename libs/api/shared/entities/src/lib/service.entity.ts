@@ -1,15 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, registerEnumType } from '@nestjs/graphql';
+import { $Enums, Service } from '@prisma/client';
+import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
 
-export class ServiceEntity {
-  @ApiProperty()
+registerEnumType($Enums.ServiceType, { name: 'ServiceType' });
+export class ServiceEntity implements Service {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
-  name_ar!: string;
+  @Field(() => PrismaNameJsonEntity)
+  name!: PrismaNameJsonEntity;
 
-  @ApiProperty()
-  name_en!: string;
+  @Field(() => String)
+  type!: $Enums.ServiceType;
 
-  @ApiProperty()
-  name_he!: string;
+  @Field(() => String, { nullable: true })
+  image_url!: string | null;
+
+  @Field(() => Boolean)
+  is_active!: boolean;
+
+  @Field(() => Date)
+  createdAt!: Date;
+
+  @Field(() => Date)
+  updatedAt!: Date;
 }
