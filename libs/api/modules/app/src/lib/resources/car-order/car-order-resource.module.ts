@@ -4,9 +4,10 @@ import { CarOrderResourceService } from './car-order-resource.service';
 import { GetCarOrderModule } from './services/get/get-car-order.module';
 import { ListCarOrdersModule } from './services/list/list-car-orders.module';
 import { CreateCarOrderModule } from './services/create/create-car-order.module';
+import { UpdateCarOrderModule } from './services/update/update-car-order.module';
 
 @Module({
-  imports: [CreateCarOrderModule, ListCarOrdersModule, GetCarOrderModule],
+  imports: [CreateCarOrderModule, ListCarOrdersModule, GetCarOrderModule, UpdateCarOrderModule],
   providers: [CarOrderResourceResolver, CarOrderResourceService],
   exports: [CarOrderResourceResolver],
 })

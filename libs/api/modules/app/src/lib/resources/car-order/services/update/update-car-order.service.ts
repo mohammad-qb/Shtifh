@@ -1,60 +1,120 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { PrismaService } from "@shtifh/prisma-service";
-import { UpdateNormalCarOrderInput } from "../../dtos/update-car-order.dto";
-import { HeaderLanguage } from "@shtifh/decorators";
-import { HttpErrorsService } from "@shtifh/exception-service";
+import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '@shtifh/prisma-service';
+import { UpdateNormalCarOrderInput } from '../../dtos/update-car-order.dto';
+import { HeaderLanguage } from '@shtifh/decorators';
+import { HttpErrorsService } from '@shtifh/exception-service';
+import { DateAccessService } from '@shtifh/date-access-service';
 
 @Injectable()
 export class UpdateCarOrderService {
   private logger = new Logger(UpdateCarOrderService.name);
+    private hyPay;
 
-  constructor(private readonly prismaService: PrismaService, private readonly httpErrorsService: HttpErrorsService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+       private readonly dataAccessService: DateAccessService,
+    private readonly httpErrorsService: HttpErrorsService
+  ) {
+    this.hyPay = this.dataAccessService.resources.hyPay;
+  }
 
-  async updateCarOrder(customerId: string, data: UpdateNormalCarOrderInput, lang: HeaderLanguage) {
-    this.logger.log(`Update car order with id ${data.carOrderId} for customer ${customerId}`);
-    const carOrder = await this.prismaService.carOrder.findFirst({where: {id: data.carOrderId}});
+  async updateNormalCarOrder(
+    customerId: string,
+    data: UpdateNormalCarOrderInput,
+    lang: HeaderLanguage
+  ): Promise<{paymentLink: string | null}> {
+    this.logger.log(
+      `Update car order with id ${data.carOrderId} for customer ${customerId}`
+    );
 
-    if(!carOrder) {
-      throw this.httpErrorsService.orderNotFound(data.carOrderId, lang);
+    const {carOrderId, ...restCarOrderData} = data;
+    const carOrder = await this.prismaService.carOrder.findFirst({
+      where: { id: carOrderId }, include: {customer: {include: {user: true}}}
+    });
+
+    if (!carOrder) {
+      throw this.httpErrorsService.orderNotFound(carOrderId, lang);
     }
 
-    if(carOrder.customerId !== customerId) {
-      throw this.httpErrorsService.orderNotBelongToCustomer(data.carOrderId, lang);
+    if (carOrder.customerId !== customerId) {
+      throw this.httpErrorsService.orderNotBelongToCustomer(
+        carOrderId,
+        lang
+      );
     }
 
-
-    if(carOrder.type !== 'NORMAL') {
-      throw this.httpErrorsService.orderNotNormalType(data.carOrderId, lang);
+    if (carOrder.type !== 'NORMAL') {
+      throw this.httpErrorsService.orderNotNormalType(carOrderId, lang);
     }
 
-    const city = await this.prismaService.city.findFirst({where: {id: data.cityId}});
+    const city = await this.prismaService.city.findFirst({
+      where: { id: data.cityId },
+    });
 
-    if(!city) {
+    if (!city) {
       throw this.httpErrorsService.cityNotFound(data.cityId, lang);
     }
 
-    const car = await this.prismaService.car.findFirst({where: {id: data.carId, customerId}});
+    const car = await this.prismaService.car.findFirst({
+      where: { id: data.carId, customerId },
+    });
 
-    if(!car) {
+    if (!car) {
       throw this.httpErrorsService.carNotFound(data.carId, lang);
     }
 
-    const carModelService = city.car_model_services.find(el => el.serviceId === data.serviceId);
+    const carModelService = city.car_model_services.find(
+      (el) => el.serviceId === data.serviceId
+    );
 
-    if(!carModelService) {
-      throw this.httpErrorsService.serviceNotAvailableForCity(data.serviceId, data.cityId, lang);
+    if (!carModelService) {
+      throw this.httpErrorsService.serviceNotAvailableForCity(
+        data.serviceId,
+        data.cityId,
+        lang
+      );
     }
 
-    if(carModelService.carModelId !== car.carModelId) {
-      throw this.httpErrorsService.serviceNotAvailableForCarModel(data.serviceId, car.carModelId, lang);
+    if (carModelService.carModelId !== car.carModelId) {
+      throw this.httpErrorsService.serviceNotAvailableForCarModel(
+        data.serviceId,
+        car.carModelId,
+        lang
+      );
     }
+
+    if(carModelService.fees <= carOrder.fees) {
+      await this.prismaService.carOrder.update({where: {id: carOrderId}, data: restCarOrderData});
+      return {paymentLink: null};
+    }
+
+    const totalFees = carModelService.fees - carOrder.fees;
+
+    const paymentIntent = await this.hyPay.paymentIntent({
+      amount: totalFees,
+      lang,
+      orderRefNumber: carOrder.ref_number,
+      email: carOrder.customer.user.email,
+      fullName: carOrder.customer.user.full_name,
+      phone: carOrder.customer.user.phone,
+    });
+
+    await this.prismaService.payment.create({
+      data: {
+        amount: totalFees,
+        carOrderId: carOrder.id,
+        payment_method: 'CREDIT_CARD',
+        transaction_id: paymentIntent.signature,
+      },
+    });
 
     //TODO: save in cache the data to set them after payment with order id as key
-    //TODO: generate payment link
-    //TODO: return it
 
-    // await this.prismaService.carOrder.update({where: {id: data.id}, data});
-    this.logger.log(`Car order ${data.carOrderId} updated for customer ${customerId}`);
-    return true
+    this.logger.log(
+      `Car order ${data.carOrderId} updated for customer ${customerId}`
+    );
+
+    return {paymentLink: paymentIntent.url};
+
   }
 }

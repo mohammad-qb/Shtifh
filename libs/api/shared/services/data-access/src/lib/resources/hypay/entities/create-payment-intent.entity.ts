@@ -49,6 +49,6 @@ export interface paymentQueryData {
 }
 
 export interface paymentURL {
-  url?: string;
+  url: string;
   signature?: string;
 }

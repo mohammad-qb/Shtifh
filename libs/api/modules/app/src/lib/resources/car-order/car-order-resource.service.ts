@@ -8,13 +8,16 @@ import {
 } from './dtos/create-car-order.dto';
 import { UserPayload } from '@shtifh/user-service';
 import { HeaderLanguage } from '@shtifh/decorators';
+import { UpdateCarOrderService } from './services/update/update-car-order.service';
+import { UpdateNormalCarOrderInput } from './dtos/update-car-order.dto';
 
 @Injectable()
 export class CarOrderResourceService {
   constructor(
     private readonly createCarOrderService: CreateCarOrderService,
     private readonly getCarOrderService: GetCarOrderService,
-    private readonly listCarOrdersService: ListCarOrdersService
+    private readonly listCarOrdersService: ListCarOrdersService,
+    private readonly updateCarOrderService: UpdateCarOrderService
   ) {}
 
   async createNormalOrder(
@@ -39,6 +42,18 @@ export class CarOrderResourceService {
       customerId,
       lang,
       input
+    );
+  }
+
+  async updateNormalOrder(
+    customerId: string,
+    lang: HeaderLanguage,
+    input: UpdateNormalCarOrderInput
+  ) {
+    return await this.updateCarOrderService.updateNormalCarOrder(
+      customerId,
+      input,
+      lang
     );
   }
 

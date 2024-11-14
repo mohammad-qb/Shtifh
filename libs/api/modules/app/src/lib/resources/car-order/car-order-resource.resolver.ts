@@ -10,6 +10,8 @@ import {
   CreatePrivateCarOrderInput,
 } from './dtos/create-car-order.dto';
 import { JwtAuthGuard } from '@shtifh/auth-service';
+import { UpdateNormalCarOrderInput } from './dtos/update-car-order.dto';
+import { UpdateNormalCarOrderEntity } from './entities/update-car-order.entity';
 
 @Resolver()
 @UseGuards(JwtAuthGuard)
@@ -59,6 +61,19 @@ export class CarOrderResourceResolver {
   ) {
     return await this.carOrderResourceService.createNormalOrder(
       user,
+      language,
+      input
+    );
+  }
+
+  @Mutation(() => UpdateNormalCarOrderEntity, { name: 'updateNormalCarOrder' })
+  async updateNormalCarOrder(
+    @Args('UpdateNormalCarOrderInput') input: UpdateNormalCarOrderInput,
+    @GqlUser() user: UserPayload,
+    @GqlLang() language: HeaderLanguage
+  ) {
+    return await this.carOrderResourceService.updateNormalOrder(
+      user.id,
       language,
       input
     );
