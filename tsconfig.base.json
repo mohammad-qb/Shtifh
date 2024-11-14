@@ -33,6 +33,7 @@
       ],
       "@shtifh/helpers": ["libs/api/shared/helpers/src/index.ts"],
       "@shtifh/jwt-service": ["libs/api/shared/services/jwt/src/index.ts"],
+      "@shtifh/plugins": ["libs/api/shared/plugins/src/index.ts"],
       "@shtifh/prisma-service": [
         "libs/api/shared/services/prisma/src/index.ts"
       ],

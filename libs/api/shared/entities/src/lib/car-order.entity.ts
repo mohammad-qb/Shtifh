@@ -1,4 +1,4 @@
-import { registerEnumType, Field } from '@nestjs/graphql';
+import { registerEnumType, Field, ObjectType } from '@nestjs/graphql';
 import { $Enums, CarOrder } from '@prisma/client';
 import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
 import { PrismaCarOrderAccessoriesJsonEntity } from './common/prisma-car-order-accessories-json.entity';
@@ -6,6 +6,7 @@ import { PrismaCarOrderAccessoriesJsonEntity } from './common/prisma-car-order-a
 registerEnumType($Enums.OrderStatus, { name: 'OrderStatus' });
 registerEnumType($Enums.OrderType, { name: 'OrderType' });
 
+@ObjectType()
 export class CarOrderEntity implements CarOrder {
   @Field(() => String)
   id!: string;

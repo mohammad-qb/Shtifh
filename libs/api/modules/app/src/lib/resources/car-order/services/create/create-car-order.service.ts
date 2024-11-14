@@ -91,7 +91,7 @@ export class CreateCarOrderService {
         serviceId: data.serviceId,
         tips: data.tips || 0,
         note: data.note || null,
-        order_date: newDate(data.order_date),
+        order_date: newDate(data.order_date).toISOString(),
         order_time: data.order_time,
         accessories: data.accessories,
         logs: [

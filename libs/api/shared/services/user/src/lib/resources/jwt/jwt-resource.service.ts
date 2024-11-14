@@ -1,6 +1,6 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@shtifh/jwt-service';
-import { Payload } from './types/jwt.type';
+import { UserPayload } from './types/jwt.type';
 
 @Injectable()
 export class JwtResourceService {
@@ -8,16 +8,17 @@ export class JwtResourceService {
 
   constructor(private readonly jwtService: JwtService) {}
 
-  async signJwt(payload: Payload, expire?: string) {
+  async signJwt(payload: UserPayload, expire?: string) {
     return await this.jwtService.generateToken(payload, expire);
   }
 
   async verify(token: string) {
     return this.jwtService
       .verifyToken(token)
-      .then((data) => data.payload as Payload)
+      .then((data) => data.payload as UserPayload)
       .catch((error) => {
-        throw new UnauthorizedException('Unauthorized');
+        this.logger.error('Unauthorized', error.message);
+        throw new UnauthorizedException('Unauthorized', error.message);
       });
   }
 }

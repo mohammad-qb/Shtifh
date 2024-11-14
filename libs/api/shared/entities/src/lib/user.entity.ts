@@ -1,8 +1,10 @@
-import { Field, registerEnumType } from '@nestjs/graphql';
+import { Field, registerEnumType, ObjectType } from '@nestjs/graphql';
 import { $Enums, User } from '@prisma/client';
 
 registerEnumType($Enums.Lang, { name: 'Lang' });
 registerEnumType($Enums.UserRole, { name: 'UserRole' });
+
+@ObjectType()
 export class UserEntity implements User {
   @Field(() => String)
   id!: string;

@@ -1,7 +1,8 @@
-import { Field, Float } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { Employee } from '@prisma/client';
 import { PrismaEmployeeWalletSummaryJsonEntity } from './common/prisma-employee-wallet-summary-json.entity';
 
+@ObjectType()
 export class EmployeeEntity implements Employee {
   @Field(() => String)
   id!: string;

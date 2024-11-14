@@ -1,28 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { $Enums } from '@prisma/client';
-import { CarEntity } from './car.entity';
-import { OrderEntity } from './order.entity';
-import { UserEntity } from './user.entity';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { $Enums, Customer } from '@prisma/client';
 
-export class CustomerEntity {
-  @ApiProperty()
+registerEnumType($Enums.Gender, {name: 'Gender'});
+@ObjectType()
+export class CustomerEntity implements Customer {
+  @Field(() => String)
   id!: string;
 
-  @ApiProperty()
+  @Field(() => String)
+  image_url!: string;
+
+  @Field(() => $Enums.Gender)
   gender!: $Enums.Gender;
 
-  @ApiProperty({ nullable: true })
-  image_url!: string | null;
+  @Field(() => Boolean)
+  is_removed!: boolean;
 
-  @ApiProperty()
-  user!: UserEntity;
-
-  @ApiProperty()
-  cars!: CarEntity[];
-
-  @ApiProperty()
-  orders!: OrderEntity[];
-
-  @ApiProperty()
+  @Field(() => String)
   userId!: string;
 }

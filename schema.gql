@@ -1,0 +1,323 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PrismaNameJsonEntity {
+  ar: String!
+  en: String!
+  he: String!
+}
+
+type CarModelEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CarBrandEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PrismaCarOrderLogJsonEntity {
+  status: CarOrderLogStatus!
+  createdAt: DateTime!
+}
+
+enum CarOrderLogStatus {
+  CREATED
+  PENDING_PAYMENT
+  PROCESSING
+  COMPLETED
+  CONFIRMED
+  CANCELED_BY_CUSTOMER
+  CANCELED_BY_EMPLOYEE
+}
+
+type PrismaCarOrderAccessoriesJsonEntity {
+  accessoryId: String!
+  quantity: Int!
+}
+
+type PrismaCityGlobalScheduleJsonEntity {
+  start_time: String!
+  end_time: String!
+  requests_in_hour: Float!
+  is_off: Boolean!
+}
+
+type PrismaCityMonthlyScheduleJsonEntity {
+  start_time: String!
+  end_time: String!
+  year: Float!
+  month: Float!
+  requests_in_hour: Float!
+}
+
+type PrismaCityRecurringScheduleJsonEntity {
+  start_time: String!
+  end_time: String!
+  date: String!
+  requests_in_hour: Float!
+  is_off: Boolean!
+}
+
+type PrismaCityDailyScheduleJsonEntity {
+  start_time: String!
+  end_time: String!
+  date: String!
+  requests_in_hour: Float!
+  is_off: Boolean!
+}
+
+type PrismaCityScheduleJsonEntity {
+  global: PrismaCityGlobalScheduleJsonEntity!
+  monthly: [PrismaCityMonthlyScheduleJsonEntity!]!
+  recurring: [PrismaCityRecurringScheduleJsonEntity!]!
+  daily: [PrismaCityDailyScheduleJsonEntity!]!
+}
+
+type PrismaCityCarModelServiceJsonEntity {
+  carModelId: String!
+  serviceId: String!
+  is_active: String!
+  fees: Float!
+}
+
+type PrismaEmployeeWalletSummaryJsonEntity {
+  total_tips: Float!
+  total_orders_earn: Float!
+}
+
+type ListAccessoriesEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+  price: Float!
+}
+
+type ListCarBrandsEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+}
+
+type ListCarModelsEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+}
+
+type CarDataForListCarOrdersEntity {
+  id: String!
+  plate_number: String!
+  year: Int!
+  color: String!
+  model: CarModelEntity!
+  brand: CarBrandEntity!
+}
+
+type ServiceDataForListCarOrdersEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  type: String!
+  image_url: String
+}
+
+type EmployeeDataForListCarOrdersEntity {
+  full_name: String!
+}
+
+type ListCarOrdersEntity {
+  ref_number: String!
+  status: OrderStatus!
+  order_date: DateTime
+  order_time: String
+  fees: String!
+  note: String
+  address: String!
+  accessories: [PrismaCarOrderAccessoriesJsonEntity!]!
+  type: OrderType!
+  car: CarDataForListCarOrdersEntity!
+  service: ServiceDataForListCarOrdersEntity!
+  employee: EmployeeDataForListCarOrdersEntity
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CONFIRMED
+  CANCELED
+}
+
+enum OrderType {
+  PRIVATE
+  NORMAL
+}
+
+type UpdateNormalCarOrderEntity {
+  paymentLink: String
+}
+
+type ListCarsBrandEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+}
+
+type ListCarsModelEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  image_url: String!
+}
+
+type ListCarsEntity {
+  id: String!
+  plate_number: String!
+  year: Int!
+  color: String!
+  is_active: Boolean!
+  brand: ListCarsBrandEntity!
+  model: ListCarsModelEntity!
+}
+
+type ListCitiesEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  car_model_services: PrismaCityCarModelServiceJsonEntity!
+}
+
+type AuthUserEntity {
+  id: String!
+  full_name: String!
+  email: String!
+  phone: String!
+  language: Lang!
+  role: UserRole!
+}
+
+enum Lang {
+  EN
+  AR
+  HE
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  EMPLOYEE
+}
+
+type Query {
+  accessories: [ListAccessoriesEntity!]!
+  cars: [ListCarsEntity!]!
+  carBrands: [ListCarBrandsEntity!]!
+  carModels: [ListCarModelsEntity!]!
+  carOrders: [ListCarOrdersEntity!]!
+  carOrder(GetCarOrderByIdInput: GetCarOrderByIdInput!): ListCarOrdersEntity!
+  cities: [ListCitiesEntity!]!
+  me: AuthUserEntity!
+}
+
+input GetCarOrderByIdInput {
+  carOrderId: String!
+}
+
+type Mutation {
+  createCar(CreateCarInput: CreateCarInput!): Boolean!
+  deactivateCar(DeactivateCarInput: DeactivateCarInput!): Boolean!
+  updateCar(updateCarInput: UpdateCarInput!): Boolean!
+  createPrivateCarOrder(CreatePrivateCarOrderInput: CreatePrivateCarOrderInput!): Boolean!
+  createNormalCarOrder(CreateNormalCarOrderInput: CreateNormalCarOrderInput!): String!
+  updateNormalCarOrder(UpdateNormalCarOrderInput: UpdateNormalCarOrderInput!): UpdateNormalCarOrderEntity!
+  createCustomer(CreateCustomerInput: CreateCustomerInput!): Boolean!
+  login(LoginInput: LoginInput!): AuthUserEntity!
+}
+
+input CreateCarInput {
+  plate_number: String!
+  year: Int!
+  color: String!
+  carBrandId: String!
+  carModelId: String!
+}
+
+input DeactivateCarInput {
+  carId: String!
+}
+
+input UpdateCarInput {
+  plate_number: String!
+  year: Int!
+  color: String!
+  carBrandId: String!
+  carModelId: String!
+  carId: String!
+}
+
+input CreatePrivateCarOrderInput {
+  address: String!
+  note: String
+  car_location: [String!]!
+  serviceId: String!
+  carId: String!
+  cityId: String!
+}
+
+input CreateNormalCarOrderInput {
+  order_date: String!
+  order_time: String!
+  address: String!
+  tips: Float
+  note: String
+  car_location: [String!]!
+  serviceId: String!
+  carId: String!
+  accessories: [CarOrderAccessoriesInput!]!
+  cityId: String!
+}
+
+input CarOrderAccessoriesInput {
+  accessoryId: String!
+  quantity: Float!
+}
+
+input UpdateNormalCarOrderInput {
+  address: String!
+  note: String
+  car_location: [String!]!
+  serviceId: String!
+  carId: String!
+  cityId: String!
+  carOrderId: String!
+}
+
+input CreateCustomerInput {
+  full_name: String!
+  email: String!
+  phone: String!
+  password: String!
+  language: Lang!
+  gender: Gender!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}

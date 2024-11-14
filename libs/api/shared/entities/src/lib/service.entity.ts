@@ -1,8 +1,10 @@
-import { Field, registerEnumType } from '@nestjs/graphql';
+import { Field, registerEnumType, ObjectType } from '@nestjs/graphql';
 import { $Enums, Service } from '@prisma/client';
 import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
 
 registerEnumType($Enums.ServiceType, { name: 'ServiceType' });
+
+@ObjectType()
 export class ServiceEntity implements Service {
   @Field(() => String)
   id!: string;
