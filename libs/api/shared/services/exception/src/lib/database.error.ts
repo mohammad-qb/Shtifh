@@ -31,17 +31,17 @@ const getPrismaErrorMessage = (error: PrismaClientKnownRequestError) => {
   return prismaError?.[1].message
 }
 
-type PrsimaErrorType = Record<typeof PRISMA_ERORR_TYPE[number], PrismaError>
+type PrismaErrorType = Record<typeof PRISMA_ERROR_TYPE[number], PrismaError>
 
 interface PrismaError {
   code: string
   message: (error: PrismaClientKnownRequestError) => string | string
 }
 
-const PRISMA_ERORR_TYPE = ['forgienKeyFailure'] as const
-const PRISMA_KNOWN_ERRORS: PrsimaErrorType = {
-  forgienKeyFailure: {
+const PRISMA_ERROR_TYPE = ['foreignKeyFailure'] as const
+const PRISMA_KNOWN_ERRORS: PrismaErrorType = {
+  foreignKeyFailure: {
     code: 'P2003',
-    message: (error) => `Forgien key failure`,
+    message: (error) => `Foreign key failure`,
   },
 }

@@ -19,7 +19,7 @@ export class ApiError extends HttpException implements ApiErrorParams {
   code?: number
   explanation?: string | undefined
 
-  constructor(readonly message: string, params?: ApiErrorParams) {
+  constructor(override readonly message: string, params?: ApiErrorParams) {
     const statusCode = params?.statusCode || 400
 
     super({ message, ...params }, statusCode)

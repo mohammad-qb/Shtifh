@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@shtifh/admin": ["libs/api/modules/admin/src/index.ts"],
+      "@shtifh/agent-server-module": ["libs/api/modules/agent/src/index.ts"],
       "@shtifh/app-server-module": ["libs/api/modules/app/src/index.ts"],
       "@shtifh/auth-service": ["libs/api/shared/services/auth/src/index.ts"],
       "@shtifh/aws-s3-lib": ["libs/api/shared/services/aws/s3/src/index.ts"],
