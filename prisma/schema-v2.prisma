@@ -3,8 +3,8 @@ generator client {
 }
 
 generator jsonTypes {
-  provider = "prisma-json-types-generator"
-  // namespace = "PrismaJson"
+  provider  = "prisma-json-types-generator"
+  namespace = "PrismaJson"
 }
 
 datasource db {
@@ -23,6 +23,23 @@ model Accessory {
   updatedAt DateTime @updatedAt()
 }
 
+model Agent {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  position           Int[]
+  salary             Float
+  color              String
+  start_work_date    DateTime
+  is_available       Boolean              @default(true)
+  is_busy            Boolean              @default(false)
+  coordinates        Float[] // lat and lon
+  /// [AgentWalletSummaryJson]
+  wallet_summary     Json // {total_tips: 0, total_orders_earn: 0}
+  user               User                 @relation(fields: [userId], references: [id])
+  userId             String               @db.ObjectId
+  carOrders          CarOrder[]
+  ExpressCrWashOrder ExpressCrWashOrder[]
+}
+
 model BookedSlot {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   date       String // "2024-10-02"
@@ -32,31 +49,33 @@ model BookedSlot {
 }
 
 model Customer {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  image_url  String
-  gender     Gender
-  is_removed Boolean    @default(false)
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String     @db.ObjectId
-  cars       Car[]
-  carOrders  CarOrder[]
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  image_url          String
+  gender             Int
+  is_removed         Boolean              @default(false)
+  user               User                 @relation(fields: [userId], references: [id])
+  userId             String               @db.ObjectId
+  cars               Car[]
+  carOrders          CarOrder[]
+  ExpressCrWashOrder ExpressCrWashOrder[]
 }
 
 model Car {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  plate_number String
-  year         Int
-  color        String
-  is_active    Boolean    @default(true)
-  brand        CarBrand   @relation(fields: [carBrandId], references: [id])
-  model        CarModel   @relation(fields: [carModelId], references: [id])
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt()
-  customerId   String     @db.ObjectId
-  carBrandId   String     @db.ObjectId
-  carModelId   String     @db.ObjectId
-  carOrders    CarOrder[]
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  plate_number       String
+  year               Int
+  color              String
+  is_active          Boolean              @default(true)
+  brand              CarBrand             @relation(fields: [carBrandId], references: [id])
+  model              CarModel             @relation(fields: [carModelId], references: [id])
+  customer           Customer             @relation(fields: [customerId], references: [id])
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt()
+  customerId         String               @db.ObjectId
+  carBrandId         String               @db.ObjectId
+  carModelId         String               @db.ObjectId
+  carOrders          CarOrder[]
+  ExpressCrWashOrder ExpressCrWashOrder[]
 }
 
 model CarBrand {
@@ -79,50 +98,6 @@ model CarModel {
   cars      Car[]
 }
 
-model CarOrder {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
-  ref_number   String
-  status       OrderStatus  @default(PENDING)
-  order_date   DateTime?
-  order_time   String?
-  fees         Float
-  tips         Float
-  note         String?
-  address      String
-  /// [CarOrderLogJson]
-  logs         Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
-  /// [CarOrderAccessoriesJson]
-  accessories  Json[] // {accessoryId: "", quantity: 0}
-  type         OrderType    @default(NORMAL)
-  service      Service      @relation(fields: [serviceId], references: [id])
-  car          Car          @relation(fields: [carId], references: [id])
-  customer     Customer     @relation(fields: [customerId], references: [id])
-  employee     Employee?    @relation(fields: [employeeId], references: [id])
-  city         City         @relation(fields: [cityId], references: [id])
-  car_location String[] // lat and lon
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt()
-  carId        String       @db.ObjectId
-  customerId   String       @db.ObjectId
-  cityId       String       @db.ObjectId
-  serviceId    String       @db.ObjectId
-  employeeId   String?      @db.ObjectId
-  payments     Payment[]
-  bookedSlots  BookedSlot[]
-}
-
-model Service {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name      Json // {ar: "", en: "", he: ""}
-  type      ServiceType @default(PUBLIC)
-  image_url String?
-  is_active Boolean     @default(true)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt()
-  CarOrder  CarOrder[]
-}
-
 model City {
   id                 String     @id @default(auto()) @map("_id") @db.ObjectId
   /// [NameJson]
@@ -137,29 +112,80 @@ model City {
   carOrders          CarOrder[]
 }
 
-model Employee {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  position        String
-  salary          Float
-  color           String
-  start_work_date DateTime
-  /// [EmployeeWalletSummaryJson]
-  wallet_summary  Json // {total_tips: 0, total_orders_earn: 0}
-  user            User       @relation(fields: [userId], references: [id])
-  userId          String     @db.ObjectId
-  carOrders       CarOrder[]
+model CarOrder {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  ref_number  String
+  order_date  DateTime?
+  order_time  String?
+  fees        Float
+  tips        Float
+  note        String?
+  address     String
+  /// [CarOrderLogJson]
+  logs        Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
+  /// [CarOrderAccessoriesJson]
+  accessories Json[] // {accessoryId: "", quantity: 0}
+  type        Int          @default(0)
+  service     Service      @relation(fields: [serviceId], references: [id])
+  car         Car          @relation(fields: [carId], references: [id])
+  customer    Customer     @relation(fields: [customerId], references: [id])
+  agent       Agent?       @relation(fields: [agentId], references: [id])
+  city        City         @relation(fields: [cityId], references: [id])
+  coordinates Float[] // lat and lon
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt()
+  carId       String       @db.ObjectId
+  customerId  String       @db.ObjectId
+  cityId      String       @db.ObjectId
+  serviceId   String       @db.ObjectId
+  agentId     String?      @db.ObjectId
+  payments    Payment[]
+  bookedSlots BookedSlot[]
+}
+
+model ExpressCrWashOrder {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  ref_number  String
+  fees        Float
+  tips        Float
+  /// [CarOrderLogJson]
+  logs        Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
+  car         Car       @relation(fields: [carId], references: [id])
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  agent       Agent?    @relation(fields: [agentId], references: [id])
+  coordinates Float[] // lat and lon
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
+  carId       String    @db.ObjectId
+  customerId  String    @db.ObjectId
+  agentId     String?   @db.ObjectId
+  payments    Payment[]
 }
 
 model Payment {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  payment_method PaymentMethod @default(CREDIT_CARD)
-  amount         Float
-  transaction_id String?
-  status         PaymentStatus @default(PENDING)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt()
-  CarOrder       CarOrder?     @relation(fields: [carOrderId], references: [id])
-  carOrderId     String?       @db.ObjectId
+  id                   String              @id @default(auto()) @map("_id") @db.ObjectId
+  payment_method       Int                 @default(1)
+  amount               Float
+  transaction_id       String?
+  status               Int                 @default(0)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt()
+  CarOrder             CarOrder?           @relation(fields: [carOrderId], references: [id])
+  carOrderId           String?             @db.ObjectId
+  ExpressCrWashOrder   ExpressCrWashOrder? @relation(fields: [expressCrWashOrderId], references: [id])
+  expressCrWashOrderId String?             @db.ObjectId
+}
+
+model Service {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  /// [NameJson]
+  name      Json // {ar: "", en: "", he: ""}
+  type      Int        @default(1)
+  image_url String?
+  is_active Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt()
+  CarOrder  CarOrder[]
 }
 
 model User {
@@ -169,61 +195,16 @@ model User {
   phone               String
   password            String
   is_blocked          Boolean    @default(false)
-  language            Lang       @default(EN)
+  language            Int        @default(0)
   reset_password_code String?
-  role                UserRole   @default(CUSTOMER)
+  role                Int        @default(1)
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt()
-  employees           Employee[]
+  agent               Agent[]
   customers           Customer[]
 }
 
 //* Enums
-enum Lang {
-  EN
-  AR
-  HE
-}
-
-enum UserRole {
-  ADMIN
-  CUSTOMER
-  EMPLOYEE
-}
-
-enum ServiceType {
-  PRIVATE
-  PUBLIC
-}
-
-enum Gender {
-  MALE
-  FEMALE
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  CONFIRMED
-  CANCELED
-}
-
-enum OrderType {
-  PRIVATE
-  NORMAL
-}
-
-enum PaymentMethod {
-  CASH
-  CREDIT_CARD
-}
-
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  CANCELED
-}
 
 enum Day {
   SUNDAY

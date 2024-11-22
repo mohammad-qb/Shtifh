@@ -54,7 +54,7 @@ export const httpErrorMessages = {
     en: 'Invalid login credential',
     he: 'פרטי כניסה שגויים'
   },
-  __order_not_found: {
+  __car_order_not_found: {
     ar: 'الطلب غير موجود',
     en: 'Order not found',
     he: 'ההזמנה לא נמצאה'
@@ -78,5 +78,25 @@ export const httpErrorMessages = {
     ar: 'الخدمة غير متوفرة لهذا النموذج',
     en: 'Service not available for this car model',
     he: 'השירות לא זמין לדגם הזה'
+   },
+   __car_wash_order_not_found: {
+    ar: 'طلب غسيل السيارة غير موجود',
+    en: 'Car wash order not found',
+    he: 'הזמנת כביסת המכונית לא נמצאה'
+   },
+   __car_wash_order_already_cancelled: {
+    ar: 'تم إلغاء طلب غسيل السيارة بالفعل',
+    en: 'Car wash order already cancelled',
+    he: 'הזמנת כביסת המכונית כבר בוטלה'
+   },
+   __car_order_not_belong_to_agent: {
+    ar: 'الطلب لا ينتمي للوكيل',
+    en: 'Order not belong to agent',
+    he: 'ההזמנה לא שייכת לסוכן'
+   },
+   __car_order_already_cancelled: {
+    ar: 'تم إلغاء الطلب بالفعل',
+    en: 'Order already cancelled',
+    he: 'ההזמנה כבר בוטלה'
    }
 }

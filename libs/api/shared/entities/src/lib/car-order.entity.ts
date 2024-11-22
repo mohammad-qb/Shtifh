@@ -1,10 +1,8 @@
-import { registerEnumType, Field, ObjectType } from '@nestjs/graphql';
-import { $Enums, CarOrder } from '@prisma/client';
-import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { CarOrder } from '@prisma/client';
+import { CarOrderType } from '@shtifh/helpers';
 import { PrismaCarOrderAccessoriesJsonEntity } from './common/prisma-car-order-accessories-json.entity';
-
-registerEnumType($Enums.OrderStatus, { name: 'OrderStatus' });
-registerEnumType($Enums.OrderType, { name: 'OrderType' });
+import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
 
 @ObjectType()
 export class CarOrderEntity implements CarOrder {
@@ -13,9 +11,6 @@ export class CarOrderEntity implements CarOrder {
 
   @Field(() => String)
   ref_number!: string;
-
-  @Field(() => $Enums.OrderStatus)
-  status!: $Enums.OrderStatus;
 
   @Field(() => Date, { nullable: true })
   order_date!: Date | null;
@@ -41,11 +36,11 @@ export class CarOrderEntity implements CarOrder {
   @Field(() => [PrismaCarOrderAccessoriesJsonEntity])
   accessories!: PrismaCarOrderAccessoriesJsonEntity[];
 
-  @Field(() => $Enums.OrderType)
-  type!: $Enums.OrderType;
+  @Field(() => Int)
+  type!: CarOrderType;
 
-  @Field(() => [String])
-  car_location!: string[];
+  @Field(() => [Float])
+  coordinates!: number[];
 
   @Field(() => Date)
   createdAt!: Date;
@@ -66,5 +61,5 @@ export class CarOrderEntity implements CarOrder {
   serviceId!: string;
 
   @Field(() => String, {nullable: true})
-  employeeId!: string | null;
+  agentId!: string | null;
 }

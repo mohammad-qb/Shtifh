@@ -1,5 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { $Enums } from '@prisma/client';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { Gender, Language } from '@shtifh/helpers';
 import {
   IsEmail,
   IsEnum,
@@ -31,13 +31,13 @@ export class CreateCustomerInput {
   @IsNotEmpty()
   password!: string;
 
-  @Field(() => $Enums.Lang)
-  @IsEnum($Enums.Lang)
+  @Field(() => Int)
+  @IsEnum(Language)
   @IsNotEmpty()
-  language!: $Enums.Lang;
+  language!: Language;
 
-  @Field(() => $Enums.Gender)
-  @IsEnum($Enums.Gender)
+  @Field(() => Int)
+  @IsEnum(Gender)
   @IsNotEmpty()
-  gender!: $Enums.Gender;
+  gender!: Gender;
 }

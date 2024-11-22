@@ -1,7 +1,7 @@
-import { $Enums } from '@prisma/client';
+import { Gender } from '@shtifh/helpers';
 
-export const generateImageUrl = (gender: $Enums.Gender, username: string) => {
+export const generateImageUrl = (gender: Gender, username: string) => {
   return `https://avatar.iran.liara.run/public/${
-    gender === 'FEMALE' ? 'girl' : 'boy'
+    gender === Gender.FEMALE ? 'girl' : 'boy'
   }?username=${username}`;
 };

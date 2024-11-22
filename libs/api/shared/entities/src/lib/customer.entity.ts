@@ -1,7 +1,7 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { $Enums, Customer } from '@prisma/client';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Customer } from '@prisma/client';
+import { Gender } from '@shtifh/helpers';
 
-registerEnumType($Enums.Gender, {name: 'Gender'});
 @ObjectType()
 export class CustomerEntity implements Customer {
   @Field(() => String)
@@ -10,8 +10,8 @@ export class CustomerEntity implements Customer {
   @Field(() => String)
   image_url!: string;
 
-  @Field(() => $Enums.Gender)
-  gender!: $Enums.Gender;
+  @Field(() => Int)
+  gender!: Gender;
 
   @Field(() => Boolean)
   is_removed!: boolean;

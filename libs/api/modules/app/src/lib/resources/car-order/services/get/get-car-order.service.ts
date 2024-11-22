@@ -20,14 +20,14 @@ export class GetCarOrderService {
     this.logger.log(`Get car order ${carOrderId} for customer ${customerId}`);
     const order = await this.prismaService.carOrder.findFirst({
       where: { customerId, id: carOrderId },
-      include: { car: { include: { model: true, brand: true } } },
+      include: { car: { include: { model: true, brand: true } }, agent: {include: {user: true}} },
     });
 
     if (!order) {
       this.logger.error(
         `Car order ${carOrderId} for customer ${customerId} not found`
       );
-      throw this.httpErrorsService.orderNotFound(carOrderId, lang);
+      throw this.httpErrorsService.carOrderNotFound(carOrderId, lang);
     }
     this.logger.log(`Car order ${carOrderId} for customer ${customerId} found`);
     return order;

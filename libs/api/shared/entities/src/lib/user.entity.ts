@@ -1,8 +1,7 @@
-import { Field, registerEnumType, ObjectType } from '@nestjs/graphql';
-import { $Enums, User } from '@prisma/client';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { User } from '@prisma/client';
+import { Language, UserRole } from '@shtifh/helpers';
 
-registerEnumType($Enums.Lang, { name: 'Lang' });
-registerEnumType($Enums.UserRole, { name: 'UserRole' });
 
 @ObjectType()
 export class UserEntity implements User {
@@ -24,14 +23,14 @@ export class UserEntity implements User {
   @Field(() => Boolean)
   is_blocked!: boolean;
 
-  @Field(() => $Enums.Lang)
-  language!: $Enums.Lang;
+  @Field(() => Int)
+  language!: Language;
 
   @Field(() => String, { nullable: true })
   reset_password_code!: string | null;
 
-  @Field(() => $Enums.UserRole)
-  role!: $Enums.UserRole;
+  @Field(() => Int)
+  role!: UserRole;
 
   @Field(() => Date)
   createdAt!: Date;

@@ -1,9 +1,8 @@
-import { $Enums } from "@prisma/client"
 
 declare global{
 namespace PrismaJson {
     type NameJson = { ar: string, en: string, he: string };
-    type EmployeeWalletSummaryJson ={ total_tips: number, total_orders_earn: number };
+    type AgentWalletSummaryJson ={ total_tips: number, total_orders_earn: number };
     type CityScheduleJson = {
       global: {
         start_time: string,
@@ -35,7 +34,8 @@ namespace PrismaJson {
     };
     type CarOrderLogJson = {
       status: number,
-      createdAt: Date
+      note?: string,
+      createdAt: Date,
     }
     type CarOrderAccessoriesJson = {
       accessoryId: string,

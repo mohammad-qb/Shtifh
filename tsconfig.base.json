@@ -29,6 +29,9 @@
       "@shtifh/exception-service": [
         "libs/api/shared/services/exception/src/index.ts"
       ],
+      "@shtifh/express-car-wash-module": [
+        "libs/api/modules/express-car-wash/src/index.ts"
+      ],
       "@shtifh/fcm-service": [
         "libs/api/shared/services/firebase/fcm/src/index.ts"
       ],

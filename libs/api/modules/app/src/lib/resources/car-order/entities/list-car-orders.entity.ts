@@ -32,7 +32,7 @@ export class ServiceDataForListCarOrdersEntity extends PickType(ServiceEntity, [
 ]) {}
 
 @ObjectType()
-export class EmployeeDataForListCarOrdersEntity extends PickType(
+export class AgentDataForListCarOrdersEntity extends PickType(
   UserEntity,
   ['full_name']
 ) {}
@@ -47,7 +47,7 @@ export class ListCarOrdersEntity extends PickType(CarOrderEntity, [
   'order_time',
   'ref_number',
   'type',
-  'status',
+  'logs'
 ]) {
   @Field(() => CarDataForListCarOrdersEntity)
   car!: CarDataForListCarOrdersEntity;
@@ -55,6 +55,6 @@ export class ListCarOrdersEntity extends PickType(CarOrderEntity, [
   @Field(() => ServiceDataForListCarOrdersEntity)
   service!: ServiceDataForListCarOrdersEntity;
 
-  @Field(() => EmployeeDataForListCarOrdersEntity, { nullable: true })
-  employee!: EmployeeDataForListCarOrdersEntity | null;
+  @Field(() => AgentDataForListCarOrdersEntity, { nullable: true })
+  agent!: AgentDataForListCarOrdersEntity | null;
 }

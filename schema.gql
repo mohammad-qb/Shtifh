@@ -29,6 +29,11 @@ type CarBrandEntity {
   updatedAt: DateTime!
 }
 
+type PrismaCarOrderAccessoriesJsonEntity {
+  accessoryId: String!
+  quantity: Int!
+}
+
 type PrismaCarOrderLogJsonEntity {
   status: CarOrderLogStatus!
   createdAt: DateTime!
@@ -37,16 +42,11 @@ type PrismaCarOrderLogJsonEntity {
 enum CarOrderLogStatus {
   CREATED
   PENDING_PAYMENT
-  PROCESSING
+  IN_PROGRESS
   COMPLETED
   CONFIRMED
   CANCELED_BY_CUSTOMER
-  CANCELED_BY_EMPLOYEE
-}
-
-type PrismaCarOrderAccessoriesJsonEntity {
-  accessoryId: String!
-  quantity: Int!
+  CANCELED_BY_AGENT
 }
 
 type PrismaCityGlobalScheduleJsonEntity {
@@ -94,7 +94,7 @@ type PrismaCityCarModelServiceJsonEntity {
   fees: Float!
 }
 
-type PrismaEmployeeWalletSummaryJsonEntity {
+type PrismaAgentWalletSummaryJsonEntity {
   total_tips: Float!
   total_orders_earn: Float!
 }
@@ -130,40 +130,27 @@ type CarDataForListCarOrdersEntity {
 type ServiceDataForListCarOrdersEntity {
   id: String!
   name: PrismaNameJsonEntity!
-  type: String!
+  type: Int!
   image_url: String
 }
 
-type EmployeeDataForListCarOrdersEntity {
+type AgentDataForListCarOrdersEntity {
   full_name: String!
 }
 
 type ListCarOrdersEntity {
   ref_number: String!
-  status: OrderStatus!
   order_date: DateTime
   order_time: String
   fees: String!
   note: String
   address: String!
+  logs: [PrismaCarOrderLogJsonEntity!]!
   accessories: [PrismaCarOrderAccessoriesJsonEntity!]!
-  type: OrderType!
+  type: Int!
   car: CarDataForListCarOrdersEntity!
   service: ServiceDataForListCarOrdersEntity!
-  employee: EmployeeDataForListCarOrdersEntity
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  CONFIRMED
-  CANCELED
-}
-
-enum OrderType {
-  PRIVATE
-  NORMAL
+  agent: AgentDataForListCarOrdersEntity
 }
 
 type UpdateNormalCarOrderEntity {
@@ -203,20 +190,8 @@ type AuthUserEntity {
   full_name: String!
   email: String!
   phone: String!
-  language: Lang!
-  role: UserRole!
-}
-
-enum Lang {
-  EN
-  AR
-  HE
-}
-
-enum UserRole {
-  ADMIN
-  CUSTOMER
-  EMPLOYEE
+  language: Int!
+  role: Int!
 }
 
 type Query {
@@ -308,13 +283,8 @@ input CreateCustomerInput {
   email: String!
   phone: String!
   password: String!
-  language: Lang!
-  gender: Gender!
-}
-
-enum Gender {
-  MALE
-  FEMALE
+  language: Int!
+  gender: Int!
 }
 
 input LoginInput {

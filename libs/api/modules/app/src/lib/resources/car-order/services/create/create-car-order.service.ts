@@ -4,7 +4,7 @@ import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
 } from '../../dtos/create-car-order.dto';
-import { CarOrderLogStatus, newDate } from '@shtifh/helpers';
+import { CarOrderLogStatus, CarOrderType, CarServiceType, newDate, PaymentMethod } from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
@@ -34,7 +34,7 @@ export class CreateCarOrderService {
     this.logger.log(`Create car order`);
 
     const service = await this.prismaService.service.findFirst({
-      where: { id: data.serviceId, type: 'PUBLIC' },
+      where: { id: data.serviceId },
     });
     const city = await this.prismaService.city.findFirst({
       where: { id: data.cityId },
@@ -59,7 +59,7 @@ export class CreateCarOrderService {
       throw this.httpErrorsService.serviceNotFound(data.serviceId, lang);
     }
 
-    if (service.type !== 'PUBLIC') {
+    if (service.type !== CarServiceType.PUBLIC) {
       throw this.httpErrorsService.serviceNotPublic(data.serviceId, lang);
     }
 
@@ -120,7 +120,7 @@ export class CreateCarOrderService {
       data: {
         amount: totalFees,
         carOrderId: carOrder.id,
-        payment_method: 'CREDIT_CARD',
+        payment_method: PaymentMethod.CREDIT_CARD,
         transaction_id: paymentIntent.signature,
       },
     });
@@ -141,7 +141,7 @@ export class CreateCarOrderService {
     });
 
     const service = await this.prismaService.service.findFirst({
-      where: { id: data.serviceId, type: 'PRIVATE' },
+      where: { id: data.serviceId },
     });
 
     if (!city) {
@@ -152,7 +152,7 @@ export class CreateCarOrderService {
       throw this.httpErrorsService.serviceNotFound(data.serviceId, lang);
     }
 
-    if (service.type !== 'PRIVATE') {
+    if (service.type !== CarOrderType.PRIVATE) {
       throw this.httpErrorsService.serviceNotPublic(data.serviceId, lang);
     }
 

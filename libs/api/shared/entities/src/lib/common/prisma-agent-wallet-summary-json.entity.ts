@@ -1,7 +1,7 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class PrismaEmployeeWalletSummaryJsonEntity {
+export class PrismaAgentWalletSummaryJsonEntity {
   @Field(() => Float)
   total_tips!: number;
 

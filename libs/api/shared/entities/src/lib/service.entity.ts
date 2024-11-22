@@ -1,8 +1,8 @@
-import { Field, registerEnumType, ObjectType } from '@nestjs/graphql';
-import { $Enums, Service } from '@prisma/client';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Service } from '@prisma/client';
+import { CarServiceType } from '@shtifh/helpers';
 import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
 
-registerEnumType($Enums.ServiceType, { name: 'ServiceType' });
 
 @ObjectType()
 export class ServiceEntity implements Service {
@@ -12,8 +12,8 @@ export class ServiceEntity implements Service {
   @Field(() => PrismaNameJsonEntity)
   name!: PrismaNameJsonEntity;
 
-  @Field(() => String)
-  type!: $Enums.ServiceType;
+  @Field(() => Int)
+  type!: CarServiceType;
 
   @Field(() => String, { nullable: true })
   image_url!: string | null;

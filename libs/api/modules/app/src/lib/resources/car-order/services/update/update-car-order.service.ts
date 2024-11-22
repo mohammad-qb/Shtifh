@@ -4,6 +4,7 @@ import { UpdateNormalCarOrderInput } from '../../dtos/update-car-order.dto';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
 import { DateAccessService } from '@shtifh/date-access-service';
+import { CarOrderType, PaymentMethod } from '@shtifh/helpers';
 
 @Injectable()
 export class UpdateCarOrderService {
@@ -33,7 +34,7 @@ export class UpdateCarOrderService {
     });
 
     if (!carOrder) {
-      throw this.httpErrorsService.orderNotFound(carOrderId, lang);
+      throw this.httpErrorsService.carOrderNotFound(carOrderId, lang);
     }
 
     if (carOrder.customerId !== customerId) {
@@ -43,7 +44,7 @@ export class UpdateCarOrderService {
       );
     }
 
-    if (carOrder.type !== 'NORMAL') {
+    if (carOrder.type !== CarOrderType.NORMAL) {
       throw this.httpErrorsService.orderNotNormalType(carOrderId, lang);
     }
 
@@ -103,7 +104,7 @@ export class UpdateCarOrderService {
       data: {
         amount: totalFees,
         carOrderId: carOrder.id,
-        payment_method: 'CREDIT_CARD',
+        payment_method: PaymentMethod.CREDIT_CARD,
         transaction_id: paymentIntent.signature,
       },
     });
