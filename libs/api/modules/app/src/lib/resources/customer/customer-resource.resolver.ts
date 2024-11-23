@@ -2,7 +2,10 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CustomerResourceService } from './customer-resource.service';
 import { Logger } from '@nestjs/common';
 import { CreateCustomerInput } from './dtos/create-customer.dto';
-import { GqlLang, HeaderLanguage } from '@shtifh/decorators';
+import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
+import { UpdateCustomerInput } from './dtos/update-customer.input';
+import { User } from '@prisma/client';
+import { UserPayload } from '@shtifh/user-service';
 
 @Resolver()
 export class CustomerResourceResolver {
@@ -18,5 +21,14 @@ export class CustomerResourceResolver {
     @GqlLang() lang: HeaderLanguage
   ) {
     return await this.CustomerResourceService.create(lang, input);
+  }
+
+  @Mutation(() => Boolean, { name: 'updateCustomer' })
+  async updateCustomer(
+    @Args('UpdateCustomerInput') input: UpdateCustomerInput,
+    @GqlLang() lang: HeaderLanguage,
+    @GqlUser() user: UserPayload
+  ) {
+    return await this.CustomerResourceService.update(user.userId, lang, input);
   }
 }

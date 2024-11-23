@@ -78,41 +78,74 @@ export class HttpErrorsService {
 
   orderNotBelongToCustomer(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Order with id ${id} not belong to customer`);
-    return new BadRequestException(httpErrorMessages.__order_not_belong_to_customer[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__order_not_belong_to_customer[lang]
+    );
   }
 
   orderNotNormalType(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Order with id ${id} is not normal type`);
-    return new BadRequestException(httpErrorMessages.__order_not_normal_type[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__order_not_normal_type[lang]
+    );
   }
 
-  serviceNotAvailableForCity(serviceId: string, cityId: string, lang: HeaderLanguage = 'en') {
-    this.logger.error(`Service with id ${serviceId} is not available for city with id ${cityId}`);
-    return new BadRequestException(httpErrorMessages.__service_not_available_for_city[lang]);
+  serviceNotAvailableForCity(
+    serviceId: string,
+    cityId: string,
+    lang: HeaderLanguage = 'en'
+  ) {
+    this.logger.error(
+      `Service with id ${serviceId} is not available for city with id ${cityId}`
+    );
+    return new BadRequestException(
+      httpErrorMessages.__service_not_available_for_city[lang]
+    );
   }
 
-  serviceNotAvailableForCarModel(serviceId: string, carModelId: string, lang: HeaderLanguage = 'en') {
-    this.logger.error(`Service with id ${serviceId} is not available for car model with id ${carModelId}`);
-    return new BadRequestException(httpErrorMessages.__service_not_available_for_car_model[lang]);
+  serviceNotAvailableForCarModel(
+    serviceId: string,
+    carModelId: string,
+    lang: HeaderLanguage = 'en'
+  ) {
+    this.logger.error(
+      `Service with id ${serviceId} is not available for car model with id ${carModelId}`
+    );
+    return new BadRequestException(
+      httpErrorMessages.__service_not_available_for_car_model[lang]
+    );
   }
 
   carWashOrderNotFound(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Car wash order with id ${id} not found`);
-    return new NotFoundException(httpErrorMessages.__car_wash_order_not_found[lang]);
+    return new NotFoundException(
+      httpErrorMessages.__car_wash_order_not_found[lang]
+    );
   }
 
   carWashOrderAlreadyCancelled(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Car wash order with id ${id} already cancelled`);
-    return new BadRequestException(httpErrorMessages.__car_wash_order_already_cancelled[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_cancelled[lang]
+    );
   }
 
   carOrderNotBelongToAgent(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Car order with id ${id} not belong to agent`);
-    return new BadRequestException(httpErrorMessages.__car_order_not_belong_to_agent[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__car_order_not_belong_to_agent[lang]
+    );
   }
 
   carOrderAlreadyCancelled(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Car order with id ${id} already cancelled`);
-    return new BadRequestException(httpErrorMessages.__car_order_already_cancelled[lang]);
+    return new BadRequestException(
+      httpErrorMessages.__car_order_already_cancelled[lang]
+    );
+  }
+
+  otpIncorrect(otpCode: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Otp incorrect (${otpCode})`);
+    return new BadRequestException(httpErrorMessages.__otp_incorrect[lang]);
   }
 }

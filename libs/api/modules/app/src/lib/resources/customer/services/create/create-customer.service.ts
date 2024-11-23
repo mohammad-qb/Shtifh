@@ -4,6 +4,7 @@ import { HttpErrorsService } from '@shtifh/exception-service';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCustomerInput } from '../../dtos/create-customer.dto';
 import { generateImageUrl } from '../../../../common/helpers/generate-image-url';
+import { UserService } from '@shtifh/user-service';
 
 @Injectable()
 export class CreateCustomerService {
@@ -11,7 +12,8 @@ export class CreateCustomerService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly httpErrorsService: HttpErrorsService,
+    private userService: UserService
   ) {}
 
   async createCustomer(lang: HeaderLanguage, data: CreateCustomerInput) {
@@ -21,6 +23,10 @@ export class CreateCustomerService {
       where: { email: data.email },
     });
 
+    const password = await this.userService.resources.crypt.cryptPassword(
+      data.password
+    );
+
     if (user) throw this.httpErrorsService.emailAlreadyTaken(data.email, lang);
     const customer = await this.prismaService.customer.create({
       data: {
@@ -29,6 +35,7 @@ export class CreateCustomerService {
         user: {
           create: {
             ...userData,
+            password,
           },
         },
       },

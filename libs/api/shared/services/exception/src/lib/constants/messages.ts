@@ -98,5 +98,10 @@ export const httpErrorMessages = {
     ar: 'تم إلغاء الطلب بالفعل',
     en: 'Order already cancelled',
     he: 'ההזמנה כבר בוטלה'
-   }
+   },
+  __otp_incorrect: {
+    ar: '',
+    en: 'Otp incorrect',
+    he: ''
+  }
 }

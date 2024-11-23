@@ -11,7 +11,8 @@ export class ListCarsService {
     this.logger.log(`List all cars for customer ${customerId}`);
     const cars = await this.prismaService.car.findMany({
       where: {
-        customerId
+        customerId,
+        is_active: true
       },
       include: {
         brand: true,
