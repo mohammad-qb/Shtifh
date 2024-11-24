@@ -28,7 +28,7 @@ model Agent {
   position           Int[]
   salary             Float
   color              String
-  start_work_date    DateTime
+  start_work_date    DateTime @db.Date
   is_available       Boolean              @default(true)
   is_busy            Boolean              @default(false)
   coordinates        Float[] // lat and lon
@@ -42,7 +42,7 @@ model Agent {
 
 model BookedSlot {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  date       String // "2024-10-02"
+  date       DateTime @db.Date // "2024-10-02"
   time       String
   carOrder   CarOrder @relation(fields: [carOrderId], references: [id])
   carOrderId String   @db.ObjectId
@@ -115,7 +115,7 @@ model City {
 model CarOrder {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   ref_number  String
-  order_date  DateTime?
+  order_date  DateTime?   @db.Date
   order_time  String?
   fees        Float
   tips        Float

@@ -61,3 +61,13 @@ export enum PaymentStatus {
   COMPLETED,
   CANCELED
 }
+
+export enum Day {
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY
+}
