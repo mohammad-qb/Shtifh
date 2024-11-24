@@ -14,6 +14,13 @@ export class ListCityAvailableSlotsService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Lists available time slots for a given city on a specific date.
+   *
+   * @param {ListCityAvailableSlotsInput} data - The input data containing cityId and date.
+   * @param {HeaderLanguage} lang - The language for error messages and logging.
+   * @return {Promise<string[]>} - A promise that resolves to an array of available time slots.
+   */
   async listAvailableSlots(
     data: ListCityAvailableSlotsInput,
     lang: HeaderLanguage

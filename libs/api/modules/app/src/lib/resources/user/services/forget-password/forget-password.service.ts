@@ -22,6 +22,13 @@ export class ForgetPasswordService {
     });
   }
 
+  /**
+   * Initiates the password reset process by generating a reset code and sending it to the user's email.
+   *
+   * @param {string} email - The email address of the user requesting the password reset.
+   * @param {HeaderLanguage} lang - The language preference for any error messages.
+   * @return {Promise<boolean>} - Returns a promise that resolves to true if the process is successful.
+   */
   async forgetPassword(email: string, lang: HeaderLanguage) {
     this.logger.log(`Forget password for user ${email}`);
 

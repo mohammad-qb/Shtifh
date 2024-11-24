@@ -103,5 +103,15 @@ export const httpErrorMessages = {
     ar: '',
     en: 'Otp incorrect',
     he: ''
+  },
+  __notification_not_found: {
+    ar: 'ال��شعار ��ير موجود',
+    en: 'Notification not found',
+    he: 'ההתראה לא ��מצאה'
+  },
+  __notification_already_read: {
+    ar: 'الشعار مقرو�� من قبل',
+    en: 'Notification already read',
+    he: 'ההתראה כבר ��קראה'
   }
 }

@@ -13,6 +13,15 @@ export class VerifyResetPasswordOtpService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Verifies the reset password OTP code for a user.
+   *
+   * @param {VerifyResetPasswordOtpInput} data - The input data containing the user's email and reset password code.
+   * @param {HeaderLanguage} lang - The language header to be used for error messages.
+   * @return {Promise<User>} The user object if the OTP verification is successful.
+   * @throws {UserNotFoundError} If the user with the provided email does not exist.
+   * @throws {OtpIncorrectError} If the provided reset password code is incorrect.
+   */
   async verifyResetPasswordOtp(
     data: VerifyResetPasswordOtpInput,
     lang: HeaderLanguage

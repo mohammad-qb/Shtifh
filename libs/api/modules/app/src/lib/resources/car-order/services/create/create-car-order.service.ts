@@ -25,6 +25,19 @@ export class CreateCarOrderService {
     this.hyPay = this.dataAccessService.resources.hyPay;
   }
 
+  /**
+   * Creates a normal car order for a given customer and user.
+   * This process involves verifying user, city, and service details,
+   * calculating fees including accessories and tips, generating a
+   * reference number, logging the order, and initiating a payment intent.
+   *
+   * @param {string} customerId - The ID of the customer placing the order.
+   * @param {string} userId - The ID of the user placing the order.
+   * @param {HeaderLanguage} lang - The language for error messages and notifications.
+   * @param {CreateNormalCarOrderInput} data - The order details, including service, city, accessories, and other relevant information.
+   * @return {Promise<string>} - A promise that resolves to the URL of the payment intent.
+   * @throws Will throw an error if any verification fails, including user not found, city not found, service not found, or if the service is not public or available.
+   */
   async createNormalOrder(
     customerId: string,
     userId: string,
@@ -129,6 +142,14 @@ export class CreateCarOrderService {
     return paymentIntent.url;
   }
 
+  /**
+   * Creates a private car order for a given customer.
+   *
+   * @param {string} customerId - The ID of the customer creating the order.
+   * @param {HeaderLanguage} lang - The language header for the request.
+   * @param {CreatePrivateCarOrderInput} data - The input data for creating the car order.
+   * @return {Promise<boolean>} A promise resolving to a boolean indicating the success of the operation.
+   */
   async createPrivateOrder(
     customerId: string,
     lang: HeaderLanguage,

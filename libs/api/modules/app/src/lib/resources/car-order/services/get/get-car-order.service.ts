@@ -12,6 +12,15 @@ export class GetCarOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Retrieves a car order based on the provided customer ID and car order ID.
+   *
+   * @param {string} customerId - The ID of the customer.
+   * @param {string} carOrderId - The ID of the car order.
+   * @param {HeaderLanguage} lang - The language preference for error messages.
+   * @return {Promise<Object>} The car order details, including car model, brand, and agent information.
+   * @throws Will throw an error if the car order is not found.
+   */
   async getCarOrderById(
     customerId: string,
     carOrderId: string,

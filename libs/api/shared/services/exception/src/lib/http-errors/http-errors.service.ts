@@ -148,4 +148,18 @@ export class HttpErrorsService {
     this.logger.error(`Otp incorrect (${otpCode})`);
     return new BadRequestException(httpErrorMessages.__otp_incorrect[lang]);
   }
+
+  notificationNotFound(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Notification with id ${id} not found`);
+    return new NotFoundException(
+      httpErrorMessages.__notification_not_found[lang]
+    );
+  }
+
+  notificationAlreadyRead(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Notification with id ${id} already read`);
+    return new BadRequestException(
+      httpErrorMessages.__notification_already_read[lang]
+    );
+  }
 }

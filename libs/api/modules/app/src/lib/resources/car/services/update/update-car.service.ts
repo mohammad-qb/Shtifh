@@ -13,6 +13,15 @@ export class UpdateCarService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Updates the details of a car owned by a specific customer.
+   *
+   * @param {string} customerId - The ID of the customer who owns the car.
+   * @param {HeaderLanguage} lang - The language preference for error messages.
+   * @param {UpdateCarInput} data - The data containing the car ID and fields to be updated.
+   * @return {Promise<Object>} The updated car object.
+   * @throws Will throw an error if the car is not found or does not belong to the specified customer.
+   */
   async updateCar(customerId: string, lang: HeaderLanguage, data: UpdateCarInput) {
     const {carId, ...restArgs} = data;
     this.logger.log(`Update car for customer ${customerId}`);

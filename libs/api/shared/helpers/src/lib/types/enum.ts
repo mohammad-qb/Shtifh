@@ -71,3 +71,11 @@ export enum Day {
   FRIDAY,
   SATURDAY
 }
+
+export enum NotificationType {
+  CAR_ORDER_STATUS_CHANGE,
+  EXPRESS_CAR_WASH_ORDER_STATUS_CHANGE,
+  ORDER_REMINDER,
+  OFFER,
+  ADMIN_MESSAGE
+}

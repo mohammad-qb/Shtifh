@@ -15,6 +15,14 @@ export class ResetPasswordService {
     private readonly userService: UserService
   ) {}
 
+  /**
+   * Resets the password for a given user.
+   *
+   * @param {ResetPasswordInput} data - The input data required for resetting the password, including the user's email and new password.
+   * @param {HeaderLanguage} lang - The language preference for error messages.
+   * @return {Promise<Object>} - A promise that resolves to the updated user object after the password has been successfully reset.
+   * @throws Will throw an error if the user is not found.
+   */
   async resetPassword(data: ResetPasswordInput, lang: HeaderLanguage) {
     this.logger.log(`Reset password for ${data.email}`);
 

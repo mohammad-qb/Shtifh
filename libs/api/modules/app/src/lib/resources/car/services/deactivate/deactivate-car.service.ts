@@ -9,6 +9,14 @@ export class DeactivateCarService {
 
   constructor(private readonly prismaService: PrismaService, private readonly httpErrorsService: HttpErrorsService) {}
 
+  /**
+   * Deactivates a car for a given customer.
+   *
+   * @param {string} customerId - The ID of the customer who owns the car.
+   * @param {string} carId - The ID of the car to be deactivated.
+   * @param {HeaderLanguage} lang - The language preference for error messages.
+   * @return {Promise<boolean>} A promise that resolves to `true` if the car was successfully deactivated.
+   */
   async deactivate(customerId: string, carId: string, lang: HeaderLanguage) {
     this.logger.log(`Deactivate car ${carId} for customer ${customerId}`);
     const car = await this.prismaService.car.findFirst({where: {id: carId, customerId}});

@@ -24,20 +24,20 @@ model Accessory {
 }
 
 model Agent {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  position           Int[]
-  salary             Float
-  color              String
-  start_work_date    DateTime @db.Date
-  is_available       Boolean              @default(true)
-  is_busy            Boolean              @default(false)
-  coordinates        Float[] // lat and lon
+  id                     String                @id @default(auto()) @map("_id") @db.ObjectId
+  position               Int[]
+  salary                 Float
+  color                  String
+  start_work_date        DateTime              @db.Date
+  is_available           Boolean               @default(true)
+  is_busy                Boolean               @default(false)
+  coordinates            Float[] // lat and lon
   /// [AgentWalletSummaryJson]
-  wallet_summary     Json // {total_tips: 0, total_orders_earn: 0}
-  user               User                 @relation(fields: [userId], references: [id])
-  userId             String               @db.ObjectId
-  carOrders          CarOrder[]
-  ExpressCrWashOrder ExpressCrWashOrder[]
+  wallet_summary         Json // {total_tips: 0, total_orders_earn: 0}
+  user                   User                  @relation(fields: [userId], references: [id])
+  userId                 String                @db.ObjectId
+  carOrders              CarOrder[]
+  express_car_wash_order ExpressCarWashOrder[]
 }
 
 model BookedSlot {
@@ -49,33 +49,33 @@ model BookedSlot {
 }
 
 model Customer {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  image_url          String
-  gender             Int
-  is_removed         Boolean              @default(false)
-  user               User                 @relation(fields: [userId], references: [id])
-  userId             String               @db.ObjectId
-  cars               Car[]
-  carOrders          CarOrder[]
-  ExpressCrWashOrder ExpressCrWashOrder[]
+  id                     String                @id @default(auto()) @map("_id") @db.ObjectId
+  image_url              String
+  gender                 Int
+  is_removed             Boolean               @default(false)
+  user                   User                  @relation(fields: [userId], references: [id])
+  userId                 String                @db.ObjectId
+  cars                   Car[]
+  carOrders              CarOrder[]
+  express_car_wash_order ExpressCarWashOrder[]
 }
 
 model Car {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  plate_number       String
-  year               Int
-  color              String
-  is_active          Boolean              @default(true)
-  brand              CarBrand             @relation(fields: [carBrandId], references: [id])
-  model              CarModel             @relation(fields: [carModelId], references: [id])
-  customer           Customer             @relation(fields: [customerId], references: [id])
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt()
-  customerId         String               @db.ObjectId
-  carBrandId         String               @db.ObjectId
-  carModelId         String               @db.ObjectId
-  carOrders          CarOrder[]
-  ExpressCrWashOrder ExpressCrWashOrder[]
+  id                     String                @id @default(auto()) @map("_id") @db.ObjectId
+  plate_number           String
+  year                   Int
+  color                  String
+  is_active              Boolean               @default(true)
+  brand                  CarBrand              @relation(fields: [carBrandId], references: [id])
+  model                  CarModel              @relation(fields: [carModelId], references: [id])
+  customer               Customer              @relation(fields: [customerId], references: [id])
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt()
+  customerId             String                @db.ObjectId
+  carBrandId             String                @db.ObjectId
+  carModelId             String                @db.ObjectId
+  car_orders             CarOrder[]
+  express_car_wash_order ExpressCarWashOrder[]
 }
 
 model CarBrand {
@@ -113,37 +113,37 @@ model City {
 }
 
 model CarOrder {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  ref_number  String
-  order_date  DateTime?   @db.Date
-  order_time  String?
-  fees        Float
-  tips        Float
-  note        String?
-  address     String
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  ref_number   String
+  order_date   DateTime?    @db.Date
+  order_time   String?
+  fees         Float
+  tips         Float
+  note         String?
+  address      String
   /// [CarOrderLogJson]
-  logs        Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
+  logs         Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
   /// [CarOrderAccessoriesJson]
-  accessories Json[] // {accessoryId: "", quantity: 0}
-  type        Int          @default(0)
-  service     Service      @relation(fields: [serviceId], references: [id])
-  car         Car          @relation(fields: [carId], references: [id])
-  customer    Customer     @relation(fields: [customerId], references: [id])
-  agent       Agent?       @relation(fields: [agentId], references: [id])
-  city        City         @relation(fields: [cityId], references: [id])
-  coordinates Float[] // lat and lon
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt()
-  carId       String       @db.ObjectId
-  customerId  String       @db.ObjectId
-  cityId      String       @db.ObjectId
-  serviceId   String       @db.ObjectId
-  agentId     String?      @db.ObjectId
-  payments    Payment[]
-  bookedSlots BookedSlot[]
+  accessories  Json[] // {accessoryId: "", quantity: 0}
+  type         Int          @default(0)
+  service      Service      @relation(fields: [serviceId], references: [id])
+  car          Car          @relation(fields: [carId], references: [id])
+  customer     Customer     @relation(fields: [customerId], references: [id])
+  agent        Agent?       @relation(fields: [agentId], references: [id])
+  city         City         @relation(fields: [cityId], references: [id])
+  coordinates  Float[] // lat and lon
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt()
+  carId        String       @db.ObjectId
+  customerId   String       @db.ObjectId
+  cityId       String       @db.ObjectId
+  serviceId    String       @db.ObjectId
+  agentId      String?      @db.ObjectId
+  payments     Payment[]
+  booked_slots BookedSlot[]
 }
 
-model ExpressCrWashOrder {
+model ExpressCarWashOrder {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   ref_number  String
   fees        Float
@@ -162,18 +162,39 @@ model ExpressCrWashOrder {
   payments    Payment[]
 }
 
+model Notification {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  type          Int           @default(1)
+  message       String
+  createdAt     DateTime      @default(now())
+  userId        String?       @db.ObjectId // Nullable field to link private notifications to a user
+  user          User?         @relation(fields: [userId], references: [id])
+  read_receipts ReadReceipt[] // Relation field to track read receipts
+}
+
 model Payment {
-  id                   String              @id @default(auto()) @map("_id") @db.ObjectId
-  payment_method       Int                 @default(1)
-  amount               Float
-  transaction_id       String?
-  status               Int                 @default(0)
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt()
-  CarOrder             CarOrder?           @relation(fields: [carOrderId], references: [id])
-  carOrderId           String?             @db.ObjectId
-  ExpressCrWashOrder   ExpressCrWashOrder? @relation(fields: [expressCrWashOrderId], references: [id])
-  expressCrWashOrderId String?             @db.ObjectId
+  id                     String               @id @default(auto()) @map("_id") @db.ObjectId
+  payment_method         Int                  @default(1)
+  amount                 Float
+  transaction_id         String?
+  status                 Int                  @default(0)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt()
+  car_order              CarOrder?            @relation(fields: [carOrderId], references: [id])
+  carOrderId             String?              @db.ObjectId
+  express_car_wash_order ExpressCarWashOrder? @relation(fields: [expressCarWashOrderId], references: [id])
+  expressCarWashOrderId  String?              @db.ObjectId
+}
+
+model ReadReceipt {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String       @db.ObjectId
+  notificationId String       @db.ObjectId
+  readAt         DateTime     @default(now())
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([userId, notificationId]) // Ensures that each user can only have one read receipt per notification
 }
 
 model Service {
@@ -189,26 +210,19 @@ model Service {
 }
 
 model User {
-  id                  String     @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String         @id @default(auto()) @map("_id") @db.ObjectId
   full_name           String
-  email               String     @unique
+  email               String         @unique
   phone               String
   password            String
-  is_blocked          Boolean    @default(false)
-  language            Int        @default(0)
+  is_blocked          Boolean        @default(false)
+  language            Int            @default(0)
   reset_password_code String?
-  role                Int        @default(1)
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt()
+  role                Int            @default(1)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt()
   agent               Agent[]
   customers           Customer[]
-}
-
-//* Enums
-
-enum Day {
-  SUNDAY
-  MONDAY
-  TUESDAY
-  WEDNESDAY
+  ReadReceipt         ReadReceipt[]
+  Notification        Notification[]
 }

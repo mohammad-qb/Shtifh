@@ -7,6 +7,13 @@ export class ListCitiesService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Retrieves a list of all cities, performing an aggregation
+   * lookup to include related service information from the Service collection.
+   *
+   * @return {Promise<Array>} A promise that resolves to an array of cities, each
+   *                          with embedded service data from the Service collection.
+   */
   async listCities() {
     this.logger.log(`List all cities`);
     const cities = await this.prismaService.city.aggregateRaw({

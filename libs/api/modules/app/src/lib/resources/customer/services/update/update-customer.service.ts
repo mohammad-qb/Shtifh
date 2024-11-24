@@ -13,6 +13,15 @@ export class UpdateCustomerService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Updates the customer information for the given user ID with the provided data.
+   *
+   * @param {string} userId - The ID of the user whose information is to be updated.
+   * @param {UpdateCustomerInput} data - The new customer information to update.
+   * @param {HeaderLanguage} lang - The language header for error messages.
+   * @return {Promise<User>} A promise that resolves to the updated user information.
+   * @throws {UserNotFoundException} If no user is found with the given ID.
+   */
   async updateCustomer(
     userId: string,
     data: UpdateCustomerInput,

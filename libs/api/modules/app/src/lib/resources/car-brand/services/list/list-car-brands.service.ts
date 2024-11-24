@@ -7,6 +7,11 @@ export class ListCarBrandsService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Lists all car brands available in the database.
+   *
+   * @return {Promise<Array>} A promise that resolves to an array of car brands.
+   */
   async listCarBrands(){
     this.logger.log(`List all car brands`);
     const carBrands = await this.prismaService.carBrand.findMany();

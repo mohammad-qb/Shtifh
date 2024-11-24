@@ -19,6 +19,14 @@ export class UpdateCarOrderService {
     this.hyPay = this.dataAccessService.resources.hyPay;
   }
 
+  /**
+   * Updates a normal car order for a given customer.
+   *
+   * @param {string} customerId - The ID of the customer making the request.
+   * @param {UpdateNormalCarOrderInput} data - The data to update the car order.
+   * @param {HeaderLanguage} lang - The language for error messages and other localized content.
+   * @return {Promise<{paymentLink: string | null}>} - A promise that resolves to an object containing a payment link if additional fees are required, otherwise null.
+   */
   async updateNormalCarOrder(
     customerId: string,
     data: UpdateNormalCarOrderInput,

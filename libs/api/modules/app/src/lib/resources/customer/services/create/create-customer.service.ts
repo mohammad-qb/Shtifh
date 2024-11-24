@@ -16,6 +16,13 @@ export class CreateCustomerService {
     private userService: UserService
   ) {}
 
+  /**
+   * Creates a new customer using the provided data.
+   *
+   * @param {HeaderLanguage} lang - The language header for error messages.
+   * @param {CreateCustomerInput} data - The input data for creating the customer.
+   * @return {Promise<object>} The created customer object.
+   */
   async createCustomer(lang: HeaderLanguage, data: CreateCustomerInput) {
     this.logger.log(`Create customer`, data);
     const { gender, ...userData } = data;

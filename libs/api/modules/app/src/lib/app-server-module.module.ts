@@ -6,7 +6,7 @@ import { CarResourceModule } from './resources/car/car-resource.module';
 import { CityResourceModule } from './resources/city/city-resource.module';
 import { CustomerResourceModule } from './resources/customer/customer-resource.module';
 import { UserResourceModule } from './resources/user/user-resource.module';
-import {PrismaModule} from '@shtifh/prisma-service';
+import { PrismaModule } from '@shtifh/prisma-service';
 import { ApolloServerPlugin } from '@apollo/server';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -27,6 +27,7 @@ import {
 import { LoggerPlugin } from '@shtifh/plugins';
 import { join } from 'path';
 import { EnvModule } from '@shtifh/env-service';
+import { NotificationResourceModule } from './resources/notification/notification-resource.module';
 
 const GRAPHQL_MODULES = [
   AccessoryResourceModule,
@@ -36,6 +37,7 @@ const GRAPHQL_MODULES = [
   CarOrderResourceModule,
   CityResourceModule,
   CustomerResourceModule,
+  NotificationResourceModule,
   UserResourceModule,
 ];
 
