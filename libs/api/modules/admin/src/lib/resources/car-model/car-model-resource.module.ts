@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '@shtifh/prisma-service';
-import { UserModule } from '@shtifh/user-service';
-import { CarModelResourceController } from './car-model-resource.controller';
-import { CarModelResourceService } from './car-model-resource.service';
+import { AdminCarModelResourceService } from './car-model-resource.service';
+import { AdminCarModelResourceResolver } from './car-model-resource.resolver';
 
 @Module({
-  imports: [PrismaModule, UserModule],
-  controllers: [CarModelResourceController],
-  providers: [CarModelResourceController, CarModelResourceService],
-  exports: [CarModelResourceController, CarModelResourceService],
+  imports: [],
+  providers: [AdminCarModelResourceService, AdminCarModelResourceResolver],
+  exports: [AdminCarModelResourceResolver],
 })
-export class CarModelResourceModule {}
+export class AdminCarModelResourceModule {}

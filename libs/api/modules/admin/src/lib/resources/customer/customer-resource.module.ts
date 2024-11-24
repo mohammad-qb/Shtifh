@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from '@shtifh/prisma-service';
-import { UserModule } from '@shtifh/user-service';
-import { CustomerResourceController } from './customer-resource.controller';
-import { CustomerResourceService } from './customer-resource.service';
+import { AdminCustomerResourceService } from './customer-resource.service';
+import { AdminCustomerResourceResolver } from './customer-resource.resolver';
 
 @Module({
-  imports: [PrismaModule, UserModule],
-  controllers: [CustomerResourceController],
-  providers: [CustomerResourceController, CustomerResourceService],
-  exports: [CustomerResourceController, CustomerResourceService],
+  imports: [],
+  providers: [AdminCustomerResourceService, AdminCustomerResourceResolver],
+  exports: [AdminCustomerResourceResolver],
 })
-export class CustomerResourceModule {}
+export class AdminCustomerResourceModule {}
