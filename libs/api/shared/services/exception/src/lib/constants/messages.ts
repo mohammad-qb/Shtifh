@@ -113,5 +113,10 @@ export const httpErrorMessages = {
     ar: 'الشعار مقرو�� من قبل',
     en: 'Notification already read',
     he: 'ההתראה כבר ��קראה'
+  },
+  __agent_not_found: {
+    ar: 'الوكيل ��ير موجود',
+    en: 'Agent not found',
+    he: 'ה��ו���� לא ��מצא'
   }
 }

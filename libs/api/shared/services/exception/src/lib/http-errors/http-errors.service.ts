@@ -162,4 +162,9 @@ export class HttpErrorsService {
       httpErrorMessages.__notification_already_read[lang]
     );
   }
+
+  agentNotFound(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Agent with id ${id} not found`);
+    return new NotFoundException(httpErrorMessages.__agent_not_found[lang]);
+  }
 }
