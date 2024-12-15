@@ -4,6 +4,9 @@ import { NotificationResourceService } from './notification-resource.service';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { MakeNotificationReadInput } from './inputs/make-notification-read.input';
 import { UserPayload } from '@shtifh/user-service';
+import {
+  ListNotificationsEntity
+} from './entities/list-notifications.entity';
 
 @Resolver()
 export class NotificationResourceResolver {
@@ -13,7 +16,7 @@ export class NotificationResourceResolver {
     private readonly notificationResourceService: NotificationResourceService
   ) {}
 
-  @Query(() => [Notification], { name: 'notifications' })
+  @Query(() => [ListNotificationsEntity], { name: 'notifications' })
   async list(@GqlUser() user: UserPayload) {
     return await this.notificationResourceService.list(user.userId);
   }

@@ -49,6 +49,11 @@ enum CarOrderLogStatus {
   CANCELED_BY_AGENT
 }
 
+type PrismaCityUnavailableSlots {
+  start_time: String!
+  end_time: String!
+}
+
 type PrismaCityGlobalScheduleJsonEntity {
   start_time: String!
   end_time: String!
@@ -67,9 +72,10 @@ type PrismaCityMonthlyScheduleJsonEntity {
 type PrismaCityRecurringScheduleJsonEntity {
   start_time: String!
   end_time: String!
-  date: String!
+  day: Int!
   requests_in_hour: Float!
   is_off: Boolean!
+  unavailable_slots: [PrismaCityUnavailableSlots!]!
 }
 
 type PrismaCityDailyScheduleJsonEntity {
@@ -78,6 +84,7 @@ type PrismaCityDailyScheduleJsonEntity {
   date: String!
   requests_in_hour: Float!
   is_off: Boolean!
+  unavailable_slots: [PrismaCityUnavailableSlots!]!
 }
 
 type PrismaCityScheduleJsonEntity {
@@ -194,6 +201,14 @@ type AuthUserEntity {
   role: Int!
 }
 
+type ListNotificationsEntity {
+  id: String!
+  type: Int!
+  message: String!
+  createdAt: DateTime!
+  userId: String
+}
+
 type Query {
   accessories: [ListAccessoriesEntity!]!
   cars: [ListCarsEntity!]!
@@ -202,11 +217,19 @@ type Query {
   carOrders: [ListCarOrdersEntity!]!
   carOrder(GetCarOrderByIdInput: GetCarOrderByIdInput!): ListCarOrdersEntity!
   cities: [ListCitiesEntity!]!
+  listCityAvailableSlots(ListCityAvailableSlotsInput: ListCityAvailableSlotsInput!): [String!]!
+  notifications: [ListNotificationsEntity!]!
+  checkMissedNotifications: Boolean!
   me: AuthUserEntity!
 }
 
 input GetCarOrderByIdInput {
   carOrderId: String!
+}
+
+input ListCityAvailableSlotsInput {
+  cityId: String!
+  date: String!
 }
 
 type Mutation {
@@ -217,7 +240,12 @@ type Mutation {
   createNormalCarOrder(CreateNormalCarOrderInput: CreateNormalCarOrderInput!): String!
   updateNormalCarOrder(UpdateNormalCarOrderInput: UpdateNormalCarOrderInput!): UpdateNormalCarOrderEntity!
   createCustomer(CreateCustomerInput: CreateCustomerInput!): Boolean!
+  updateCustomer(UpdateCustomerInput: UpdateCustomerInput!): Boolean!
+  makeNotificationRead(makeNotificationReadInput: MakeNotificationReadInput!): Boolean!
   login(LoginInput: LoginInput!): AuthUserEntity!
+  forgetPassword(ForgetPasswordInput: ForgetPasswordInput!): Boolean!
+  resetPassword(ResetPasswordInput: ResetPasswordInput!): Boolean!
+  verifyResetPasswordOtp(VerifyResetPasswordOtpInput: VerifyResetPasswordOtpInput!): Boolean!
 }
 
 input CreateCarInput {
@@ -287,7 +315,31 @@ input CreateCustomerInput {
   gender: Int!
 }
 
+input UpdateCustomerInput {
+  full_name: String!
+  email: String!
+  phone: String!
+}
+
+input MakeNotificationReadInput {
+  notificationId: String!
+}
+
 input LoginInput {
   email: String!
   password: String!
+}
+
+input ForgetPasswordInput {
+  email: String!
+}
+
+input ResetPasswordInput {
+  email: String!
+  new_password: String!
+}
+
+input VerifyResetPasswordOtpInput {
+  email: String!
+  reset_password_code: String!
 }

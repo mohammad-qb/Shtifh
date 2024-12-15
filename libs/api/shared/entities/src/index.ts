@@ -8,4 +8,5 @@ export * from './lib/agent.entity';
 export * from './lib/service.entity';
 export * from './lib/user.entity';
 export * from './lib/accessory.entity';
+export * from './lib/notification.entity';
 export * from './lib/express-car-wash-order.entity';
