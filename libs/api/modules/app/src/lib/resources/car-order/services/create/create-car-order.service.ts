@@ -110,11 +110,11 @@ export class CreateCarOrderService {
         logs: [
           {
             status: CarOrderLogStatus.CREATED,
-            createdAt: newDate(),
+            createdAt: newDate().toDate(),
           },
           {
             status: CarOrderLogStatus.PENDING_PAYMENT,
-            createdAt: newDate(),
+            createdAt: newDate().toDate(),
           },
         ],
       },
@@ -191,7 +191,7 @@ export class CreateCarOrderService {
         logs: [
           {
             status: CarOrderLogStatus.CREATED,
-            createdAt: newDate(),
+            createdAt: newDate().toDate(),
           },
         ],
       },

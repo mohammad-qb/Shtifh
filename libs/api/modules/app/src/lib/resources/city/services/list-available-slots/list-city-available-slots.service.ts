@@ -118,7 +118,7 @@ export class ListCityAvailableSlotsService {
         slots.push(slot);
       }
 
-      currentTime = nextTime;
+      currentTime = nextTime.toString();
     }
 
     this.logger.log(

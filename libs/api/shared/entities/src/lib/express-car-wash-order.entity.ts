@@ -1,9 +1,9 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { ExpressCrWashOrder } from '@prisma/client';
+import { ExpressCarWashOrder } from '@prisma/client';
 import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
 
 @ObjectType()
-export class ExpressCatWashOrderEntity implements ExpressCrWashOrder {
+export class ExpressCatWashOrderEntity implements ExpressCarWashOrder {
   @Field(() => String)
   id!: string;
 
