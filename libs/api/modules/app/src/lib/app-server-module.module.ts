@@ -81,6 +81,7 @@ const APOLLO_PLUGINS: ApolloServerPlugin[] =
       formatError: apolloErrorFormatter,
       autoTransformHttpErrors: true,
       autoSchemaFile: join(process.cwd(), 'schema.gql'),
+      context: (args: { req: Request; res: Response }) => args,
     }),
   ],
   providers: [

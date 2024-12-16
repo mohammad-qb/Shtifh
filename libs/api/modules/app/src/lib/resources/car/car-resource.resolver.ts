@@ -1,14 +1,21 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CarResourceService } from './car-resource.service';
-import { Logger } from '@nestjs/common';
+import {
+  Logger,
+  UseGuards
+} from '@nestjs/common';
 import { CreateCarInput } from './dtos/create-car.dto';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UserPayload } from '@shtifh/user-service';
 import { UpdateCarInput } from './dtos/update-car.dto';
 import { ListCarsEntity } from './entities/list-cars.entity';
 import { DeactivateCarInput } from './dtos/deactivate-car.dto';
+import {
+  JwtAuthGuard
+} from '@shtifh/auth-service';
 
 @Resolver()
+@UseGuards(JwtAuthGuard)
 export class CarResourceResolver {
   private logger = new Logger(CarResourceResolver.name);
 

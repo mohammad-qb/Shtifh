@@ -24,6 +24,7 @@ export class AuthService {
    * @throws {Error} Throws an error if the email is not found or the password is invalid.
    */
   async login(email: string, password: string, lang: HeaderLanguage) {
+    this.logger.log(`Login attempt for ${email}`);
     const user = await this.prismaService.user.findFirst({ where: { email } });
 
     if (!user) {
@@ -40,6 +41,7 @@ export class AuthService {
       throw this.httpErrorsService.invalidPassword(lang);
     }
 
+    this.logger.log(`User successfully authenticated for email: ${email}`);
     return user;
   }
 
@@ -53,12 +55,14 @@ export class AuthService {
    * @throws {Error} If the user is not found.
    */
   async me(userId: string, lang: HeaderLanguage) {
+    this.logger.log(`Attempting to fetch the user with ID: ${userId}`);
     const user = await this.prismaService.user.findFirst({
       where: { id: userId },
     });
     if (!user) {
       throw this.httpErrorsService.userNotFound(userId, lang);
     }
+    this.logger.log(`Successfully fetched the user with ID: ${userId}.`);
     return user;
   }
 }

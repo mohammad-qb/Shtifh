@@ -1,37 +1,63 @@
 import {
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from '@shtifh/user-service';
+import {
+  UserTokenService
+} from '../token/user-token.service';
+import {
+  IS_OPTIONAL_KEY
+} from '@shtifh/decorators';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private userService: UserService) {
+  private logger = new Logger(JwtAuthGuard.name);
+
+  constructor(
+    private readonly userTokenService: UserTokenService,
+    private reflector: Reflector,
+  ) {
     super();
   }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Directly obtain the request object from the HTTP context
-    const req = context.switchToHttp().getRequest();
+  override async canActivate(context: ExecutionContext): Promise<boolean> {
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+    const isOptional = this.reflector.get<boolean>(
+      IS_OPTIONAL_KEY,
+      context.getHandler(),
+    );
 
     const token = this.getToken(req);
     if (!token) {
-      throw new UnauthorizedException('No JWT token provided');
-    } else {
-      const decode = await this.userService.resources.jwt.verify(token);
-      if (decode) {
-        req.user = decode;
-        return true;
+      if (isOptional) {
+        return true; // Proceed without a user
+      } else {
+        throw new UnauthorizedException('No JWT token provided');
       }
     }
 
-    return false;
+    try {
+      const decode = await this.userTokenService.verify(token);
+      req.user = decode;
+      return true;
+    } catch (error) {
+      if (isOptional) {
+        return true; // Proceed without a user if token is invalid
+      } else {
+        throw new UnauthorizedException('Invalid token');
+      }
+    }
   }
 
   getToken(req: any): string | null {
     const authHeader = req.headers.authorization;
+    this.logger.log({ req: req.cookies });
     if (!authHeader) return null;
 
     const parts = authHeader.split(' ');
