@@ -8,6 +8,7 @@ import { AuthUserEntity } from './entities/auth-user.entity';
 import { ForgetPasswordInput } from './inputs/forget-password.input';
 import { ResetPasswordInput } from './inputs/reset-password.input';
 import { VerifyResetPasswordOtpInput } from './inputs/verify-reset-password-otp.input';
+import { ChangePasswordInput } from './inputs/change-password.input';
 
 @Resolver()
 export class UserResourceResolver {
@@ -45,6 +46,19 @@ export class UserResourceResolver {
     @GqlLang() lang: HeaderLanguage
   ) {
     return await this.UserResourceService.verifyResetPasswordOtp(input, lang);
+  }
+
+  @Mutation(() => Boolean, { name: 'changePassword' })
+  async changePassword(
+    @Args('ChangePasswordInput') input: ChangePasswordInput,
+    @GqlLang() lang: HeaderLanguage,
+    @GqlUser() user: UserPayload
+  ) {
+    return await this.UserResourceService.changePassword(
+      user.userId,
+      input,
+      lang
+    );
   }
 
   @Query(() => AuthUserEntity, { name: 'me' })

@@ -118,5 +118,10 @@ export const httpErrorMessages = {
     ar: 'الوكيل ��ير موجود',
     en: 'Agent not found',
     he: 'ה��ו���� לא ��מצא'
+  },
+  __agent_not_available: {
+    ar: 'الوكيل غير متوفر',
+    en: 'Agent not available',
+    he: 'ה��ו���� לא זמין'
   }
 }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import {
   GetSignatureDTO,
   paymentQueryData,
-  paymentURL
+  paymentURL,
 } from './entities/create-payment-intent.entity';
 
 @Injectable()
@@ -20,19 +20,23 @@ export class HyPayResourceService {
     this.HyMasOf = envService.get('HYPAYL_MASOF');
   }
 
-  async paymentIntent(args: GetSignatureDTO): Promise<paymentURL> {
-    const { amount, email, orderRefNumber, fullName, phone, lang, mode } = args;
+  async paymentIntent({
+    orderType = 'standard',
+    mode = 'create',
+    ...args
+  }: GetSignatureDTO): Promise<paymentURL> {
+    const { amount, email, orderRefNumber, fullName, phone, lang } = args;
     const [firstName, lastName] = fullName.split(' ');
 
     const paymentUrl = `${this.HyBaseUrl}?action=APISign&What=SIGN&KEY=${
       this.HyKey
     }&ClientName=${firstName || lastName}&ClientLName=${
       lastName || ''
-    }&PassP=yaad.net&Masof=${this.HyMasOf}&mode=${
-      mode || 'create'
-    }&Order=${orderRefNumber}&Info=Shitfh App&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=${
+    }&PassP=yaad.net&Masof=${
+      this.HyMasOf
+    }&mode=${mode}&Order=${orderRefNumber}&Info=Shitfh App&Amount=${amount}&UTF8=True&UTF8out=True&UserId=00000000&cell=${phone}&email=${email}&Tash=1&FixTash=False&ShowEngTashText=False&Coin=1&Postpone=False&J5=False&Sign=True&MoreData=True&sendemail=True&SendHesh=True&PageLang=${
       lang === 'he' ? 'HEB' : 'ENG'
-    }&tmp=5`;
+    }&tmp=5&orderType=${orderType}`;
 
     const { data } = await axios.get(paymentUrl);
 

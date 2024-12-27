@@ -41,6 +41,7 @@ type PrismaCarOrderLogJsonEntity {
 
 enum CarOrderLogStatus {
   CREATED
+  SEARCHING
   PENDING_PAYMENT
   IN_PROGRESS
   COMPLETED
@@ -104,6 +105,16 @@ type PrismaCityCarModelServiceJsonEntity {
 type PrismaAgentWalletSummaryJsonEntity {
   total_tips: Float!
   total_orders_earn: Float!
+}
+
+type ServiceEntity {
+  id: String!
+  name: PrismaNameJsonEntity!
+  type: Int!
+  image_url: String
+  is_active: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ListAccessoriesEntity {
@@ -209,6 +220,24 @@ type ListNotificationsEntity {
   userId: String
 }
 
+type ListExpressCarWashOrdersEntity {
+  id: String!
+  ref_number: String!
+  fees: Float!
+  tips: Int!
+  logs: [PrismaCarOrderLogJsonEntity!]!
+  coordinates: [Float!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  carId: String!
+  customerId: String!
+  agentId: String
+}
+
+type CreateExpressCarWashOrderEntity {
+  id: String!
+}
+
 type Query {
   accessories: [ListAccessoriesEntity!]!
   cars: [ListCarsEntity!]!
@@ -221,6 +250,8 @@ type Query {
   notifications: [ListNotificationsEntity!]!
   checkMissedNotifications: Boolean!
   me: AuthUserEntity!
+  listPrivateServices: [ServiceEntity!]!
+  listExpressCarWashOrders: [ListExpressCarWashOrdersEntity!]!
 }
 
 input GetCarOrderByIdInput {
@@ -246,6 +277,10 @@ type Mutation {
   forgetPassword(ForgetPasswordInput: ForgetPasswordInput!): Boolean!
   resetPassword(ResetPasswordInput: ResetPasswordInput!): Boolean!
   verifyResetPasswordOtp(VerifyResetPasswordOtpInput: VerifyResetPasswordOtpInput!): Boolean!
+  changePassword(ChangePasswordInput: ChangePasswordInput!): Boolean!
+  cancelExpressCarWashOrder(CancelExpressCarWashOrderInput: CancelExpressCarWashOrderInput!): Boolean!
+  createExpressCarWashOrder(CreateExpressCarWashOrderInput: CreateExpressCarWashOrderInput!): CreateExpressCarWashOrderEntity!
+  confirmExpressCarWashOrder(ConfirmExpressCarWashOrderInput: ConfirmExpressCarWashOrderInput!): Boolean!
 }
 
 input CreateCarInput {
@@ -342,4 +377,25 @@ input ResetPasswordInput {
 input VerifyResetPasswordOtpInput {
   email: String!
   reset_password_code: String!
+}
+
+input ChangePasswordInput {
+  current_password: String!
+  new_password: String!
+}
+
+input CancelExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
+}
+
+input CreateExpressCarWashOrderInput {
+  carId: String!
+  coordinates: [Float!]!
+}
+
+input ConfirmExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
+  agentId: String!
+  tips: String!
+  payment_method: Int!
 }

@@ -167,4 +167,11 @@ export class HttpErrorsService {
     this.logger.error(`Agent with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__agent_not_found[lang]);
   }
+
+  agentNotAvailable(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Agent with id ${id} not available`);
+    return new BadRequestException(
+      httpErrorMessages.__agent_not_available[lang]
+    );
+  }
 }

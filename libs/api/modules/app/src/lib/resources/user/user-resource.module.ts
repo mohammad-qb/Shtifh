@@ -5,6 +5,7 @@ import { AuthModule } from '@shtifh/auth-service';
 import { ForgetPasswordModule } from './services/forget-password/forget-password.module';
 import { ResetPasswordModule } from './services/reset-password/reset-password.module';
 import { VerifyResetPasswordOtpModule } from './services/verify-reset-password-otp/verify-reset-password-otp.module';
+import { ChangePasswordModule } from './services/change-password/change-password.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { VerifyResetPasswordOtpModule } from './services/verify-reset-password-o
     ForgetPasswordModule,
     ResetPasswordModule,
     VerifyResetPasswordOtpModule,
+    ChangePasswordModule
   ],
   providers: [UserResourceResolver, UserResourceService],
   exports: [UserResourceResolver],

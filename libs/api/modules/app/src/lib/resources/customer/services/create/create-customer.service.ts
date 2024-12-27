@@ -3,8 +3,8 @@ import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
 import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCustomerInput } from '../../dtos/create-customer.dto';
-import { generateImageUrl } from '../../../../common/helpers/generate-image-url';
 import { UserService } from '@shtifh/user-service';
+import { generateImageUrl } from '@shtifh/helpers';
 
 @Injectable()
 export class CreateCustomerService {

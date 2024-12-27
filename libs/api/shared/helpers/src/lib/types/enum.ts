@@ -1,5 +1,6 @@
 export enum CarOrderLogStatus {
   CREATED,
+  SEARCHING,
   PENDING_PAYMENT,
   IN_PROGRESS,
   COMPLETED,

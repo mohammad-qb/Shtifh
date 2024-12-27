@@ -7,6 +7,8 @@ import { ResetPasswordService } from './services/reset-password/reset-password.s
 import { ResetPasswordInput } from './inputs/reset-password.input';
 import { VerifyResetPasswordOtpService } from './services/verify-reset-password-otp/verify-reset-password-otp.service';
 import { VerifyResetPasswordOtpInput } from './inputs/verify-reset-password-otp.input';
+import { ChangePasswordService } from './services/change-password/change-password.service';
+import { ChangePasswordInput } from './inputs/change-password.input';
 
 @Injectable()
 export class UserResourceService {
@@ -16,7 +18,8 @@ export class UserResourceService {
     private readonly authService: AuthService,
     private readonly forgetPasswordService: ForgetPasswordService,
     private readonly resetPasswordService: ResetPasswordService,
-    private readonly verifyResetPasswordOtpService: VerifyResetPasswordOtpService
+    private readonly verifyResetPasswordOtpService: VerifyResetPasswordOtpService,
+    private readonly changePasswordService: ChangePasswordService
   ) {}
 
   async login(input: LoginInput, lang: HeaderLanguage) {
@@ -33,6 +36,15 @@ export class UserResourceService {
 
   async resetPassword(input: ResetPasswordInput, lang: HeaderLanguage) {
     await this.resetPasswordService.resetPassword(input, lang);
+    return true;
+  }
+
+  async changePassword(
+    userId: string,
+    data: ChangePasswordInput,
+    lang: HeaderLanguage
+  ) {
+    await this.changePasswordService.changePassword(userId, data, lang);
     return true;
   }
 

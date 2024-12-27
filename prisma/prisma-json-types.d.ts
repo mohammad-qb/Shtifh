@@ -1,7 +1,4 @@
-type unavailableSlot = {
-  start_time: string;
-  end_time: string;
-};
+export {};
 declare global {
   namespace PrismaJson {
     type NameJson = { ar: string; en: string; he: string };

@@ -28,6 +28,8 @@ import { LoggerPlugin } from '@shtifh/plugins';
 import { join } from 'path';
 import { EnvModule } from '@shtifh/env-service';
 import { NotificationResourceModule } from './resources/notification/notification-resource.module';
+import { ServicesResourceModule } from './resources/services/services-resource.module';
+import { ExpressCarWashOrderResourceModule } from './resources/express-car-wash-order/express-car-wash-order-resource.module';
 
 const GRAPHQL_MODULES = [
   AccessoryResourceModule,
@@ -39,6 +41,8 @@ const GRAPHQL_MODULES = [
   CustomerResourceModule,
   NotificationResourceModule,
   UserResourceModule,
+  ServicesResourceModule,
+  ExpressCarWashOrderResourceModule
 ];
 
 const DEVELOPMENT_APOLLO_PLUGINS: ApolloServerPlugin[] = [

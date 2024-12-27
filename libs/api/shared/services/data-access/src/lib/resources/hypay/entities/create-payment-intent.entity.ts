@@ -11,6 +11,7 @@ export class GetSignatureDTO {
   email!: string;
   phone!: string;
   lang!: string;
+  orderType?: 'express' | 'standard';
   mode?: 'create' | 'update';
 }
 

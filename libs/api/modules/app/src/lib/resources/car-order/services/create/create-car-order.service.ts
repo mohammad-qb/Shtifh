@@ -4,14 +4,11 @@ import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
 } from '../../dtos/create-car-order.dto';
-import { CarOrderLogStatus, CarOrderType, CarServiceType, newDate, PaymentMethod } from '@shtifh/helpers';
+import { CarOrderLogStatus, CarOrderType, CarServiceType, generateOrderRefNumber, newDate, PaymentMethod } from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
 
-const generateOrderRefNumber = () => {
-  return Math.floor(Math.random() * 90000000) + 10000000 + '';
-};
 @Injectable()
 export class CreateCarOrderService {
   private logger = new Logger(CreateCarOrderService.name);
