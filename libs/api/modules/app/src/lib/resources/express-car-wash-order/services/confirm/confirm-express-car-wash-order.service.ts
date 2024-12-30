@@ -19,6 +19,15 @@ export class ConfirmExpressCarWashOrderService {
     this.hyPay = this.dataAccessService.resources.hyPay;
   }
 
+  /**
+   * Confirms an express car wash order for a specific customer, either using cash or credit card payment methods.
+   * This involves validating agent availability, order existence, and processing payment.
+   *
+   * @param {string} customerId - The unique identifier of the customer making the car wash order.
+   * @param {ConfirmExpressCarWashOrderInput} data - The input data containing details about the order, including agent ID, tips, payment method, and order ID.
+   * @param {HeaderLanguage} language - The preferred language for localizing errors and other communications.
+   * @return {Promise<{expressCarWashOrder: ExpressCarWashOrder, url: string | null}>} A promise that resolves with the updated express car wash order and a payment URL (if credit card payment is used).
+   */
   async confirmExpressCarWashOrder(
     customerId: string,
     data: ConfirmExpressCarWashOrderInput,

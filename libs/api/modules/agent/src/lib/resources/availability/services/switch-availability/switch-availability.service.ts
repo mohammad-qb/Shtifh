@@ -12,6 +12,13 @@ export class AgentSwitchAvailabilityService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Toggles the availability status of an agent.
+   *
+   * @param agentId - The unique identifier of the agent whose availability needs to be switched.
+   * @param lang - The language preference for any error messages or logs.
+   * @return A promise that resolves to a boolean indicating the successful update of the agent's availability.
+   */
   async switchAvailability(agentId: string, lang: HeaderLanguage) {
     this.logger.log(`Switch the availability for the agent with Id ${agentId}`);
 

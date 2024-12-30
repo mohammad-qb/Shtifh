@@ -13,6 +13,13 @@ export class CreateExpressCarWashOrderService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new express car wash order for the given customer.
+   *
+   * @param {string} customerId - The unique identifier of the customer placing the order.
+   * @param {CreateExpressCarWashOrderInput} data - The data required to create the express car wash order, including carId and coordinates.
+   * @return {Promise<Object>} A promise that resolves to the created express car wash order object.
+   */
   async createExpressCarWashOrder(
     customerId: string,
     data: CreateExpressCarWashOrderInput

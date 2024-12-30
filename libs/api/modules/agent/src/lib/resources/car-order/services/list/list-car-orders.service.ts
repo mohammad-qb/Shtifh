@@ -7,6 +7,12 @@ export class ListCarOrdersService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Retrieves a list of car orders associated with a specific agent.
+   *
+   * @param {string} agentId - The unique identifier of the agent whose car orders are to be fetched.
+   * @return {Promise<Array<Object>>} - A promise that resolves to an array of car order objects, including related customer, car, service, and city details.
+   */
   async listCarOrders(agentId: string) {
     this.logger.log(`List car orders for agent ${agentId}`);
 

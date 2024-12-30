@@ -13,6 +13,16 @@ export class AgentStartExpressCarWashOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Initiates the start of an express car wash order by verifying the order's validity,
+   * ensuring the agent is assigned to the order, and updating the order's status to "IN_PROGRESS".
+   *
+   * @param {string} agentId - The identifier of the agent attempting to start the car wash order.
+   * @param {string} expressCarWashOrderId - The unique identifier of the express car wash order to start.
+   * @param {HeaderLanguage} lang - The language preference for error messages or responses.
+   * @return {Promise<boolean>} A promise that resolves to `true` if the operation completes successfully.
+   * @throws Will throw an error if the order is not found, not assigned to the agent, already canceled, or already in progress.
+   */
   async startExpressCarWashOrder(
     agentId: string,
     expressCarWashOrderId: string,

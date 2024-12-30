@@ -13,6 +13,16 @@ export class AgentAcceptExpressCarWashOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Accepts an express car wash order by assigning it to an agent if it is available and valid.
+   *
+   * @param {string} agentId - The unique identifier of the agent trying to accept the order.
+   * @param {string} expressCarWashOrderId - The unique identifier of the express car wash order.
+   * @param {HeaderLanguage} lang - The language preference used for error messages.
+   *
+   * @return {Promise<boolean>} Returns a promise that resolves to true if the order is successfully accepted.
+   * @throws Will throw an error if the order does not exist, has already been taken, or has been canceled by the customer.
+   */
   async acceptExpressCarWashOrder(
     agentId: string,
     expressCarWashOrderId: string,

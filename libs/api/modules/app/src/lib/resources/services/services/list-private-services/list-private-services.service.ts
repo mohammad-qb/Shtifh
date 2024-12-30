@@ -8,6 +8,11 @@ export class ListPrivateServicesService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Retrieves a list of private car services from the database.
+   *
+   * @return {Promise<Array>} A promise that resolves to an array of private car services.
+   */
   async listPrivateServices() {
     this.logger.log("List private services");
     const privateServices = await this.prismaService.service.findMany({

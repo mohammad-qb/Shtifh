@@ -13,6 +13,15 @@ export class CancelExpressCarWashOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Cancels an express car wash order for the specified customer.
+   *
+   * @param {string} customerId - The ID of the customer requesting to cancel the order.
+   * @param {string} expressCarWashOrderId - The ID of the express car wash order to be canceled.
+   * @param {HeaderLanguage} lang - The language preference for error messages or logs.
+   * @return {Promise<Object>} - The updated express car wash order data after the cancellation.
+   * @throws Will throw an error if the order does not exist or if the order does not belong to the customer.
+   */
   async cancelExpressCarWashOrder(
     customerId: string,
     expressCarWashOrderId: string,

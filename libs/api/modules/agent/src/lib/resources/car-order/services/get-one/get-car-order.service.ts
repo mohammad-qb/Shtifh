@@ -12,6 +12,14 @@ export class GetCarOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Retrieves a car order by its ID for a specific agent.
+   *
+   * @param {string} agentId - The ID of the agent requesting the car order.
+   * @param {string} carOrderId - The unique identifier of the car order to retrieve.
+   * @param {HeaderLanguage} lang - The language header for localized responses or error messages.
+   * @return {Promise<Object>} A promise that resolves to the car order object, including related information such as customer, car details, service, and city. Throws an error if the car order is not found.
+   */
   async getCarOrderById(
     agentId: string,
     carOrderId: string,

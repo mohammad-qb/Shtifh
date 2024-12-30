@@ -15,6 +15,15 @@ export class ChangePasswordService {
     private readonly userService: UserService
   ) {}
 
+  /**
+   * Changes the password for a user identified by their user ID.
+   *
+   * @param {string} userId - The unique identifier of the user whose password is being updated.
+   * @param {ChangePasswordInput} data - An object containing the current password and the new password.
+   * @param {HeaderLanguage} lang - The language header used for error messaging and localization.
+   * @return {Promise<object>} Returns a Promise resolving to the updated user object with the new password.
+   * @throws Will throw an error if the user is not found, the current password is incorrect, or if any database operation fails.
+   */
   async changePassword(
     userId: string,
     data: ChangePasswordInput,

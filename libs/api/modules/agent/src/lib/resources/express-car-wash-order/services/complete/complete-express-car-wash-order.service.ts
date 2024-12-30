@@ -14,6 +14,16 @@ export class AgentCompleteExpressCarWashOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Completes an express car wash order assigned to an agent.
+   * Validates the order's existence, ownership, and status before completing it.
+   * Updates the order's status to completed in the logs and marks the agent as not busy.
+   *
+   * @param {string} agentId - The unique identifier of the agent attempting to complete the order.
+   * @param {string} expressCarWashOrderId - The unique identifier of the express car wash order to be completed.
+   * @return {Promise<boolean>} A promise that resolves to true if the order is successfully completed.
+   * @throws {Error} If the order is not found, not assigned to the agent, already canceled (by agent or customer), or already completed.
+   */
   async completeExpressCarWashOrder(
     agentId: string,
     expressCarWashOrderId: string

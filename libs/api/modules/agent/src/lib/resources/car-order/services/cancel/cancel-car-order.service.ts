@@ -14,6 +14,15 @@ export class CancelCarOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Cancels a specific car order for a given agent, verifying the order existence, ownership, and current status.
+   *
+   * @param {string} agentId - The unique identifier of the agent requesting the cancellation.
+   * @param {AgentCancelCarOrderInput} data - The cancellation details including the car order ID and reason.
+   * @param {HeaderLanguage} lang - The language preference for error messages or responses.
+   * @return {Promise<Object>} A promise resolving to the updated car order object after cancellation.
+   * @throws {Error} If the car order does not exist, does not belong to the agent, or is already cancelled.
+   */
   async cancelCarOrder(
     agentId: string,
     data: AgentCancelCarOrderInput,

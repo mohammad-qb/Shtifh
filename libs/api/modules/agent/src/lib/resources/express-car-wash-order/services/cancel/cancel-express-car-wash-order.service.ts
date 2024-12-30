@@ -14,6 +14,17 @@ export class AgentCancelExpressCarWashOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Cancels an express car wash order assigned to an agent. Verifies the ownership
+   * of the order, checks the current order status, updates the order's logs, and
+   * marks the agent as not busy upon successful cancellation.
+   *
+   * @param {string} agentId - The unique identifier of the agent attempting to cancel the order.
+   * @param {AgentCancelExpressCarWashOrderInput} data - The input data containing the order ID and the reason for cancellation.
+   * @param {HeaderLanguage} lang - The language preference used for error messages.
+   * @return {Promise<boolean>} A promise that resolves to true if the cancellation was successful.
+   * @throws Will throw an error if the order does not exist, is not assigned to the agent, or has already been canceled.
+   */
   async cancelExpressCarWashOrder(
     agentId: string,
     data: AgentCancelExpressCarWashOrderInput,

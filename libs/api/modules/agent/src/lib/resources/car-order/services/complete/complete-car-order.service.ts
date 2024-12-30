@@ -13,6 +13,15 @@ export class CompleteCarOrderService {
     private readonly httpErrorsService: HttpErrorsService
   ) {}
 
+  /**
+   * Completes a car order by updating its status to completed and appending a log entry.
+   *
+   * @param {string} agentId - The ID of the agent completing the car order.
+   * @param {string} carOrderId - The unique identifier of the car order to be completed.
+   * @param {HeaderLanguage} lang - The language preference for error messages and localization.
+   * @return {Promise<object>} A promise that resolves to the completed car order object.
+   * @throws Will throw an error if the car order is not found for the given agent and carOrderId.
+   */
   async completeCarOrder(
     agentId: string,
     carOrderId: string,
