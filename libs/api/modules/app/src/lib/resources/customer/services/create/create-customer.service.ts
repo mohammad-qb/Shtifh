@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
 import { PrismaService } from '@shtifh/prisma-service';
-import { CreateCustomerInput } from '../../dtos/create-customer.dto';
+import { CreateCustomerInput } from '../../inputs/create-customer.input';
 import { UserService } from '@shtifh/user-service';
 import { generateImageUrl } from '@shtifh/helpers';
 

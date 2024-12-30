@@ -2,9 +2,9 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CreateCarService } from "./services/create/create-car.service";
 import { ListCarsService } from "./services/list/list-cars.service";
 import { UpdateCarService } from "./services/update/update-car.service";
-import { CreateCarInput } from "./dtos/create-car.dto";
+import { CreateCarInput } from "./inputs/create-car.input";
 import { HeaderLanguage } from "@shtifh/decorators";
-import { UpdateCarInput } from "./dtos/update-car.dto";
+import { UpdateCarInput } from "./inputs/update-car.input";
 import { DeactivateCarService } from "./services/deactivate/deactivate-car.service";
 
 @Injectable()

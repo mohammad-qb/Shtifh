@@ -3,8 +3,15 @@ import { PrismaService } from '@shtifh/prisma-service';
 import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
-} from '../../dtos/create-car-order.dto';
-import { CarOrderLogStatus, CarOrderType, CarServiceType, generateOrderRefNumber, newDate, PaymentMethod } from '@shtifh/helpers';
+} from '../../inputs/create-car-order.input';
+import {
+  CarOrderLogStatus,
+  CarOrderType,
+  CarServiceType,
+  generateOrderRefNumber,
+  newDate,
+  PaymentMethod,
+} from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
@@ -32,7 +39,7 @@ export class CreateCarOrderService {
    * @param {string} userId - The ID of the user placing the order.
    * @param {HeaderLanguage} lang - The language for error messages and notifications.
    * @param {CreateNormalCarOrderInput} data - The order details, including service, city, accessories, and other relevant information.
-   * @return {Promise<string>} - A promise that resolves to the URL of the payment intent.
+   * @return {Promise<{paymentUrl: string | null}>} - A promise that resolves to the URL of the payment intent.
    * @throws Will throw an error if any verification fails, including user not found, city not found, service not found, or if the service is not public or available.
    */
   async createNormalOrder(
@@ -90,6 +97,20 @@ export class CreateCarOrderService {
     const totalFees = cityService.fees + (data.tips || 0) + accessoriesFees;
 
     const refNumber = generateOrderRefNumber();
+    let paymentUrl: string | null = null;
+    const carOrderLogs = [
+      {
+        status: CarOrderLogStatus.CREATED,
+        createdAt: newDate().toDate(),
+      },
+      {
+        status:
+          data.payment_method === PaymentMethod.CREDIT_CARD
+            ? CarOrderLogStatus.PENDING_PAYMENT
+            : CarOrderLogStatus.CONFIRMED,
+        createdAt: newDate().toDate(),
+      },
+    ];
     const carOrder = await this.prismaService.carOrder.create({
       data: {
         ref_number: refNumber,
@@ -104,39 +125,34 @@ export class CreateCarOrderService {
         order_date: newDate(data.order_date).toISOString(),
         order_time: data.order_time,
         accessories: data.accessories,
-        logs: [
-          {
-            status: CarOrderLogStatus.CREATED,
-            createdAt: newDate().toDate(),
-          },
-          {
-            status: CarOrderLogStatus.PENDING_PAYMENT,
-            createdAt: newDate().toDate(),
-          },
-        ],
+        logs: carOrderLogs,
       },
     });
 
-    const paymentIntent = await this.hyPay.paymentIntent({
-      amount: totalFees,
-      lang,
-      orderRefNumber: refNumber,
-      email: user.email,
-      fullName: user.full_name,
-      phone: user.phone,
-    });
-
-    await this.prismaService.payment.create({
-      data: {
+    if (data.payment_method === PaymentMethod.CREDIT_CARD) {
+      const paymentIntent = await this.hyPay.paymentIntent({
         amount: totalFees,
-        carOrderId: carOrder.id,
-        payment_method: PaymentMethod.CREDIT_CARD,
-        transaction_id: paymentIntent.signature,
-      },
-    });
+        lang,
+        orderRefNumber: refNumber,
+        email: user.email,
+        fullName: user.full_name,
+        phone: user.phone,
+      });
+
+      await this.prismaService.payment.create({
+        data: {
+          amount: totalFees,
+          carOrderId: carOrder.id,
+          payment_method: PaymentMethod.CREDIT_CARD,
+          transaction_id: paymentIntent.signature,
+        },
+      });
+
+      paymentUrl = paymentIntent.url;
+    }
 
     this.logger.log(`Car order created`, carOrder);
-    return paymentIntent.url;
+    return { paymentUrl };
   }
 
   /**
@@ -184,7 +200,7 @@ export class CreateCarOrderService {
         cityId: data.cityId,
         serviceId: data.serviceId,
         tips: 0,
-        note: data.note || null,
+        note: data.note,
         logs: [
           {
             status: CarOrderLogStatus.CREATED,

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@shtifh/prisma-service";
-import { CreateCarInput } from "../../dtos/create-car.dto";
+import { CreateCarInput } from "../../inputs/create-car.input";
 
 @Injectable()
 export class CreateCarService {

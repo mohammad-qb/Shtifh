@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
-import { UpdateNormalCarOrderInput } from '../../dtos/update-car-order.dto';
+import { UpdateNormalCarOrderInput } from '../../inputs/update-car-order.input';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
 import { DateAccessService } from '@shtifh/date-access-service';
@@ -9,11 +9,11 @@ import { CarOrderType, PaymentMethod } from '@shtifh/helpers';
 @Injectable()
 export class UpdateCarOrderService {
   private logger = new Logger(UpdateCarOrderService.name);
-    private hyPay;
+  private hyPay;
 
   constructor(
     private readonly prismaService: PrismaService,
-       private readonly dataAccessService: DateAccessService,
+    private readonly dataAccessService: DateAccessService,
     private readonly httpErrorsService: HttpErrorsService
   ) {
     this.hyPay = this.dataAccessService.resources.hyPay;
@@ -25,31 +25,30 @@ export class UpdateCarOrderService {
    * @param {string} customerId - The ID of the customer making the request.
    * @param {UpdateNormalCarOrderInput} data - The data to update the car order.
    * @param {HeaderLanguage} lang - The language for error messages and other localized content.
-   * @return {Promise<{paymentLink: string | null}>} - A promise that resolves to an object containing a payment link if additional fees are required, otherwise null.
+   * @return {Promise<{paymentUrl: string | null}>} - A promise that resolves to an object containing a payment link if additional fees are required, otherwise null.
    */
   async updateNormalCarOrder(
     customerId: string,
     data: UpdateNormalCarOrderInput,
     lang: HeaderLanguage
-  ): Promise<{paymentLink: string | null}> {
+  ): Promise<{ paymentUrl: string | null }> {
     this.logger.log(
       `Update car order with id ${data.carOrderId} for customer ${customerId}`
     );
 
-    const {carOrderId, ...restCarOrderData} = data;
+    const { carOrderId, ...restCarOrderData } = data;
     const carOrder = await this.prismaService.carOrder.findFirst({
-      where: { id: carOrderId }, include: {customer: {include: {user: true}}}
+      where: { id: carOrderId },
+      include: { customer: { include: { user: true } } },
     });
+    let paymentUrl = null;
 
     if (!carOrder) {
       throw this.httpErrorsService.carOrderNotFound(carOrderId, lang);
     }
 
     if (carOrder.customerId !== customerId) {
-      throw this.httpErrorsService.orderNotBelongToCustomer(
-        carOrderId,
-        lang
-      );
+      throw this.httpErrorsService.orderNotBelongToCustomer(carOrderId, lang);
     }
 
     if (carOrder.type !== CarOrderType.NORMAL) {
@@ -92,9 +91,12 @@ export class UpdateCarOrderService {
       );
     }
 
-    if(carModelService.fees <= carOrder.fees) {
-      await this.prismaService.carOrder.update({where: {id: carOrderId}, data: restCarOrderData});
-      return {paymentLink: null};
+    if (carModelService.fees <= carOrder.fees) {
+      await this.prismaService.carOrder.update({
+        where: { id: carOrderId },
+        data: restCarOrderData,
+      });
+      return { paymentUrl };
     }
 
     const totalFees = carModelService.fees - carOrder.fees;
@@ -117,13 +119,14 @@ export class UpdateCarOrderService {
       },
     });
 
+    paymentUrl = paymentIntent.url;
+
     //TODO: save in cache the data to set them after payment with order id as key
 
     this.logger.log(
       `Car order ${data.carOrderId} updated for customer ${customerId}`
     );
 
-    return {paymentLink: paymentIntent.url};
-
+    return { paymentUrl };
   }
 }

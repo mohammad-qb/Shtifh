@@ -11,6 +11,9 @@ import { HeaderLanguage } from '@shtifh/decorators';
 export class HttpErrorsService {
   private logger = new Logger(HttpErrorsService.name);
 
+  /**
+   *
+   */
   carNotFound(id: string, lang: HeaderLanguage = 'en') {
     this.logger.error(`Car with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__car_not_found[lang]);
@@ -172,6 +175,48 @@ export class HttpErrorsService {
     this.logger.error(`Agent with id ${id} not available`);
     return new BadRequestException(
       httpErrorMessages.__agent_not_available[lang]
+    );
+  }
+
+  carWashOrderAlreadyTaken(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} already taken`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_taken[lang]
+    );
+  }
+
+  carWashOrderAlreadyCanceledByCustomer(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} already canceled by customer`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_canceled_by_customer[lang]
+    );
+  }
+
+  carWashOrderNotAssignedToAgent(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} not assigned to agent`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_not_assigned_to_agent[lang]
+    );
+  }
+
+  carWashOrderAlreadyCanceledByAgent(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} already canceled by agent`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_canceled_by_agent[lang]
+    );
+  }
+
+  carWashOrderAlreadyStarted(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} already started`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_started[lang]
+    );
+  }
+
+  carWashOrderAlreadyCompleted(id: string, lang: HeaderLanguage = 'en') {
+    this.logger.error(`Car wash order with id ${id} already completed`);
+    return new BadRequestException(
+      httpErrorMessages.__car_wash_order_already_completed[lang]
     );
   }
 }

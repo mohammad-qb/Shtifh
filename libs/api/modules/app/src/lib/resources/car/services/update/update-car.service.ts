@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "@shtifh/prisma-service";
-import { UpdateCarInput } from "../../dtos/update-car.dto";
+import { UpdateCarInput } from "../../inputs/update-car.input";
 import { HttpErrorsService } from "@shtifh/exception-service";
 import { HeaderLanguage } from "@shtifh/decorators";
 

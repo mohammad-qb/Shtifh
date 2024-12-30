@@ -4,13 +4,13 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { ListCarOrdersEntity } from './entities/list-car-orders.entity';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UserPayload } from '@shtifh/user-service';
-import { GetCarOrderByIdInput } from './dtos/get-car-order-by-id.dto';
+import { GetCarOrderByIdInput } from './inputs/get-car-order-by-id.input';
 import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
-} from './dtos/create-car-order.dto';
+} from './inputs/create-car-order.input';
 import { JwtAuthGuard } from '@shtifh/auth-service';
-import { UpdateNormalCarOrderInput } from './dtos/update-car-order.dto';
+import { UpdateNormalCarOrderInput } from './inputs/update-car-order.input';
 import { UpdateNormalCarOrderEntity } from './entities/update-car-order.entity';
 
 @Resolver()

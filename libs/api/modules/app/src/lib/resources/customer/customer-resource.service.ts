@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateCustomerService } from './services/create/create-customer.service';
 import { HeaderLanguage } from '@shtifh/decorators';
-import { CreateCustomerInput } from './dtos/create-customer.dto';
+import { CreateCustomerInput } from './inputs/create-customer.input';
 import { UpdateCustomerService } from './services/update/update-customer.service';
-import { UpdateCustomerInput } from './dtos/update-customer.input';
+import { UpdateCustomerInput } from './inputs/update-customer.input';
 
 @Injectable()
 export class CustomerResourceService {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 import { HttpErrorsService } from '@shtifh/exception-service';
-import { UpdateCustomerInput } from '../../dtos/update-customer.input';
+import { UpdateCustomerInput } from '../../inputs/update-customer.input';
 import { HeaderLanguage } from '@shtifh/decorators';
 
 @Injectable()

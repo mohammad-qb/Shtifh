@@ -1,6 +1,17 @@
-import { Field, Float, InputType } from "@nestjs/graphql";
-import { Type } from "class-transformer";
-import { IsArray, IsDateString, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { Field, Float, InputType, Int } from '@nestjs/graphql';
+import { PaymentMethod } from '@shtifh/helpers';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 @InputType()
 class CarOrderAccessoriesInput {
@@ -22,6 +33,11 @@ export class CreateNormalCarOrderInput {
   @IsNotEmpty()
   order_date!: string;
 
+  @Field(() => Int)
+  @IsEnum(PaymentMethod)
+  @IsNotEmpty()
+  payment_method!: PaymentMethod;
+
   @Field(() => String)
   @IsString()
   @IsNotEmpty()
@@ -32,18 +48,18 @@ export class CreateNormalCarOrderInput {
   @IsNotEmpty()
   address!: string;
 
-  @Field(() => Float, {nullable: true})
+  @Field(() => Float, { nullable: true })
   @IsNumber()
   @IsOptional()
   tips!: number | null;
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   note!: string | null;
 
   @Field(() => [String])
-  @IsString({each: true})
+  @IsString({ each: true })
   @IsArray()
   @IsNotEmpty()
   car_location!: string[];
@@ -78,13 +94,13 @@ export class CreatePrivateCarOrderInput {
   @IsNotEmpty()
   address!: string;
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   @IsString()
   @IsOptional()
   note!: string | null;
 
   @Field(() => [String])
-  @IsString({each: true})
+  @IsString({ each: true })
   @IsArray()
   @IsNotEmpty()
   car_location!: string[];

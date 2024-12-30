@@ -7,6 +7,7 @@ export enum CarOrderLogStatus {
   CONFIRMED,
   CANCELED_BY_CUSTOMER,
   CANCELED_BY_AGENT,
+  ACCEPTED_BY_AGENT
 }
 
 export enum AgentPosition {

@@ -5,11 +5,11 @@ import { ListCarOrdersService } from './services/list/list-car-orders.service';
 import {
   CreateNormalCarOrderInput,
   CreatePrivateCarOrderInput,
-} from './dtos/create-car-order.dto';
+} from './inputs/create-car-order.input';
 import { UserPayload } from '@shtifh/user-service';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { UpdateCarOrderService } from './services/update/update-car-order.service';
-import { UpdateNormalCarOrderInput } from './dtos/update-car-order.dto';
+import { UpdateNormalCarOrderInput } from './inputs/update-car-order.input';
 
 @Injectable()
 export class CarOrderResourceService {

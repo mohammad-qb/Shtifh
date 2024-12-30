@@ -1,9 +1,9 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CustomerResourceService } from './customer-resource.service';
 import { Logger } from '@nestjs/common';
-import { CreateCustomerInput } from './dtos/create-customer.dto';
+import { CreateCustomerInput } from './inputs/create-customer.input';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
-import { UpdateCustomerInput } from './dtos/update-customer.input';
+import { UpdateCustomerInput } from './inputs/update-customer.input';
 import { User } from '@prisma/client';
 import { UserPayload } from '@shtifh/user-service';
 
