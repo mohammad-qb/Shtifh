@@ -6,7 +6,6 @@ import {
 } from '../../inputs/create-car-order.input';
 import {
   CarOrderLogStatus,
-  CarOrderType,
   CarServiceType,
   generateOrderRefNumber,
   newDate,
@@ -14,7 +13,8 @@ import {
 } from '@shtifh/helpers';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { HeaderLanguage } from '@shtifh/decorators';
-import { HttpErrorsService } from '@shtifh/exception-service';
+import { CreateCarOrderValidator } from './validator/car-order-validator.service';
+import { CalculateOrderFeesService } from '../../utils/calculate-order-fees.utils';
 
 @Injectable()
 export class CreateCarOrderService {
@@ -24,23 +24,26 @@ export class CreateCarOrderService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly dataAccessService: DateAccessService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly carOrderValidator: CreateCarOrderValidator,
+    private readonly carOrderFeesCalculator: CalculateOrderFeesService
   ) {
     this.hyPay = this.dataAccessService.resources.hyPay;
   }
 
   /**
-   * Creates a normal car order for a given customer and user.
-   * This process involves verifying user, city, and service details,
-   * calculating fees including accessories and tips, generating a
-   * reference number, logging the order, and initiating a payment intent.
+   * Creates a new normal car order for a user.
    *
-   * @param {string} customerId - The ID of the customer placing the order.
-   * @param {string} userId - The ID of the user placing the order.
-   * @param {HeaderLanguage} lang - The language for error messages and notifications.
-   * @param {CreateNormalCarOrderInput} data - The order details, including service, city, accessories, and other relevant information.
-   * @return {Promise<{paymentUrl: string | null}>} - A promise that resolves to the URL of the payment intent.
-   * @throws Will throw an error if any verification fails, including user not found, city not found, service not found, or if the service is not public or available.
+   * This method performs various validations for the user, city, and service compatibility,
+   * calculates fees, generates a reference number, and stores the order details in the database.
+   * If the payment method is credit card, it also integrates with an external payment processing system.
+   *
+   * @param {string} customerId - The unique identifier of the customer placing the order.
+   * @param {string} userId - The unique identifier of the user associated with the order.
+   * @param {HeaderLanguage} lang - The language preference for validation messages or responses.
+   * @param {CreateNormalCarOrderInput} data - The details of the car order, including service type,
+   *                                           chosen accessories, address, and payment method.
+   * @return {Promise<{paymentUrl: string | null}>} The URL for payment processing if the payment method is credit card,
+   *                                                or null if no payment URL is required.
    */
   async createNormalOrder(
     customerId: string,
@@ -48,69 +51,40 @@ export class CreateCarOrderService {
     lang: HeaderLanguage,
     data: CreateNormalCarOrderInput
   ) {
-    this.logger.log(`Create car order`);
+    this.logger.log(`Create normal car order`);
 
-    const service = await this.prismaService.service.findFirst({
-      where: { id: data.serviceId },
-    });
-    const city = await this.prismaService.city.findFirst({
-      where: { id: data.cityId },
-    });
-    const accessories = await this.prismaService.accessory.findMany({
-      where: {
-        id: { in: data.accessories.map((accessory) => accessory.accessoryId) },
-      },
-    });
-    const user = await this.prismaService.user.findFirst({
-      where: { id: userId },
-    });
-
-    if (!user) {
-      throw this.httpErrorsService.userNotFound(userId, lang);
-    }
-    if (!city) {
-      throw this.httpErrorsService.cityNotFound(data.cityId, lang);
-    }
-
-    if (!service) {
-      throw this.httpErrorsService.serviceNotFound(data.serviceId, lang);
-    }
-
-    if (service.type !== CarServiceType.PUBLIC) {
-      throw this.httpErrorsService.serviceNotPublic(data.serviceId, lang);
-    }
+    const user = await this.carOrderValidator.validateUser(userId, lang);
+    const city = await this.carOrderValidator.validateCity(data.cityId, lang);
+    await this.carOrderValidator.validateService(
+      data.serviceId,
+      lang,
+      CarServiceType.PUBLIC
+    );
 
     const cityService = city.car_model_services.find(
       (service) => service.serviceId === data.serviceId
     );
 
     if (!cityService) {
-      throw this.httpErrorsService.serviceNotAvailable(data.serviceId, lang);
+      throw new Error('Service not available in the selected city');
     }
-    const accessoriesFees = data.accessories.reduce((acc, accessory) => {
-      const accessoryItem = accessories.find(
-        (el) => el.id === accessory.accessoryId
-      );
-      return acc + accessory.quantity * (accessoryItem?.price || 1);
-    }, 0);
 
-    const totalFees = cityService.fees + (data.tips || 0) + accessoriesFees;
+    const accessories = await this.prismaService.accessory.findMany({
+      where: { id: { in: data.accessories.map((a) => a.accessoryId) } },
+    });
+
+    const orderTips = data.tips || 0;
+    const accessoriesFee = this.carOrderFeesCalculator.calculateAccessoriesFees(
+      { accessories: data.accessories },
+      accessories
+    );
+    const totalFees = this.carOrderFeesCalculator.calculateTotalFees(
+      cityService.fees,
+      accessoriesFee,
+      orderTips
+    );
 
     const refNumber = generateOrderRefNumber();
-    let paymentUrl: string | null = null;
-    const carOrderLogs = [
-      {
-        status: CarOrderLogStatus.CREATED,
-        createdAt: newDate().toDate(),
-      },
-      {
-        status:
-          data.payment_method === PaymentMethod.CREDIT_CARD
-            ? CarOrderLogStatus.PENDING_PAYMENT
-            : CarOrderLogStatus.CONFIRMED,
-        createdAt: newDate().toDate(),
-      },
-    ];
     const carOrder = await this.prismaService.carOrder.create({
       data: {
         ref_number: refNumber,
@@ -120,15 +94,25 @@ export class CreateCarOrderService {
         carId: data.carId,
         cityId: data.cityId,
         serviceId: data.serviceId,
-        tips: data.tips || 0,
+        tips: orderTips,
         note: data.note || null,
         order_date: newDate(data.order_date).toISOString(),
         order_time: data.order_time,
         accessories: data.accessories,
-        logs: carOrderLogs,
+        logs: [
+          { status: CarOrderLogStatus.CREATED, createdAt: newDate().toDate() },
+          {
+            status:
+              data.payment_method === PaymentMethod.CREDIT_CARD
+                ? CarOrderLogStatus.PENDING_PAYMENT
+                : CarOrderLogStatus.CONFIRMED,
+            createdAt: newDate().toDate(),
+          },
+        ],
       },
     });
 
+    let paymentUrl = null;
     if (data.payment_method === PaymentMethod.CREDIT_CARD) {
       const paymentIntent = await this.hyPay.paymentIntent({
         amount: totalFees,
@@ -151,7 +135,7 @@ export class CreateCarOrderService {
       paymentUrl = paymentIntent.url;
     }
 
-    this.logger.log(`Car order created`, carOrder);
+    this.logger.log(`Normal car order created`, { carOrder });
     return { paymentUrl };
   }
 
@@ -170,25 +154,12 @@ export class CreateCarOrderService {
   ) {
     this.logger.log(`Create private car order`);
 
-    const city = await this.prismaService.city.findFirst({
-      where: { id: data.cityId },
-    });
-
-    const service = await this.prismaService.service.findFirst({
-      where: { id: data.serviceId },
-    });
-
-    if (!city) {
-      throw this.httpErrorsService.cityNotFound(data.cityId, lang);
-    }
-
-    if (!service) {
-      throw this.httpErrorsService.serviceNotFound(data.serviceId, lang);
-    }
-
-    if (service.type !== CarOrderType.PRIVATE) {
-      throw this.httpErrorsService.serviceNotPublic(data.serviceId, lang);
-    }
+    await this.carOrderValidator.validateCity(data.cityId, lang);
+    await this.carOrderValidator.validateService(
+      data.serviceId,
+      lang,
+      CarServiceType.PRIVATE
+    );
 
     await this.prismaService.carOrder.create({
       data: {
@@ -209,6 +180,8 @@ export class CreateCarOrderService {
         ],
       },
     });
+
+    this.logger.log(`Private car order created`);
 
     return true;
   }

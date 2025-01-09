@@ -48,6 +48,7 @@ enum CarOrderLogStatus {
   CONFIRMED
   CANCELED_BY_CUSTOMER
   CANCELED_BY_AGENT
+  ACCEPTED_BY_AGENT
 }
 
 type PrismaCityUnavailableSlots {
@@ -315,6 +316,7 @@ input CreatePrivateCarOrderInput {
 
 input CreateNormalCarOrderInput {
   order_date: String!
+  payment_method: Int!
   order_time: String!
   address: String!
   tips: Float
