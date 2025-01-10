@@ -13,7 +13,7 @@ export class CheckMissedNotificationsService {
    * @param {string} userId - The ID of the user for whom to check missed notifications.
    * @return {Promise<boolean>} - A promise that resolves to true if there are missed unread notifications, false otherwise.
    */
-  async checkMissedNotifications(userId: string) {
+  async checkMissedNotifications(userId: string): Promise<boolean> {
     this.logger.log(`Check missed notifications for user ${userId}`);
 
     const missedUnreadNotificationsCount =

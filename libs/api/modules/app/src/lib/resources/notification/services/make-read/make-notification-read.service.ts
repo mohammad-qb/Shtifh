@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
-import { HttpErrorsService } from '@shtifh/exception-service';
 import { HeaderLanguage } from '@shtifh/decorators';
+import { NotificationValidatorService } from '../../validators/notification-validator.service';
 
 @Injectable()
 export class MakeNotificationReadService {
@@ -9,38 +9,39 @@ export class MakeNotificationReadService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly notificationValidatorService: NotificationValidatorService
   ) {}
 
+
   /**
-   * Marks a notification as read for a specific user.
+   * Marks a specific notification as read for a given user.
    *
-   * @param {string} userId - The ID of the user.
-   * @param {string} notificationId - The ID of the notification to mark as read.
-   * @param {HeaderLanguage} lang - The language preference for error messages.
-   * @return {Promise<boolean>} - Returns true if the notification was successfully marked as read.
+   * @param {string} userId - The unique identifier of the user who has read the notification.
+   * @param {string} notificationId - The unique identifier of the notification to be marked as read.
+   * @param {HeaderLanguage} lang - The language setting for error or validation messages.
+   * @return {Promise<boolean>} A promise resolving to `true` to indicate the notification has been successfully marked as read.
    */
   async makeNotificationRead(
     userId: string,
     notificationId: string,
     lang: HeaderLanguage
-  ) {
+  ): Promise<boolean> {
     this.logger.log(
       `Make notification with Id ${notificationId} is read by user with Id ${userId}`
     );
 
-    const notification = await this.prismaService.notification.findFirst({
-      where: { id: notificationId },
-      include: { read_receipts: true },
-    });
-    if (!notification)
-      throw this.httpErrorsService.notificationNotFound(notificationId, lang);
-
-    if (notification.read_receipts.some((receipt) => receipt.userId === userId))
-      throw this.httpErrorsService.notificationAlreadyRead(
+    const notification =
+      await this.notificationValidatorService.validateNotification(
         notificationId,
         lang
       );
+
+    this.notificationValidatorService.validateNotificationUnread(
+      notification.read_receipts,
+      userId,
+      notificationId,
+      lang
+    );
 
     await this.prismaService.readReceipt.create({
       data: {

@@ -3,9 +3,10 @@ import { CreateCustomerService } from "./create-customer.service";
 import {
   UserModule
 } from '@shtifh/user-service';
+import { CustomerValidatorModule } from '../../validators/customer-validator.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, CustomerValidatorModule],
   providers: [CreateCustomerService],
   exports: [CreateCustomerService]
 })

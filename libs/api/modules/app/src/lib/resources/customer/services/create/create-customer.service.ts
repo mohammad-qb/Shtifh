@@ -5,6 +5,7 @@ import { PrismaService } from '@shtifh/prisma-service';
 import { CreateCustomerInput } from '../../inputs/create-customer.input';
 import { UserService } from '@shtifh/user-service';
 import { generateImageUrl } from '@shtifh/helpers';
+import { CustomerValidatorService } from '../../validators/customer-validator.service';
 
 @Injectable()
 export class CreateCustomerService {
@@ -12,29 +13,33 @@ export class CreateCustomerService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly httpErrorsService: HttpErrorsService,
+    private readonly customerValidatorService: CustomerValidatorService,
     private userService: UserService
   ) {}
 
+
   /**
-   * Creates a new customer using the provided data.
+   * Creates a new customer along with their associated user account.
    *
-   * @param {HeaderLanguage} lang - The language header for error messages.
-   * @param {CreateCustomerInput} data - The input data for creating the customer.
-   * @return {Promise<object>} The created customer object.
+   * @param {HeaderLanguage} lang - The language header for validations and error messages.
+   * @param {CreateCustomerInput} data - The input object containing customer information, including email, password, and other user data.
+   * @return {Promise<object>} A promise that resolves to the created customer object.
    */
-  async createCustomer(lang: HeaderLanguage, data: CreateCustomerInput) {
+  async createCustomer(
+    lang: HeaderLanguage,
+    data: CreateCustomerInput
+  ): Promise<object> {
     this.logger.log(`Create customer`, data);
     const { gender, ...userData } = data;
-    const user = await this.prismaService.user.findFirst({
-      where: { email: data.email },
-    });
+
+    await this.customerValidatorService.validateCustomerEmailUniqueness(
+      data.email,
+      lang
+    );
 
     const password = await this.userService.resources.crypt.cryptPassword(
       data.password
     );
-
-    if (user) throw this.httpErrorsService.emailAlreadyTaken(data.email, lang);
     const customer = await this.prismaService.customer.create({
       data: {
         gender,

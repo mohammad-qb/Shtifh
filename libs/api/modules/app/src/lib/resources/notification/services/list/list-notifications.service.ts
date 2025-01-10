@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
+import {Notification} from '@prisma/client';
 
 @Injectable()
 export class ListNotificationsService {
@@ -7,13 +8,13 @@ export class ListNotificationsService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+
   /**
-   * Retrieves a list of notifications for the specified user.
-   *
-   * @param {string} userId - The ID of the user for whom to list notifications.
-   * @return {Promise<Array>} A promise that resolves to an array of notification objects.
+   * Retrieves a list of notifications for a given user. Includes notifications specific to the user as well as global notifications.
+   * @param {string} userId - The unique identifier of the user for whom to retrieve notifications.
+   * @return {Promise<Array<Notification>>} A promise that resolves to an array of Notification objects.
    */
-  async list(userId: string) {
+  async list(userId: string): Promise<Array<Notification>> {
     this.logger.log(`List notifications for user with Id ${userId}`);
 
     const notifications = await this.prismaService.notification.findMany({

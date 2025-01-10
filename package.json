@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "prisma:update": "npx prisma db push --schema=./prisma/schema-v2.prisma",
-    "dev:app-server": "npx nx serve shtifha-app-server"
+    "dev:app-server": "sudo nx serve shtifha-app-server"
   },
   "private": true,
   "dependencies": {

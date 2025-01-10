@@ -19,7 +19,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {NotFoundException} An exception indicating that the car was not found.
    */
-  carNotFound(id: string, lang: HeaderLanguage = 'en') {
+  carNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`Car with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__car_not_found[lang]);
   }
@@ -31,7 +31,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message, defaults to 'en'.
    * @return {BadRequestException} Returns an exception indicating the email is already taken.
    */
-  emailAlreadyTaken(email: string, lang: HeaderLanguage = 'en') {
+  emailAlreadyTaken(
+    email: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Email ${email} already taken`);
     return new BadRequestException(
       httpErrorMessages.__email_already_taken[lang]
@@ -45,7 +48,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message.
    * @return {NotFoundException} - The exception indicating the user was not found.
    */
-  userNotFound(id: string, lang: HeaderLanguage = 'en') {
+  userNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`User with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__user_not_found[lang]);
   }
@@ -57,7 +60,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language used for the error message. Defaults to 'en' if not provided.
    * @return {NotFoundException} Returns a NotFoundException with a localized error message.
    */
-  serviceNotFound(id: string, lang: HeaderLanguage = 'en') {
+  serviceNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`Service with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__service_not_found[lang]);
   }
@@ -69,7 +72,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language code specifying the response message language. Defaults to 'en'.
    * @return {NotFoundException} The exception indicating the city was not found.
    */
-  cityNotFound(id: string, lang: HeaderLanguage = 'en') {
+  cityNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`City with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__city_not_found[lang]);
   }
@@ -81,7 +84,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} lang - The language for the error message. Defaults to 'en'.
    * @return {BadRequestException} A BadRequestException containing the error message.
    */
-  serviceNotPublic(id: string, lang: HeaderLanguage = 'en') {
+  serviceNotPublic(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Service with id ${id} is not public`);
     return new BadRequestException(
       httpErrorMessages.__service_not_public[lang]
@@ -95,7 +101,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language used for the error message. Defaults to 'en'.
    * @return {BadRequestException} A BadRequestException containing the appropriate error message.
    */
-  serviceNotPrivate(id: string, lang: HeaderLanguage = 'en') {
+  serviceNotPrivate(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Service with id ${id} is not private`);
     return new BadRequestException(
       httpErrorMessages.__service_not_private[lang]
@@ -109,7 +118,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language code to select the localized error message. Defaults to 'en'.
    * @return {BadRequestException} An exception with the localized error message indicating the service is not available.
    */
-  serviceNotAvailable(id: string, lang: HeaderLanguage = 'en') {
+  serviceNotAvailable(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Service with id ${id} is not available`);
     return new BadRequestException(
       httpErrorMessages.__service_not_available[lang]
@@ -122,7 +134,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language to use for the error message. Defaults to 'en' (English).
    * @return {BadRequestException} The exception containing the localized error message for invalid password.
    */
-  invalidPassword(lang: HeaderLanguage = 'en') {
+  invalidPassword(lang: HeaderLanguage = 'en'): BadRequestException {
     this.logger.error(`Invalid password`);
     return new BadRequestException(httpErrorMessages.__invalid_password[lang]);
   }
@@ -134,7 +146,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {BadRequestException} A BadRequestException containing the localized error message.
    */
-  invalidLoginCredential(email: string, lang: HeaderLanguage = 'en') {
+  invalidLoginCredential(
+    email: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Invalid login credential for email ${email}`);
     return new BadRequestException(
       httpErrorMessages.__invalid_login_credential[lang]
@@ -148,7 +163,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language preference for the error message.
    * @return {NotFoundException} A not found exception containing the appropriate error message.
    */
-  carOrderNotFound(id: string, lang: HeaderLanguage = 'en') {
+  carOrderNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`Car order with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__car_order_not_found[lang]);
   }
@@ -160,7 +175,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language to be used for the error message.
    * @return {BadRequestException} A BadRequestException containing the localized error message.
    */
-  orderNotBelongToCustomer(id: string, lang: HeaderLanguage = 'en') {
+  orderNotBelongToCustomer(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Order with id ${id} not belong to customer`);
     return new BadRequestException(
       httpErrorMessages.__order_not_belong_to_customer[lang]
@@ -174,7 +192,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message header, defaults to 'en'.
    * @return {BadRequestException} - Returns a BadRequestException with an appropriate error message.
    */
-  orderNotNormalType(id: string, lang: HeaderLanguage = 'en') {
+  orderNotNormalType(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Order with id ${id} is not normal type`);
     return new BadRequestException(
       httpErrorMessages.__order_not_normal_type[lang]
@@ -193,7 +214,7 @@ export class HttpErrorsService {
     serviceId: string,
     cityId: string,
     lang: HeaderLanguage = 'en'
-  ) {
+  ): BadRequestException {
     this.logger.error(
       `Service with id ${serviceId} is not available for city with id ${cityId}`
     );
@@ -214,7 +235,7 @@ export class HttpErrorsService {
     serviceId: string,
     carModelId: string,
     lang: HeaderLanguage = 'en'
-  ) {
+  ): BadRequestException {
     this.logger.error(
       `Service with id ${serviceId} is not available for car model with id ${carModelId}`
     );
@@ -231,7 +252,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message, defaulting to 'en'.
    * @return {NotFoundException} The exception containing the localized error message.
    */
-  carWashOrderNotFound(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderNotFound(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): NotFoundException {
     this.logger.error(`Car wash order with id ${id} not found`);
     return new NotFoundException(
       httpErrorMessages.__car_wash_order_not_found[lang]
@@ -245,7 +269,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language code used to retrieve the relevant error message.
    * @return {BadRequestException} Throws an exception with the appropriate localized error message.
    */
-  carWashOrderAlreadyCancelled(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderAlreadyCancelled(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} already cancelled`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_cancelled[lang]
@@ -260,7 +287,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message. Defaults to 'en'.
    * @return {BadRequestException} Throws an exception indicating the car order does not belong to the agent.
    */
-  carOrderNotBelongToAgent(id: string, lang: HeaderLanguage = 'en') {
+  carOrderNotBelongToAgent(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car order with id ${id} not belong to agent`);
     return new BadRequestException(
       httpErrorMessages.__car_order_not_belong_to_agent[lang]
@@ -275,7 +305,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language for the error message.
    * @return {BadRequestException} The exception indicating the car order is already cancelled.
    */
-  carOrderAlreadyCancelled(id: string, lang: HeaderLanguage = 'en') {
+  carOrderAlreadyCancelled(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car order with id ${id} already cancelled`);
     return new BadRequestException(
       httpErrorMessages.__car_order_already_cancelled[lang]
@@ -289,7 +322,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {BadRequestException} An exception indicating that the provided OTP is incorrect.
    */
-  otpIncorrect(otpCode: string, lang: HeaderLanguage = 'en') {
+  otpIncorrect(
+    otpCode: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Otp incorrect (${otpCode})`);
     return new BadRequestException(httpErrorMessages.__otp_incorrect[lang]);
   }
@@ -301,7 +337,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {NotFoundException} An exception representing the "notification not found" error.
    */
-  notificationNotFound(id: string, lang: HeaderLanguage = 'en') {
+  notificationNotFound(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): NotFoundException {
     this.logger.error(`Notification with id ${id} not found`);
     return new NotFoundException(
       httpErrorMessages.__notification_not_found[lang]
@@ -315,7 +354,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language to use for the error message.
    * @return {BadRequestException} An exception indicating the notification has already been read.
    */
-  notificationAlreadyRead(id: string, lang: HeaderLanguage = 'en') {
+  notificationAlreadyRead(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Notification with id ${id} already read`);
     return new BadRequestException(
       httpErrorMessages.__notification_already_read[lang]
@@ -330,7 +372,7 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {NotFoundException} - An exception indicating that the agent was not found.
    */
-  agentNotFound(id: string, lang: HeaderLanguage = 'en') {
+  agentNotFound(id: string, lang: HeaderLanguage = 'en'): NotFoundException {
     this.logger.error(`Agent with id ${id} not found`);
     return new NotFoundException(httpErrorMessages.__agent_not_found[lang]);
   }
@@ -342,7 +384,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {BadRequestException} A BadRequestException containing the error message for the unavailable agent.
    */
-  agentNotAvailable(id: string, lang: HeaderLanguage = 'en') {
+  agentNotAvailable(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Agent with id ${id} not available`);
     return new BadRequestException(
       httpErrorMessages.__agent_not_available[lang]
@@ -356,7 +401,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] The language for the error message, defaulting to English.
    * @return {BadRequestException} An exception indicating that the car wash order has already been taken.
    */
-  carWashOrderAlreadyTaken(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderAlreadyTaken(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} already taken`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_taken[lang]
@@ -370,8 +418,13 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language used for the error message.
    * @return {BadRequestException} Returns a BadRequestException indicating the order was already canceled by the customer.
    */
-  carWashOrderAlreadyCanceledByCustomer(id: string, lang: HeaderLanguage = 'en') {
-    this.logger.error(`Car wash order with id ${id} already canceled by customer`);
+  carWashOrderAlreadyCanceledByCustomer(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
+    this.logger.error(
+      `Car wash order with id ${id} already canceled by customer`
+    );
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_canceled_by_customer[lang]
     );
@@ -384,7 +437,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The preferred language for the error message.
    * @return {BadRequestException} A BadRequestException with a localized error message.
    */
-  carWashOrderNotAssignedToAgent(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderNotAssignedToAgent(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} not assigned to agent`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_not_assigned_to_agent[lang]
@@ -399,7 +455,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language to use for the error message. Defaults to 'en' (English).
    * @return {BadRequestException} A BadRequestException containing the localized error message.
    */
-  carWashOrderAlreadyCanceledByAgent(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderAlreadyCanceledByAgent(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} already canceled by agent`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_canceled_by_agent[lang]
@@ -413,7 +472,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language in which the error message should be returned.
    * @return {BadRequestException} An exception indicating that the car wash order has already started.
    */
-  carWashOrderAlreadyStarted(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderAlreadyStarted(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} already started`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_started[lang]
@@ -427,7 +489,10 @@ export class HttpErrorsService {
    * @param {HeaderLanguage} [lang='en'] - The language used for the error message.
    * @return {BadRequestException} Throws an exception indicating the car wash order has already been completed.
    */
-  carWashOrderAlreadyCompleted(id: string, lang: HeaderLanguage = 'en') {
+  carWashOrderAlreadyCompleted(
+    id: string,
+    lang: HeaderLanguage = 'en'
+  ): BadRequestException {
     this.logger.error(`Car wash order with id ${id} already completed`);
     return new BadRequestException(
       httpErrorMessages.__car_wash_order_already_completed[lang]
