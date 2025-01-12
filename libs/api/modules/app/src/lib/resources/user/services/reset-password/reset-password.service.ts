@@ -31,8 +31,9 @@ export class ResetPasswordService {
     });
     if (!user) throw this.httpErrorsService.userNotFound(data.email, lang);
 
-    const newHashedPassword =
-      await this.userService.resources.crypt.cryptPassword(data.new_password);
+    const newHashedPassword = await this.userService.cryptPassword(
+      data.new_password
+    );
     const updatedUser = await this.prismaService.user.update({
       where: { id: user.id },
       data: { password: newHashedPassword },

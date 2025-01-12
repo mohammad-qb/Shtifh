@@ -35,7 +35,7 @@ model Agent {
   /// [AgentWalletSummaryJson]
   wallet_summary         Json // {total_tips: 0, total_orders_earn: 0}
   user                   User                  @relation(fields: [userId], references: [id])
-  userId                 String                @db.ObjectId
+  userId                 String                @unique @db.ObjectId
   carOrders              CarOrder[]
   express_car_wash_order ExpressCarWashOrder[]
 }
@@ -54,7 +54,7 @@ model Customer {
   gender                 Int
   is_removed             Boolean               @default(false)
   user                   User                  @relation(fields: [userId], references: [id])
-  userId                 String                @db.ObjectId
+  userId                 String                @unique @db.ObjectId
   cars                   Car[]
   carOrders              CarOrder[]
   express_car_wash_order ExpressCarWashOrder[]
@@ -221,8 +221,8 @@ model User {
   role                Int            @default(1)
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt()
-  agent               Agent[]
-  customers           Customer[]
+  agent               Agent?
+  customer           Customer?
   ReadReceipt         ReadReceipt[]
   Notification        Notification[]
 }

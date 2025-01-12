@@ -1,18 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CarResourceService } from './car-resource.service';
-import {
-  Logger,
-  UseGuards
-} from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { CreateCarInput } from './inputs/create-car.input';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UserPayload } from '@shtifh/user-service';
 import { UpdateCarInput } from './inputs/update-car.input';
 import { ListCarsEntity } from './entities/list-cars.entity';
 import { DeactivateCarInput } from './inputs/deactivate-car.input';
-import {
-  JwtAuthGuard
-} from '@shtifh/auth-service';
+import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @Resolver()
 @UseGuards(JwtAuthGuard)

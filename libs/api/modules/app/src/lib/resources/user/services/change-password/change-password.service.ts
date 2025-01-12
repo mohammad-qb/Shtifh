@@ -36,16 +36,16 @@ export class ChangePasswordService {
     });
     if (!user) throw this.httpErrorsService.userNotFound(userId, lang);
 
-    const isPasswordValid =
-      await this.userService.resources.crypt.isPasswordMatch(
-        data.current_password,
-        user.password
-      );
+    const isPasswordValid = await this.userService.isPasswordMatch(
+      data.current_password,
+      user.password
+    );
 
     if (!isPasswordValid) throw this.httpErrorsService.invalidPassword(lang);
 
-    const newHashedPassword =
-      await this.userService.resources.crypt.cryptPassword(data.new_password);
+    const newHashedPassword = await this.userService.cryptPassword(
+      data.new_password
+    );
     const updatedUser = await this.prismaService.user.update({
       where: { id: userId },
       data: { password: newHashedPassword },

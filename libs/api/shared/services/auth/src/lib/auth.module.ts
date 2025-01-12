@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { UserModule } from '@shtifh/user-service';
 import { AuthService } from './auth.service';
+import { JwtModule } from '@shtifh/jwt-service';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [UserModule],
+  imports: [PassportModule.register({ defaultStrategy: 'jwt' })],
   providers: [JwtAuthGuard, AuthService],
   exports: [JwtAuthGuard, AuthService],
 })

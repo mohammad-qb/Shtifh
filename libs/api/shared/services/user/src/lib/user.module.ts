@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CryptResourceModule } from './resources/crypt/crypt-resource.module';
-import { JwtResourceModule } from './resources/jwt/jwt.resource.module';
+import { TokenResourceModule } from './resources/token/token-resource.module';
 
+@Global()
 @Module({
-  imports: [CryptResourceModule, JwtResourceModule],
+  imports: [CryptResourceModule, TokenResourceModule],
   providers: [UserService],
   exports: [UserService],
 })

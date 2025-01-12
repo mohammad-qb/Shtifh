@@ -7,20 +7,16 @@ import {
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  UserTokenService
-} from '../token/user-token.service';
-import {
-  IS_OPTIONAL_KEY
-} from '@shtifh/decorators';
+import { IS_OPTIONAL_KEY } from '@shtifh/decorators';
+import { UserService } from '@shtifh/user-service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   private logger = new Logger(JwtAuthGuard.name);
 
   constructor(
-    private readonly userTokenService: UserTokenService,
-    private reflector: Reflector,
+    private readonly userService: UserService,
+    private reflector: Reflector
   ) {
     super();
   }
@@ -30,7 +26,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const req = ctx.getContext().req;
     const isOptional = this.reflector.get<boolean>(
       IS_OPTIONAL_KEY,
-      context.getHandler(),
+      context.getHandler()
     );
 
     const token = this.getToken(req);
@@ -43,13 +39,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     try {
-      const decode = await this.userTokenService.verify(token);
+      const decode = await this.userService.verifyToken(token);
       req.user = decode;
       return true;
     } catch (error) {
       if (isOptional) {
         return true; // Proceed without a user if token is invalid
       } else {
+        console.log({ error });
         throw new UnauthorizedException('Invalid token');
       }
     }
@@ -57,7 +54,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   getToken(req: any): string | null {
     const authHeader = req.headers.authorization;
-    this.logger.log({ req: req.cookies });
     if (!authHeader) return null;
 
     const parts = authHeader.split(' ');

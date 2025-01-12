@@ -17,7 +17,6 @@ export class CreateCustomerService {
     private userService: UserService
   ) {}
 
-
   /**
    * Creates a new customer along with their associated user account.
    *
@@ -37,9 +36,7 @@ export class CreateCustomerService {
       lang
     );
 
-    const password = await this.userService.resources.crypt.cryptPassword(
-      data.password
-    );
+    const password = await this.userService.cryptPassword(data.password);
     const customer = await this.prismaService.customer.create({
       data: {
         gender,

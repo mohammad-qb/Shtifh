@@ -23,9 +23,7 @@ export class AdminCreateAgentService {
     this.logger.log('Creating agent');
 
     const { email, phone, full_name, ...restAgentData } = data;
-    const password = await this.userService.resources.crypt.cryptPassword(
-      phone.slice(-6)
-    );
+    const password = await this.userService.cryptPassword(phone.slice(-6));
 
     const agent = await this.prismaService.agent.create({
       data: {

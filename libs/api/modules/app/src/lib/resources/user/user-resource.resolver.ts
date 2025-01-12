@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserResourceService } from './user-resource.service';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { LoginInput } from './inputs/login.input';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UserPayload } from '@shtifh/user-service';
@@ -9,6 +9,7 @@ import { ForgetPasswordInput } from './inputs/forget-password.input';
 import { ResetPasswordInput } from './inputs/reset-password.input';
 import { VerifyResetPasswordOtpInput } from './inputs/verify-reset-password-otp.input';
 import { ChangePasswordInput } from './inputs/change-password.input';
+import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @Resolver()
 export class UserResourceResolver {
@@ -62,6 +63,7 @@ export class UserResourceResolver {
   }
 
   @Query(() => AuthUserEntity, { name: 'me' })
+  @UseGuards(JwtAuthGuard)
   async me(@GqlUser() user: UserPayload, @GqlLang() lang: HeaderLanguage) {
     return await this.UserResourceService.me(user.userId, lang);
   }

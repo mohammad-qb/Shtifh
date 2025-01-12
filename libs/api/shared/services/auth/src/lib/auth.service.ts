@@ -25,24 +25,37 @@ export class AuthService {
    */
   async login(email: string, password: string, lang: HeaderLanguage) {
     this.logger.log(`Login attempt for ${email}`);
-    const user = await this.prismaService.user.findFirst({ where: { email } });
+    const user = await this.prismaService.user.findFirst({
+      where: { email },
+      include: {
+        agent: true,
+        customer: true,
+      },
+    });
 
     if (!user) {
       throw this.httpErrorsService.invalidLoginCredential(email, lang);
     }
 
-    const isPasswordValid =
-      await this.userService.resources.crypt.isPasswordMatch(
-        password,
-        user.password
-      );
+    const isPasswordValid = await this.userService.isPasswordMatch(
+      password,
+      user.password
+    );
 
     if (!isPasswordValid) {
       throw this.httpErrorsService.invalidPassword(lang);
     }
 
+    const token = await this.userService.generateToken({
+      email: user.email,
+      role: user.role,
+      userId: user.id,
+      id: user.agent?.id || user.customer?.id || '',
+      full_name: user.full_name,
+    });
+
     this.logger.log(`User successfully authenticated for email: ${email}`);
-    return user;
+    return { user, token };
   }
 
   /**
@@ -58,11 +71,21 @@ export class AuthService {
     this.logger.log(`Attempting to fetch the user with ID: ${userId}`);
     const user = await this.prismaService.user.findFirst({
       where: { id: userId },
+      include: { agent: true, customer: true },
     });
     if (!user) {
       throw this.httpErrorsService.userNotFound(userId, lang);
     }
+
+    const token = await this.userService.generateToken({
+      email: user.email,
+      role: user.role,
+      userId: user.id,
+      id: user.agent?.id || user.customer?.id || '',
+      full_name: user.full_name,
+    });
+
     this.logger.log(`Successfully fetched the user with ID: ${userId}.`);
-    return user;
+    return { user, token };
   }
 }
