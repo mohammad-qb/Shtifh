@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ListCarOrdersService } from './services/list/list-car-orders.service';
-import { GetCarOrderService } from './services/get-one/get-car-order.service';
-import { CancelCarOrderService } from './services/cancel/cancel-car-order.service';
+import { AgentListCarOrdersService } from './services/list/list-car-orders.service';
+import { AgentGetCarOrderService } from './services/get-one/get-car-order.service';
+import { AgentCancelCarOrderService } from './services/cancel/cancel-car-order.service';
 import { AgentCancelCarOrderInput } from './inputs/cancel-car-order.input';
 import { HeaderLanguage } from '@shtifh/decorators';
-import { CompleteCarOrderService } from './services/complete/complete-car-order.service';
+import { AgentCompleteCarOrderService } from './services/complete/complete-car-order.service';
 
 @Injectable()
 export class CarOrderResourceService {
   private logger = new Logger(CarOrderResourceService.name);
 
   constructor(
-    private readonly listCarOrdersService: ListCarOrdersService,
-    private readonly getCarOrderService: GetCarOrderService,
-    private readonly cancelCarOrderService: CancelCarOrderService,
-    private readonly completeCarOrderService: CompleteCarOrderService
+    private readonly listCarOrdersService: AgentListCarOrdersService,
+    private readonly getCarOrderService: AgentGetCarOrderService,
+    private readonly cancelCarOrderService: AgentCancelCarOrderService,
+    private readonly completeCarOrderService: AgentCompleteCarOrderService
   ) {}
 
   async cancel(
@@ -22,11 +22,7 @@ export class CarOrderResourceService {
     input: AgentCancelCarOrderInput,
     lang: HeaderLanguage
   ) {
-    await this.cancelCarOrderService.cancelCarOrder(
-      agentId,
-      input,
-      lang
-    );
+    await this.cancelCarOrderService.cancelCarOrder(agentId, input, lang);
 
     return true;
   }

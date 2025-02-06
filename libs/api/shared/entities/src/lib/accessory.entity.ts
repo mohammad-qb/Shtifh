@@ -1,14 +1,14 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
-import {Accessory} from "@prisma/client";
-import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
+import { Accessory } from '@prisma/client';
+import { PrismaNameEntity } from './common/prisma-name.entity';
 
 @ObjectType()
 export class AccessoryEntity implements Accessory {
   @Field(() => String)
   id!: string;
 
-  @Field(() => PrismaNameJsonEntity)
-  name!: PrismaNameJsonEntity;
+  @Field(() => PrismaNameEntity)
+  name!: PrismaNameEntity;
 
   @Field(() => String)
   image_url!: string;

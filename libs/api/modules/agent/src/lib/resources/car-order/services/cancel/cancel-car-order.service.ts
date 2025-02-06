@@ -6,8 +6,8 @@ import { PrismaService } from '@shtifh/prisma-service';
 import { AgentCancelCarOrderInput } from '../../inputs/cancel-car-order.input';
 
 @Injectable()
-export class CancelCarOrderService {
-  private logger = new Logger(CancelCarOrderService.name);
+export class AgentCancelCarOrderService {
+  private logger = new Logger(AgentCancelCarOrderService.name);
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -42,7 +42,10 @@ export class CancelCarOrderService {
     }
 
     if (carOrder.agentId !== agentId) {
-      throw this.httpErrorsService.carOrderNotBelongToAgent(data.carOrderId, lang);
+      throw this.httpErrorsService.carOrderNotBelongToAgent(
+        data.carOrderId,
+        lang
+      );
     }
 
     const carOrderStatus = carOrder.logs[carOrder.logs.length - 1].status;
@@ -51,7 +54,10 @@ export class CancelCarOrderService {
       carOrderStatus === CarOrderLogStatus.CANCELED_BY_AGENT ||
       carOrderStatus === CarOrderLogStatus.CANCELED_BY_CUSTOMER
     ) {
-      throw this.httpErrorsService.carOrderAlreadyCancelled(data.carOrderId, lang);
+      throw this.httpErrorsService.carOrderAlreadyCancelled(
+        data.carOrderId,
+        lang
+      );
     }
 
     const updatedCarOrder = await this.prismaService.carOrder.update({
@@ -67,7 +73,9 @@ export class CancelCarOrderService {
       },
     });
 
-    this.logger.log(`Car order with id ${data.carOrderId} was successfully canceled`);
+    this.logger.log(
+      `Car order with id ${data.carOrderId} was successfully canceled`
+    );
 
     return updatedCarOrder;
   }

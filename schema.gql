@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type PrismaNameJsonEntity {
+type PrismaNameEntity {
   ar: String!
   en: String!
   he: String!
@@ -10,7 +10,7 @@ type PrismaNameJsonEntity {
 
 type CarModelEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -23,19 +23,20 @@ scalar DateTime
 
 type CarBrandEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type PrismaCarOrderAccessoriesJsonEntity {
+type PrismaCarOrderAccessoriesEntity {
   accessoryId: String!
   quantity: Int!
 }
 
-type PrismaCarOrderLogJsonEntity {
+type PrismaCarOrderLogEntity {
   status: CarOrderLogStatus!
+  note: String
   createdAt: DateTime!
 }
 
@@ -56,14 +57,14 @@ type PrismaCityUnavailableSlots {
   end_time: String!
 }
 
-type PrismaCityGlobalScheduleJsonEntity {
+type PrismaCityGlobalScheduleEntity {
   start_time: String!
   end_time: String!
   requests_in_hour: Float!
   is_off: Boolean!
 }
 
-type PrismaCityMonthlyScheduleJsonEntity {
+type PrismaCityMonthlyScheduleEntity {
   start_time: String!
   end_time: String!
   year: Float!
@@ -71,7 +72,7 @@ type PrismaCityMonthlyScheduleJsonEntity {
   requests_in_hour: Float!
 }
 
-type PrismaCityRecurringScheduleJsonEntity {
+type PrismaCityRecurringScheduleEntity {
   start_time: String!
   end_time: String!
   day: Int!
@@ -80,37 +81,37 @@ type PrismaCityRecurringScheduleJsonEntity {
   unavailable_slots: [PrismaCityUnavailableSlots!]!
 }
 
-type PrismaCityDailyScheduleJsonEntity {
+type PrismaCityDailyScheduleEntity {
   start_time: String!
   end_time: String!
-  date: String!
+  date: DateTime!
   requests_in_hour: Float!
   is_off: Boolean!
   unavailable_slots: [PrismaCityUnavailableSlots!]!
 }
 
-type PrismaCityScheduleJsonEntity {
-  global: PrismaCityGlobalScheduleJsonEntity!
-  monthly: [PrismaCityMonthlyScheduleJsonEntity!]!
-  recurring: [PrismaCityRecurringScheduleJsonEntity!]!
-  daily: [PrismaCityDailyScheduleJsonEntity!]!
+type PrismaCityScheduleEntity {
+  global: PrismaCityGlobalScheduleEntity!
+  monthly: [PrismaCityMonthlyScheduleEntity!]!
+  recurring: [PrismaCityRecurringScheduleEntity!]!
+  daily: [PrismaCityDailyScheduleEntity!]!
 }
 
-type PrismaCityCarModelServiceJsonEntity {
+type PrismaCityCarModelServiceEntity {
   carModelId: String!
   serviceId: String!
   is_active: String!
   fees: Float!
 }
 
-type PrismaAgentWalletSummaryJsonEntity {
+type PrismaAgentWalletSummaryEntity {
   total_tips: Float!
   total_orders_earn: Float!
 }
 
 type ServiceEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   type: Int!
   image_url: String
   is_active: Boolean!
@@ -120,20 +121,20 @@ type ServiceEntity {
 
 type ListAccessoriesEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
   price: Float!
 }
 
 type ListCarBrandsEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
 }
 
 type ListCarModelsEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
 }
 
@@ -148,7 +149,7 @@ type CarDataForListCarOrdersEntity {
 
 type ServiceDataForListCarOrdersEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   type: Int!
   image_url: String
 }
@@ -164,8 +165,8 @@ type ListCarOrdersEntity {
   fees: String!
   note: String
   address: String!
-  logs: [PrismaCarOrderLogJsonEntity!]!
-  accessories: [PrismaCarOrderAccessoriesJsonEntity!]!
+  logs: [PrismaCarOrderLogEntity!]!
+  accessories: [PrismaCarOrderAccessoriesEntity!]!
   type: Int!
   car: CarDataForListCarOrdersEntity!
   service: ServiceDataForListCarOrdersEntity!
@@ -178,13 +179,13 @@ type UpdateNormalCarOrderEntity {
 
 type ListCarsBrandEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
 }
 
 type ListCarsModelEntity {
   id: String!
-  name: PrismaNameJsonEntity!
+  name: PrismaNameEntity!
   image_url: String!
 }
 
@@ -200,8 +201,8 @@ type ListCarsEntity {
 
 type ListCitiesEntity {
   id: String!
-  name: PrismaNameJsonEntity!
-  car_model_services: PrismaCityCarModelServiceJsonEntity!
+  name: PrismaNameEntity!
+  car_model_services: PrismaCityCarModelServiceEntity!
 }
 
 type AuthUserEntity {
@@ -226,7 +227,7 @@ type ListExpressCarWashOrdersEntity {
   ref_number: String!
   fees: Float!
   tips: Int!
-  logs: [PrismaCarOrderLogJsonEntity!]!
+  logs: [PrismaCarOrderLogEntity!]!
   coordinates: [Float!]!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -237,6 +238,64 @@ type ListExpressCarWashOrdersEntity {
 
 type CreateExpressCarWashOrderEntity {
   id: String!
+}
+
+type AgentListCarOrdersCustomerUserEntity {
+  full_name: String!
+}
+
+type AgentListCarOrdersCityEntity {
+  id: String!
+  name: PrismaNameEntity!
+}
+
+type AgentListCarOrdersServiceEntity {
+  id: String!
+  name: PrismaNameEntity!
+  type: Int!
+  image_url: String
+}
+
+type AgentListCarOrdersCarBrandEntity {
+  id: String!
+  name: PrismaNameEntity!
+  image_url: String!
+}
+
+type AgentListCarOrdersCarModelEntity {
+  id: String!
+  name: PrismaNameEntity!
+  image_url: String!
+}
+
+type AgentListCarOrdersCarEntity {
+  id: String!
+  plate_number: String!
+  year: Int!
+  color: String!
+  brand: AgentListCarOrdersCarBrandEntity!
+  model: AgentListCarOrdersCarModelEntity!
+}
+
+type AgentListCarOrdersEntity {
+  id: String!
+  ref_number: String!
+  order_date: DateTime
+  order_time: String
+  fees: String!
+  tips: String!
+  note: String
+  address: String!
+  logs: [PrismaCarOrderLogEntity!]!
+  accessories: [PrismaCarOrderAccessoriesEntity!]!
+  type: Int!
+  coordinates: [Float!]!
+  createdAt: DateTime!
+  agentId: String
+  customer: AgentListCarOrdersCustomerUserEntity!
+  city: AgentListCarOrdersCityEntity!
+  service: AgentListCarOrdersServiceEntity!
+  car: AgentListCarOrdersCarEntity!
 }
 
 type Query {
@@ -253,6 +312,8 @@ type Query {
   me: AuthUserEntity!
   listPrivateServices: [ServiceEntity!]!
   listExpressCarWashOrders: [ListExpressCarWashOrdersEntity!]!
+  agentListCarOrders: [AgentListCarOrdersEntity!]!
+  agentGetCarOrder(AgentGetCarOrderInput: AgentGetCarOrderInput!): AgentListCarOrdersEntity!
 }
 
 input GetCarOrderByIdInput {
@@ -262,6 +323,10 @@ input GetCarOrderByIdInput {
 input ListCityAvailableSlotsInput {
   cityId: String!
   date: String!
+}
+
+input AgentGetCarOrderInput {
+  carOrderId: String!
 }
 
 type Mutation {
@@ -282,6 +347,13 @@ type Mutation {
   cancelExpressCarWashOrder(CancelExpressCarWashOrderInput: CancelExpressCarWashOrderInput!): Boolean!
   createExpressCarWashOrder(CreateExpressCarWashOrderInput: CreateExpressCarWashOrderInput!): CreateExpressCarWashOrderEntity!
   confirmExpressCarWashOrder(ConfirmExpressCarWashOrderInput: ConfirmExpressCarWashOrderInput!): Boolean!
+  agentSwitchAvailability: Boolean!
+  agentCancelCarOrder(AgentCancelCarOrderInput: AgentCancelCarOrderInput!): Boolean!
+  agentCompleteCarOrder(AgentCompleteCarOrderInput: AgentCompleteCarOrderInput!): Boolean!
+  agentAcceptExpressCarWashOrder(AgentAcceptExpressCarWashOrderInput: AgentAcceptExpressCarWashOrderInput!): Boolean!
+  agentCompleteExpressCarWashOrder(AgentCompleteExpressCarWashOrderInput: AgentCompleteExpressCarWashOrderInput!): Boolean!
+  agentCancelExpressCarWashOrder(AgentCancelExpressCarWashOrderInput: AgentCancelExpressCarWashOrderInput!): Boolean!
+  agentStartExpressCarWashOrder(AgentStartExpressCarWashOrderInput: AgentStartExpressCarWashOrderInput!): Boolean!
 }
 
 input CreateCarInput {
@@ -400,4 +472,30 @@ input ConfirmExpressCarWashOrderInput {
   agentId: String!
   tips: String!
   payment_method: Int!
+}
+
+input AgentCancelCarOrderInput {
+  carOrderId: String!
+  reason: String!
+}
+
+input AgentCompleteCarOrderInput {
+  carOrderId: String!
+}
+
+input AgentAcceptExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
+}
+
+input AgentCompleteExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
+}
+
+input AgentCancelExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
+  reason: String!
+}
+
+input AgentStartExpressCarWashOrderInput {
+  expressCarWashOrderId: String!
 }

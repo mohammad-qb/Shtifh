@@ -30,6 +30,7 @@ import { EnvModule } from '@shtifh/env-service';
 import { NotificationResourceModule } from './resources/notification/notification-resource.module';
 import { ServicesResourceModule } from './resources/services/services-resource.module';
 import { ExpressCarWashOrderResourceModule } from './resources/express-car-wash-order/express-car-wash-order-resource.module';
+import { AgentServerModule } from '@shtifh/agent-server-module';
 
 const GRAPHQL_MODULES = [
   AccessoryResourceModule,
@@ -42,7 +43,7 @@ const GRAPHQL_MODULES = [
   NotificationResourceModule,
   UserResourceModule,
   ServicesResourceModule,
-  ExpressCarWashOrderResourceModule
+  ExpressCarWashOrderResourceModule,
 ];
 
 const DEVELOPMENT_APOLLO_PLUGINS: ApolloServerPlugin[] = [
@@ -65,6 +66,7 @@ const APOLLO_PLUGINS: ApolloServerPlugin[] =
 @Module({
   imports: [
     ...GRAPHQL_MODULES,
+    AgentServerModule,
     PrismaModule,
     ExceptionModule,
     EnvModule.forRoot(process.env),

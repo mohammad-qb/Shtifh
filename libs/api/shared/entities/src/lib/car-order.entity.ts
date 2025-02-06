@@ -1,8 +1,8 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { CarOrder } from '@prisma/client';
 import { CarOrderType } from '@shtifh/helpers';
-import { PrismaCarOrderAccessoriesJsonEntity } from './common/prisma-car-order-accessories-json.entity';
-import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
+import { PrismaCarOrderAccessoriesEntity } from './common/prisma-car-order-accessories.entity';
+import { PrismaCarOrderLogEntity } from './common/prisma-car-order-log.entity';
 
 @ObjectType()
 export class CarOrderEntity implements CarOrder {
@@ -24,17 +24,17 @@ export class CarOrderEntity implements CarOrder {
   @Field(() => String)
   tips!: number;
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   note!: string | null;
 
   @Field(() => String)
   address!: string;
 
-  @Field(() => [PrismaCarOrderLogJsonEntity])
-  logs!: PrismaCarOrderLogJsonEntity[];
+  @Field(() => [PrismaCarOrderLogEntity])
+  logs!: PrismaCarOrderLogEntity[];
 
-  @Field(() => [PrismaCarOrderAccessoriesJsonEntity])
-  accessories!: PrismaCarOrderAccessoriesJsonEntity[];
+  @Field(() => [PrismaCarOrderAccessoriesEntity])
+  accessories!: PrismaCarOrderAccessoriesEntity[];
 
   @Field(() => Int)
   type!: CarOrderType;
@@ -60,6 +60,6 @@ export class CarOrderEntity implements CarOrder {
   @Field(() => String)
   serviceId!: string;
 
-  @Field(() => String, {nullable: true})
+  @Field(() => String, { nullable: true })
   agentId!: string | null;
 }

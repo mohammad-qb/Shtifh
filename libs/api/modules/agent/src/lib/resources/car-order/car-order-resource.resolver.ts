@@ -11,8 +11,8 @@ import { AgentCompleteCarOrderInput } from './inputs/complete-car-order.input';
 
 @Resolver()
 @UseGuards(JwtAuthGuard)
-export class CarOrderResourceResolver {
-  private logger = new Logger(CarOrderResourceResolver.name);
+export class AgentCarOrderResourceResolver {
+  private logger = new Logger(AgentCarOrderResourceResolver.name);
 
   constructor(
     private readonly carOrderResourceService: CarOrderResourceService

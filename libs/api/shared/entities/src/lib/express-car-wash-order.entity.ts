@@ -1,6 +1,6 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { ExpressCarWashOrder } from '@prisma/client';
-import { PrismaCarOrderLogJsonEntity } from './common/prisma-car-order-log-json.entity';
+import { PrismaCarOrderLogEntity } from './common/prisma-car-order-log.entity';
 
 @ObjectType()
 export class ExpressCatWashOrderEntity implements ExpressCarWashOrder {
@@ -16,8 +16,8 @@ export class ExpressCatWashOrderEntity implements ExpressCarWashOrder {
   @Field(() => Int)
   tips!: number;
 
-  @Field(() => [PrismaCarOrderLogJsonEntity])
-  logs!: PrismaCarOrderLogJsonEntity[];
+  @Field(() => [PrismaCarOrderLogEntity])
+  logs!: PrismaCarOrderLogEntity[];
 
   @Field(() => [Float])
   coordinates!: number[];

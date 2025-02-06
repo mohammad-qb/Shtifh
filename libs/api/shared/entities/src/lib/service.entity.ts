@@ -1,16 +1,15 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Service } from '@prisma/client';
 import { CarServiceType } from '@shtifh/helpers';
-import { PrismaNameJsonEntity } from './common/prisma-name-json.entity';
-
+import { PrismaNameEntity } from './common/prisma-name.entity';
 
 @ObjectType()
 export class ServiceEntity implements Service {
   @Field(() => String)
   id!: string;
 
-  @Field(() => PrismaNameJsonEntity)
-  name!: PrismaNameJsonEntity;
+  @Field(() => PrismaNameEntity)
+  name!: PrismaNameEntity;
 
   @Field(() => Int)
   type!: CarServiceType;

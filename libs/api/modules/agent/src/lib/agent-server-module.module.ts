@@ -1,8 +1,14 @@
 import { Module } from '@nestjs/common';
+import { AgentAvailabilityResourceModule } from './resources/availability/availability-resource.module';
+import { AgentCarOrderResourceModule } from './resources/car-order/car-order-resource.module';
+import { AgentExpressCarWashOrderResourceModule } from './resources/express-car-wash-order/express-car-wash-order.module';
 
+const GRAPHQL_MODULES = [
+  AgentAvailabilityResourceModule,
+  AgentCarOrderResourceModule,
+  AgentExpressCarWashOrderResourceModule,
+];
 @Module({
-  controllers: [],
-  providers: [],
-  exports: [],
+  imports: [...GRAPHQL_MODULES],
 })
-export class AgentServerModuleModule {}
+export class AgentServerModule {}

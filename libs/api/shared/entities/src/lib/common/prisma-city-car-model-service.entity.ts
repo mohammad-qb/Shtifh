@@ -1,8 +1,8 @@
 import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { CityCarModelService } from '@prisma/client';
 
 @ObjectType()
-export class PrismaCityCarModelServiceJsonEntity
-{
+export class PrismaCityCarModelServiceEntity implements CityCarModelService {
   @Field(() => String)
   carModelId!: string;
 

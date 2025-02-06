@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
-export class ListCarOrdersService {
-  private logger = new Logger(ListCarOrdersService.name);
+export class AgentListCarOrdersService {
+  private logger = new Logger(AgentListCarOrdersService.name);
 
   constructor(private readonly prismaService: PrismaService) {}
 

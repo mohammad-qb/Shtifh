@@ -1,8 +1,8 @@
-import { Module } from "@nestjs/common";
-import { GetCarOrderService } from "./get-car-order.service";
+import { Module } from '@nestjs/common';
+import { AgentGetCarOrderService } from './get-car-order.service';
 
 @Module({
-  providers: [GetCarOrderService],
-  exports: [GetCarOrderService]
+  providers: [AgentGetCarOrderService],
+  exports: [AgentGetCarOrderService],
 })
-export class GetCarOrderModule {}
+export class AgentGetCarOrderModule {}

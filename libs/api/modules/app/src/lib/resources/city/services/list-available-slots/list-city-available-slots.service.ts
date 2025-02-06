@@ -47,7 +47,7 @@ export class ListCityAvailableSlotsService {
     const unavailableSlotsHours = [];
 
     const cityDailySchedule = citySchedule.daily.find(
-      (d) => (d.date = data.date)
+      (d) => (d.date = new Date(data.date))
     );
     const cityRecurringSchedule = citySchedule.recurring.find(
       (d) => (d.day = dayOfWeek)
@@ -124,6 +124,6 @@ export class ListCityAvailableSlotsService {
     this.logger.log(
       `List available ${slots.length} slots for city Id ${data.cityId} on date ${data.date}`
     );
-    return slots.map(el => el.value);
+    return slots.map((el) => el.value);
   }
 }

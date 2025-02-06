@@ -5,8 +5,8 @@ import { CarOrderLogStatus } from '@shtifh/helpers';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
-export class CompleteCarOrderService {
-  private logger = new Logger(CompleteCarOrderService.name);
+export class AgentCompleteCarOrderService {
+  private logger = new Logger(AgentCompleteCarOrderService.name);
 
   constructor(
     private readonly prismaService: PrismaService,

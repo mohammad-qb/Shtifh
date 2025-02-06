@@ -1,6 +1,6 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Agent } from '@prisma/client';
-import { PrismaAgentWalletSummaryJsonEntity } from './common/prisma-agent-wallet-summary-json.entity';
+import { PrismaAgentWalletSummaryEntity } from './common/prisma-agent-wallet-summary.entity';
 
 @ObjectType()
 export class AgentEntity implements Agent {
@@ -13,10 +13,10 @@ export class AgentEntity implements Agent {
   @Field(() => Float)
   salary!: number;
 
-   @Field(() => Boolean)
+  @Field(() => Boolean)
   is_available!: boolean;
 
-   @Field(() => Boolean)
+  @Field(() => Boolean)
   is_busy!: boolean;
 
   @Field(() => [Float])
@@ -28,8 +28,8 @@ export class AgentEntity implements Agent {
   @Field(() => Date)
   start_work_date!: Date;
 
-  @Field(() => PrismaAgentWalletSummaryJsonEntity)
-  wallet_summary!: PrismaAgentWalletSummaryJsonEntity;
+  @Field(() => PrismaAgentWalletSummaryEntity)
+  wallet_summary!: PrismaAgentWalletSummaryEntity;
 
   @Field(() => String)
   userId!: string;

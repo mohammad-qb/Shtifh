@@ -2,11 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator jsonTypes {
-  provider  = "prisma-json-types-generator"
-  namespace = "PrismaJson"
-}
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -14,8 +9,7 @@ datasource db {
 
 model Accessory {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name      Json // {ar: "", en: "", he: ""}
+  name      Name
   image_url String
   price     Float
   is_active Boolean  @default(true)
@@ -32,8 +26,7 @@ model Agent {
   is_available           Boolean               @default(true)
   is_busy                Boolean               @default(false)
   coordinates            Float[] // lat and lon
-  /// [AgentWalletSummaryJson]
-  wallet_summary         Json // {total_tips: 0, total_orders_earn: 0}
+  wallet_summary         AgentWalletSummary
   user                   User                  @relation(fields: [userId], references: [id])
   userId                 String                @unique @db.ObjectId
   carOrders              CarOrder[]
@@ -80,8 +73,7 @@ model Car {
 
 model CarBrand {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name      Json // {ar: "", en: "", he: ""}
+  name      Name
   image_url String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -90,8 +82,7 @@ model CarBrand {
 
 model CarModel {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name      Json // {ar: "", en: "", he: ""}
+  name      Name
   image_url String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -99,66 +90,60 @@ model CarModel {
 }
 
 model City {
-  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name               Json // {ar: "", en: "", he: ""}
-  is_active          Boolean    @default(true)
-  /// [CityScheduleJson]
-  schedule           Json // {global: {start_time: "", end_time: "", request_in_hour: 0, is_off: false}, recurring: {start_time: "", end_time: "", day: Day, request_in_hour: 0, is_off: false}, monthly: {month: 0, year: 0, start_time: "09:00", end_time: "16:00", requests_in_hour: 0, is_off: false}, daily: {start_time: "09:00", end_time: "16:00", requests_in_hour: 0, is_off: false, date: ""}}
-  /// [CityCarModelServiceJson]
-  car_model_services Json[] // {carModelId: "", serviceId: "", fees: 0, is_active: true}
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt()
+  id                 String                @id @default(auto()) @map("_id") @db.ObjectId
+  name               Name
+  is_active          Boolean               @default(true)
+  schedule           CitySchedule
+  car_model_services CityCarModelService[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt()
   carOrders          CarOrder[]
 }
 
 model CarOrder {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
   ref_number   String
-  order_date   DateTime?    @db.Date
+  order_date   DateTime?             @db.Date
   order_time   String?
   fees         Float
   tips         Float
   note         String?
   address      String
-  /// [CarOrderLogJson]
-  logs         Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
-  /// [CarOrderAccessoriesJson]
-  accessories  Json[] // {accessoryId: "", quantity: 0}
-  type         Int          @default(0)
-  service      Service      @relation(fields: [serviceId], references: [id])
-  car          Car          @relation(fields: [carId], references: [id])
-  customer     Customer     @relation(fields: [customerId], references: [id])
-  agent        Agent?       @relation(fields: [agentId], references: [id])
-  city         City         @relation(fields: [cityId], references: [id])
+  logs         CarOrderLog[]
+  accessories  CarOrderAccessories[]
+  type         Int                   @default(0)
+  service      Service               @relation(fields: [serviceId], references: [id])
+  car          Car                   @relation(fields: [carId], references: [id])
+  customer     Customer              @relation(fields: [customerId], references: [id])
+  agent        Agent?                @relation(fields: [agentId], references: [id])
+  city         City                  @relation(fields: [cityId], references: [id])
   coordinates  Float[] // lat and lon
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt()
-  carId        String       @db.ObjectId
-  customerId   String       @db.ObjectId
-  cityId       String       @db.ObjectId
-  serviceId    String       @db.ObjectId
-  agentId      String?      @db.ObjectId
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt()
+  carId        String                @db.ObjectId
+  customerId   String                @db.ObjectId
+  cityId       String                @db.ObjectId
+  serviceId    String                @db.ObjectId
+  agentId      String?               @db.ObjectId
   payments     Payment[]
   booked_slots BookedSlot[]
 }
 
 model ExpressCarWashOrder {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   ref_number  String
   fees        Float
   tips        Float
-  /// [CarOrderLogJson]
-  logs        Json[] // {status: CarOrderLogStatus, createdAt: DateTime}
-  car         Car       @relation(fields: [carId], references: [id])
-  customer    Customer  @relation(fields: [customerId], references: [id])
-  agent       Agent?    @relation(fields: [agentId], references: [id])
+  logs        CarOrderLog[]
+  car         Car           @relation(fields: [carId], references: [id])
+  customer    Customer      @relation(fields: [customerId], references: [id])
+  agent       Agent?        @relation(fields: [agentId], references: [id])
   coordinates Float[] // lat and lon
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt()
-  carId       String    @db.ObjectId
-  customerId  String    @db.ObjectId
-  agentId     String?   @db.ObjectId
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt()
+  carId       String        @db.ObjectId
+  customerId  String        @db.ObjectId
+  agentId     String?       @db.ObjectId
   payments    Payment[]
 }
 
@@ -199,8 +184,7 @@ model ReadReceipt {
 
 model Service {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  /// [NameJson]
-  name      Json // {ar: "", en: "", he: ""}
+  name      Name
   type      Int        @default(1)
   image_url String?
   is_active Boolean    @default(true)
@@ -222,7 +206,82 @@ model User {
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt()
   agent               Agent?
-  customer           Customer?
+  customer            Customer?
   ReadReceipt         ReadReceipt[]
   Notification        Notification[]
+}
+
+//* Types
+type Name {
+  ar String
+  en String
+  he String
+}
+
+type AgentWalletSummary {
+  total_tips        Float @default(0)
+  total_orders_earn Float @default(0)
+}
+
+type CarOrderLog {
+  status    Int
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+type CarOrderAccessories {
+  accessoryId String @db.ObjectId
+  quantity    Int    @default(1)
+}
+
+type CityCarModelService {
+  carModelId String  @db.ObjectId
+  serviceId  String  @db.ObjectId
+  is_active  Boolean @default(true)
+  fees       Float
+}
+
+type UnavailableSlots {
+  start_time String
+  end_time   String
+}
+
+type CityScheduleGlobal {
+  start_time       String
+  end_time         String
+  requests_in_hour Int     @default(1)
+  is_off           Boolean @default(false)
+}
+
+type CityScheduleMonthly {
+  start_time       String
+  end_time         String
+  year             Int
+  month            Int
+  requests_in_hour Int    @default(1)
+}
+
+type CityScheduleRecurring {
+  start_time        String
+  end_time          String
+  day               Int
+  requests_in_hour  Int                @default(1)
+  is_off            Boolean            @default(false)
+  unavailable_slots UnavailableSlots[]
+}
+
+type CityScheduleDaily {
+  start_time        String
+  end_time          String
+  date              DateTime           @db.Date
+  requests_in_hour  Int                @default(1)
+  is_off            Boolean            @default(false)
+  unavailable_slots UnavailableSlots[]
+}
+
+type CitySchedule {
+  global    CityScheduleGlobal
+  monthly   CityScheduleMonthly[]
+  recurring CityScheduleRecurring[]
+  daily     CityScheduleDaily[]
 }

@@ -1,12 +1,14 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { NotificationResourceService } from './notification-resource.service';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { MakeNotificationReadInput } from './inputs/make-notification-read.input';
 import { UserPayload } from '@shtifh/user-service';
 import { ListNotificationsEntity } from './entities/list-notifications.entity';
+import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @Resolver()
+@UseGuards(JwtAuthGuard)
 export class NotificationResourceResolver {
   private logger = new Logger(NotificationResourceResolver.name);
 

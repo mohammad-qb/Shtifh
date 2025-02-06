@@ -4,8 +4,8 @@ import { HttpErrorsService } from '@shtifh/exception-service';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
-export class GetCarOrderService {
-  private logger = new Logger(GetCarOrderService.name);
+export class AgentGetCarOrderService {
+  private logger = new Logger(AgentGetCarOrderService.name);
 
   constructor(
     private readonly prismaService: PrismaService,

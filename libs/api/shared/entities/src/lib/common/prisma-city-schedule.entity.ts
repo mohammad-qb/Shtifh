@@ -1,11 +1,15 @@
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
-  Field,
-  Int,
-  ObjectType
-} from '@nestjs/graphql';
+  CitySchedule,
+  CityScheduleDaily,
+  CityScheduleGlobal,
+  CityScheduleMonthly,
+  CityScheduleRecurring,
+  UnavailableSlots,
+} from '@prisma/client';
 
 @ObjectType()
-export class PrismaCityUnavailableSlots {
+export class PrismaCityUnavailableSlots implements UnavailableSlots {
   @Field(() => String)
   start_time!: string;
 
@@ -14,7 +18,7 @@ export class PrismaCityUnavailableSlots {
 }
 
 @ObjectType()
-class PrismaCityGlobalScheduleJsonEntity {
+class PrismaCityGlobalScheduleEntity implements CityScheduleGlobal {
   @Field(() => String)
   start_time!: string;
 
@@ -29,7 +33,7 @@ class PrismaCityGlobalScheduleJsonEntity {
 }
 
 @ObjectType()
-class PrismaCityMonthlyScheduleJsonEntity {
+class PrismaCityMonthlyScheduleEntity implements CityScheduleMonthly {
   @Field(() => String)
   start_time!: string;
 
@@ -47,7 +51,7 @@ class PrismaCityMonthlyScheduleJsonEntity {
 }
 
 @ObjectType()
-class PrismaCityRecurringScheduleJsonEntity {
+class PrismaCityRecurringScheduleEntity implements CityScheduleRecurring {
   @Field(() => String)
   start_time!: string;
 
@@ -68,15 +72,15 @@ class PrismaCityRecurringScheduleJsonEntity {
 }
 
 @ObjectType()
-class PrismaCityDailyScheduleJsonEntity {
+class PrismaCityDailyScheduleEntity implements CityScheduleDaily {
   @Field(() => String)
   start_time!: string;
 
   @Field(() => String)
   end_time!: string;
 
-  @Field(() => String)
-  date!: string;
+  @Field(() => Date)
+  date!: Date;
 
   @Field(() => Number)
   requests_in_hour!: number;
@@ -89,17 +93,16 @@ class PrismaCityDailyScheduleJsonEntity {
 }
 
 @ObjectType()
-export class PrismaCityScheduleJsonEntity
-{
-  @Field(() => PrismaCityGlobalScheduleJsonEntity)
-  global!: PrismaCityGlobalScheduleJsonEntity;
+export class PrismaCityScheduleEntity implements CitySchedule {
+  @Field(() => PrismaCityGlobalScheduleEntity)
+  global!: PrismaCityGlobalScheduleEntity;
 
-  @Field(() => [PrismaCityMonthlyScheduleJsonEntity])
-  monthly!: PrismaCityMonthlyScheduleJsonEntity[];
+  @Field(() => [PrismaCityMonthlyScheduleEntity])
+  monthly!: PrismaCityMonthlyScheduleEntity[];
 
-  @Field(() => [PrismaCityRecurringScheduleJsonEntity])
-  recurring!: PrismaCityRecurringScheduleJsonEntity[];
+  @Field(() => [PrismaCityRecurringScheduleEntity])
+  recurring!: PrismaCityRecurringScheduleEntity[];
 
-  @Field(() => [PrismaCityDailyScheduleJsonEntity])
-  daily!: PrismaCityDailyScheduleJsonEntity[];
+  @Field(() => [PrismaCityDailyScheduleEntity])
+  daily!: PrismaCityDailyScheduleEntity[];
 }
