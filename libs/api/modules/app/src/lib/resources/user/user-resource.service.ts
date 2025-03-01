@@ -23,17 +23,11 @@ export class UserResourceService {
   ) {}
 
   async login(input: LoginInput, lang: HeaderLanguage) {
-    const { user, token } = await this.authService.login(
-      input.email,
-      input.password,
-      lang
-    );
-    return user;
+    return await this.authService.login(input.email, input.password, lang);
   }
 
   async me(userId: string, lang: HeaderLanguage) {
-    const { user, token } = await this.authService.me(userId, lang);
-    return user;
+    return await this.authService.me(userId, lang);
   }
 
   async forgetPassword(email: string, lang: HeaderLanguage) {

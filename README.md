@@ -59,3 +59,25 @@ Nx comes with local caching already built-in (check your `nx.json`). On CI you m
 - [Join the community](https://nx.dev/community)
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
+
+
+
+// Link to intercept responses to extract the token from the headers
+final Link responseInterceptorLink = Link.function(
+(request, [forward]) {
+return forward!(request).map((response) {
+// Check if headers contain token
+final context = response?.context;
+if (context != null) {
+final httpResponse = context.entry<HttpResponseContext>();
+final newToken = httpResponse?.headers['authorization'];
+if (newToken != null && newToken.isNotEmpty) {
+token = newToken.replaceFirst('Bearer ', '');
+// Save the token to storage
+PreferenceUtils.setString(PreferencesKeys.token, token!);
+}
+}
+return response;
+});
+},
+);

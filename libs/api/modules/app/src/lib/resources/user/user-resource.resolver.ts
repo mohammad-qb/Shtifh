@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserResourceService } from './user-resource.service';
 import { Logger, UseGuards } from '@nestjs/common';
 import { LoginInput } from './inputs/login.input';
@@ -10,6 +10,7 @@ import { ResetPasswordInput } from './inputs/reset-password.input';
 import { VerifyResetPasswordOtpInput } from './inputs/verify-reset-password-otp.input';
 import { ChangePasswordInput } from './inputs/change-password.input';
 import { JwtAuthGuard } from '@shtifh/auth-service';
+import { Response } from 'express';
 
 @Resolver()
 export class UserResourceResolver {
@@ -20,9 +21,16 @@ export class UserResourceResolver {
   @Mutation(() => AuthUserEntity, { name: 'login' })
   async login(
     @Args('LoginInput') input: LoginInput,
-    @GqlLang() lang: HeaderLanguage
+    @GqlLang() lang: HeaderLanguage,
+    @Context('res') res: Response
   ) {
-    return await this.UserResourceService.login(input, lang);
+    const { user, token } = await this.UserResourceService.login(input, lang);
+
+    // Set the token in the response header
+    res.setHeader('Authorization', `Bearer ${token}`);
+
+    // Return the user as the response body
+    return user;
   }
 
   @Mutation(() => Boolean, { name: 'forgetPassword' })
@@ -64,7 +72,20 @@ export class UserResourceResolver {
 
   @Query(() => AuthUserEntity, { name: 'me' })
   @UseGuards(JwtAuthGuard)
-  async me(@GqlUser() user: UserPayload, @GqlLang() lang: HeaderLanguage) {
-    return await this.UserResourceService.me(user.userId, lang);
+  async me(
+    @GqlUser() _user: UserPayload,
+    @GqlLang() lang: HeaderLanguage,
+    @Context('res') res: Response
+  ) {
+    const { user, token } = await this.UserResourceService.me(
+      _user.userId,
+      lang
+    );
+
+    // Set the token in the response header
+    res.setHeader('Authorization', `Bearer ${token}`);
+
+    // Return the user as the response body
+    return user;
   }
 }
