@@ -10,3 +10,4 @@ export * from './lib/user.entity';
 export * from './lib/accessory.entity';
 export * from './lib/notification.entity';
 export * from './lib/express-car-wash-order.entity';
+export * from './lib/common/prisma-city-car-model-service.entity';

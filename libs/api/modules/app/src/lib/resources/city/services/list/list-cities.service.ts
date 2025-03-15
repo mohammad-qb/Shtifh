@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { CarServiceType } from '@shtifh/helpers';
 import { PrismaService } from '@shtifh/prisma-service';
 
 @Injectable()
@@ -16,20 +17,19 @@ export class ListCitiesService {
    */
   async listCities() {
     this.logger.log(`List all cities`);
-    const cities = await this.prismaService.city.aggregateRaw({
-      pipeline: [
-        {
-          $lookup: {
-            from: 'Service',
-            localField: 'car_model_service.serviceId',
-            foreignField: '_id',
-            as: 'service',
-          },
-        },
-      ],
+    const services = await this.prismaService.service.findMany({
+      where: { type: CarServiceType.PUBLIC, is_active: true },
     });
 
+    const cities = await this.prismaService.city.findMany();
+
     this.logger.log(`Found ${cities['length']} cities`);
-    return (cities as any).map((el: any) => ({ ...el, id: el._id.$oid }));
+    return cities.map((el) => ({
+      ...el,
+      car_model_services: el.car_model_services.map((cms) => ({
+        ...cms,
+        service: services.find((service) => service.id === cms.serviceId),
+      })),
+    }));
   }
 }

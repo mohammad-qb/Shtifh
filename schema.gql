@@ -199,10 +199,17 @@ type ListCarsEntity {
   model: ListCarsModelEntity!
 }
 
+type ListCitiesCarModelServiceEntity {
+  carModelId: String!
+  is_active: String!
+  fees: Float!
+  service: ServiceEntity!
+}
+
 type ListCitiesEntity {
   id: String!
   name: PrismaNameEntity!
-  car_model_services: PrismaCityCarModelServiceEntity!
+  car_model_services: [ListCitiesCarModelServiceEntity!]!
 }
 
 type AuthUserEntity {
