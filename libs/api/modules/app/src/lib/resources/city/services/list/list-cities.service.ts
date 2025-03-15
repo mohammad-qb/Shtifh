@@ -30,6 +30,6 @@ export class ListCitiesService {
     });
 
     this.logger.log(`Found ${cities['length']} cities`);
-    return cities;
+    return (cities as any).map((el: any) => ({ ...el, id: el._id.$oid }));
   }
 }

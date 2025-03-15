@@ -1,13 +1,14 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CustomerResourceService } from './customer-resource.service';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { CreateCustomerInput } from './inputs/create-customer.input';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
 import { UpdateCustomerInput } from './inputs/update-customer.input';
-import { User } from '@prisma/client';
 import { UserPayload } from '@shtifh/user-service';
+import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @Resolver()
+@UseGuards(JwtAuthGuard)
 export class CustomerResourceResolver {
   private logger = new Logger(CustomerResourceResolver.name);
 
