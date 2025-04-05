@@ -9,7 +9,7 @@ export class TokenResourceService {
   constructor(private readonly jwtService: JwtService) {}
 
   async generate(args: UserPayload) {
-    return await this.jwtService.generateToken(args, '15m');
+    return await this.jwtService.generateToken(args, '90d');
   }
 
   async verify(token: string) {

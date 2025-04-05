@@ -6,12 +6,18 @@ import {
   EXPRESS_CAR_WASH_FEES,
   CarOrderLogStatus,
 } from '@shtifh/helpers';
+import { FCMService } from '@shtifh/fcm-service';
+import { GetAvailableAgentsService } from '../../../../utils/get-available-agents.service';
 
 @Injectable()
 export class CreateExpressCarWashOrderService {
   private logger = new Logger(CreateExpressCarWashOrderService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly getAvailableAgentsService: GetAvailableAgentsService,
+    private readonly fcmService: FCMService
+  ) {}
 
   /**
    * Creates a new express car wash order for the given customer.
@@ -24,7 +30,10 @@ export class CreateExpressCarWashOrderService {
     customerId: string,
     data: CreateExpressCarWashOrderInput
   ) {
-    this.logger.log(`Create express car wash order for customer ${customerId}`, {data});
+    this.logger.log(
+      `Create express car wash order for customer ${customerId}`,
+      { data }
+    );
 
     const refNumber = generateOrderRefNumber();
 
@@ -49,6 +58,22 @@ export class CreateExpressCarWashOrderService {
           ],
         },
       });
+
+    const agents = await this.getAvailableAgentsService.get();
+
+    agents.forEach((el) => {
+      this.fcmService.send({
+        data: {
+          id: expressCarWashOrder.id,
+          customerId: expressCarWashOrder.customerId,
+        },
+        notification: {
+          body: 'A new car wash request',
+          title: 'New car wash request',
+        },
+        userId: el.userId,
+      });
+    });
 
     this.logger.log(
       `Express car wash order created for customer ${customerId}`
