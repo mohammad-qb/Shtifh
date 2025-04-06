@@ -5,6 +5,7 @@ import { PrismaService } from '@shtifh/prisma-service';
 import { ConfirmExpressCarWashOrderInput } from '../../inputs/confirm-express-car-wash-order.input';
 import { DateAccessService } from '@shtifh/date-access-service';
 import { CarOrderLogStatus, PaymentMethod } from '@shtifh/helpers';
+import { FCMService } from '@shtifh/fcm-service';
 
 @Injectable()
 export class ConfirmExpressCarWashOrderService {
@@ -14,7 +15,8 @@ export class ConfirmExpressCarWashOrderService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly dataAccessService: DateAccessService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly httpErrorsService: HttpErrorsService,
+    private readonly fcmService: FCMService
   ) {
     this.hyPay = this.dataAccessService.resources.hyPay;
   }
@@ -87,10 +89,21 @@ export class ConfirmExpressCarWashOrderService {
         },
       });
 
+      //* Send Update to the agent*/
+      this.fcmService.send({
+        data: {
+          expressCarWashOrderId: data.expressCarWashOrderId,
+        },
+        notification: {
+          body: 'You can go to the location',
+          title: 'Order Confirmed',
+        },
+        userId: agent.userId,
+      });
       this.logger.log(
         `Express car wash order with id ${data.expressCarWashOrderId} for customer ${customerId} confirmed by agent ${data.agentId}`
       );
-      return {expressCarWashOrder, url: null};
+      return { expressCarWashOrder, url: null };
     }
 
     //* Credit card payment */

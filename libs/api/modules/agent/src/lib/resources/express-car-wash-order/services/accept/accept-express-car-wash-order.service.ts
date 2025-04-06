@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
+import { FCMService } from '@shtifh/fcm-service';
 import { CarOrderLogStatus } from '@shtifh/helpers';
 import { PrismaService } from '@shtifh/prisma-service';
 
@@ -10,7 +11,8 @@ export class AgentAcceptExpressCarWashOrderService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly httpErrorsService: HttpErrorsService,
+    private readonly fcmService: FCMService
   ) {}
 
   /**
@@ -36,6 +38,9 @@ export class AgentAcceptExpressCarWashOrderService {
       await this.prismaService.expressCarWashOrder.findUnique({
         where: {
           id: expressCarWashOrderId,
+        },
+        include: {
+          customer: true,
         },
       });
 
@@ -81,6 +86,18 @@ export class AgentAcceptExpressCarWashOrderService {
     await this.prismaService.agent.update({
       where: { id: agentId },
       data: { is_busy: true },
+    });
+
+    //* Send Update to the customer*/
+    this.fcmService.send({
+      data: {
+        expressCarWashOrderId,
+      },
+      notification: {
+        title: 'Agent accepted the order',
+        body: 'Agent accepted your order, you can pay',
+      },
+      userId: expressCarWashOrder.customer.userId,
     });
 
     this.logger.log(

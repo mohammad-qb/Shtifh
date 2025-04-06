@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HeaderLanguage } from '@shtifh/decorators';
 import { HttpErrorsService } from '@shtifh/exception-service';
+import { FCMService } from '@shtifh/fcm-service';
 import { CarOrderLogStatus } from '@shtifh/helpers';
 import { PrismaService } from '@shtifh/prisma-service';
 
@@ -10,7 +11,8 @@ export class CancelExpressCarWashOrderService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly httpErrorsService: HttpErrorsService
+    private readonly httpErrorsService: HttpErrorsService,
+    private readonly fcmService: FCMService
   ) {}
 
   /**
@@ -34,6 +36,7 @@ export class CancelExpressCarWashOrderService {
     const expressCarWashOrder =
       await this.prismaService.expressCarWashOrder.findUnique({
         where: { id: expressCarWashOrderId },
+        include: { agent: true },
       });
 
     if (!expressCarWashOrder)
@@ -60,6 +63,18 @@ export class CancelExpressCarWashOrderService {
           },
         },
       });
+
+    //* Send Update to the agent*/
+    this.fcmService.send({
+      data: {
+        expressCarWashOrderId,
+      },
+      notification: {
+        title: 'Order has been canceled',
+        body: 'Customer canceled the order!',
+      },
+      userId: expressCarWashOrder.agent?.userId,
+    });
 
     this.logger.log(
       `Express car wash order canceled with id ${expressCarWashOrderId} for customer ${customerId}`

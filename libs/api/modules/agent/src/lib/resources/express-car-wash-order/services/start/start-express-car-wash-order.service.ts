@@ -5,6 +5,7 @@ import {
   AgentStartExpressCarWashOrderLogHelper,
   AgentStartExpressCarWashOrderValidationHelper,
 } from './helpers/start-express-car-wash-order.helper';
+import { FCMService } from '@shtifh/fcm-service';
 
 @Injectable()
 export class AgentStartExpressCarWashOrderService {
@@ -13,7 +14,8 @@ export class AgentStartExpressCarWashOrderService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly agentStartExpressCarWashValidationHelper: AgentStartExpressCarWashOrderValidationHelper,
-    private readonly agentStartExpressCarWashLogHelper: AgentStartExpressCarWashOrderLogHelper
+    private readonly agentStartExpressCarWashLogHelper: AgentStartExpressCarWashOrderLogHelper,
+    private readonly fcmService: FCMService
   ) {}
 
   /**
@@ -35,8 +37,9 @@ export class AgentStartExpressCarWashOrderService {
 
     //* Retrieve the order
     const expressCarWashOrder =
-      await this.prismaService.expressCarWashOrder.findUnique({
+      await this.prismaService.expressCarWashOrder.findUniqueOrThrow({
         where: { id: expressCarWashOrderId },
+        include: { customer: true },
       });
 
     //* Validate the order
@@ -61,6 +64,18 @@ export class AgentStartExpressCarWashOrderService {
     await this.agentStartExpressCarWashLogHelper.updateOrderLogToInProgress(
       expressCarWashOrderId
     );
+
+    //* Send Update to the customer*/
+    this.fcmService.send({
+      data: {
+        expressCarWashOrderId,
+      },
+      notification: {
+        body: 'Agent start cleaning, We will inform you once it is done',
+        title: 'Agent Starts Cleaning',
+      },
+      userId: expressCarWashOrder.customer.userId,
+    });
 
     this.logger.log(
       `Agent ${agentId} successfully started express car wash order ${expressCarWashOrderId}`
