@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ExpressCarWashOrderResourceService } from './express-car-wash-order-resource.service';
 import { GqlLang, GqlUser, HeaderLanguage } from '@shtifh/decorators';
@@ -8,8 +8,10 @@ import { CancelExpressCarWashOrderInput } from './inputs/cancel-express-car-wash
 import { CreateExpressCarWashOrderInput } from './inputs/create-express-car-wash-order.input';
 import { CreateExpressCarWashOrderEntity } from './entities/create-express-car-wash-order.entity';
 import { ConfirmExpressCarWashOrderInput } from './inputs/confirm-express-car-wash-order.input';
+import { JwtAuthGuard } from '@shtifh/auth-service';
 
 @Resolver()
+@UseGuards(JwtAuthGuard)
 export class ExpressCarWashOrderResourceResolver {
   private logger = new Logger(ExpressCarWashOrderResourceResolver.name);
 
