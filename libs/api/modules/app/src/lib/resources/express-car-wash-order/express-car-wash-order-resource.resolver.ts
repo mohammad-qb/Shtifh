@@ -52,11 +52,11 @@ export class ExpressCarWashOrderResourceResolver {
     @GqlUser() user: UserPayload,
     @GqlLang() lang: HeaderLanguage
   ) {
-    await this.expressCarWashOrderResourceService.createExpressCarWashOrder(
+    const order = await this.expressCarWashOrderResourceService.createExpressCarWashOrder(
       user.id,
       input
     );
-    return true;
+    return order;
   }
 
   @Mutation(() => Boolean, { name: 'confirmExpressCarWashOrder' })

@@ -57,6 +57,18 @@ export class CreateExpressCarWashOrderService {
             },
           ],
         },
+        include: {
+          car: true,
+          customer: {
+            include: {
+              user: {
+                select: {
+                  full_name: true
+                }
+              }
+            }
+          },
+        }
       });
 
     const agents = await this.getAvailableAgentsService.get();
@@ -66,6 +78,11 @@ export class CreateExpressCarWashOrderService {
         data: {
           id: expressCarWashOrder.id,
           customerId: expressCarWashOrder.customerId,
+          order: {
+            customerName: expressCarWashOrder.customer.user.full_name,
+            coordinate: expressCarWashOrder.coordinates
+            
+          }
         },
         notification: {
           body: 'A new car wash request',
