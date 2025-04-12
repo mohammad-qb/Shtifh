@@ -63,27 +63,26 @@ export class CreateExpressCarWashOrderService {
             include: {
               user: {
                 select: {
-                  full_name: true
-                }
-              }
-            }
+                  full_name: true,
+                },
+              },
+            },
           },
-        }
+        },
       });
 
     const agents = await this.getAvailableAgentsService.get();
 
     agents.forEach((el) => {
       this.fcmService.send({
-        data: {
+        data: JSON.stringify({
           id: expressCarWashOrder.id,
           customerId: expressCarWashOrder.customerId,
           order: {
             customerName: expressCarWashOrder.customer.user.full_name,
-            coordinate: expressCarWashOrder.coordinates
-            
-          }
-        },
+            coordinate: expressCarWashOrder.coordinates,
+          },
+        }),
         notification: {
           body: 'A new car wash request',
           title: 'New car wash request',
